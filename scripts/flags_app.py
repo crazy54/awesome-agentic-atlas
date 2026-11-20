@@ -133,8 +133,11 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self) -> None:  # noqa: N802 - BaseHTTPRequestHandler API
         if self.path == "/":
             self.reply(HTTPStatus.OK, PAGE.replace("__TOKEN__", self.token)
-                    .replace("__MARK__", mark.svg())
+                    .replace("__MARK__", mark.svg("/"))
                     .replace("__MARKCSS__", mark.CSS).encode("utf-8"), "text/html; charset=utf-8")
+        elif self.path == "/" + mark.ASSET:
+            # The mark is Archie's icon tile, a file, so the panel serves that one file from `docs/`.
+            self.reply(HTTPStatus.OK, (ROOT / "docs" / mark.ASSET).read_bytes(), "image/webp")
         elif self.path == "/api/flags":
             try:
                 self.json_reply(HTTPStatus.OK, {"revision": app_flags.revision(), "flags": catalog()})

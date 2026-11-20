@@ -69,10 +69,10 @@ the first time it is actually visited.
 
 Not precached, deliberately:
 
-  * The icons, 50 KB of the 116 KB this stage writes. They are read by an installer and by the OS, both
-    of which keep their own copy of what they took, and the page's own favicon is an inline SVG data URI
-    -- so nothing on any render path, online or offline, ever requests them. Precaching them would be
-    50 KB of someone's data plan spent on a request that is not going to be made.
+  * The icons, about 370 KB of what this stage writes (Archie's tile is a render, not three flat colours).
+    They are read by an installer and by the OS, both of which keep their own copy of what they took, and
+    the page's own favicon is `favicon.svg` -- so nothing on any render path, online or offline, ever
+    requests them. Precaching them would spend someone's data plan on a request that is not going to be made.
 
   * The 156 facet pages under `docs/topic/**` and `docs/target/**`, ~6 MB. Precaching them would spend
     six megabytes of someone's data plan on 155 pages they did not ask for, and they carry star counts
@@ -182,9 +182,7 @@ import argparse
 import hashlib
 import importlib.util
 import json
-import struct
 import sys
-import zlib
 from pathlib import Path
 from urllib.parse import urljoin, urlsplit
 
@@ -236,23 +234,14 @@ DESCRIPTION = (f"Every agentic AI project from {b19.LISTS} awesome-lists, merged
 #
 # `PLANE` is dark's `--plane` from `sitewide.PALETTE`, the same value as the page's theme-color meta.
 #
-# The icon's three colours are NOT the page's tokens any more, and that is deliberate. They are the Atlas
-# mark's own -- `PLATE`, `GLOBE` and `LIGHT` in `scripts/mark.py`, the favicon every tab shows -- because the
-# installed icon and the tab icon are the same object and should be one drawing. They used to be the page's
-# dark --surface, --bar and --ink as well, because those were the same three values; when the palette moved
-# to Archie's colours the mark stayed what it is, a near-black plate and a brass-gold globe, which is already
-# in his palette (his brass details). `tests/theme_test.py` holds the four to these sources.
-#
-# `SURFACE` is the plate the icon is drawn on -- there, the darkest value is the right one, because the
-# mark reads against a launcher's own wallpaper rather than against the page.
-SURFACE = (0x09, 0x0A, 0x0D)
+# The icons are not drawn here any more. This stage used to draw the first Archie's mark -- a gold globe in
+# pixel shades on a black plate -- from primitives; the owner retired that character for the 3D Archie, whose
+# icon is a render. `art/brand/build.py` cuts the five files from his tile (`.github/readme/icon.png`) by
+# hand, with Pillow, and this stage copies them into `docs/` on every run (see `main()`), which keeps the
+# pipeline stdlib.
 PLANE = (0x2A, 0x2A, 0x27)
-# The globe, the mark's gold.
-BAR = (0xD6, 0xA0, 0x34)
-# The orbit ring is the mark's light, not a second accent. It sits outside the globe with a visible
-# plate-coloured gap, so each shape needs contrast against `SURFACE`; they do not share a boundary with one
-# another. `tests/theme_test.py` measures those two rendered boundaries independently.
-RING = (0xF7, 0xF8, 0xFA)
+# Where the icons' sources live: beside the script that makes them, not under `docs/`.
+ICON_SRC = ROOT / "art" / "brand"
 
 CACHE_PREFIX = "atlas-shell-"
 
@@ -349,155 +338,13 @@ FAVICON = ("favicon.ico", (16, 32, 48))
 
 
 # ------------------------------------------------------------------ icons
-def _chunk(kind: bytes, body: bytes) -> bytes:
-    return (struct.pack(">I", len(body)) + kind + body
-            + struct.pack(">I", zlib.crc32(kind + body) & 0xFFFFFFFF))
-
-
-def png(size: int, rows: list[bytearray]) -> bytes:
-    """8-bit RGBA, one IDAT, filter 0 on every row.
-
-    Written by hand because the whole pipeline is stdlib and adding Pillow for four flat-colour icons
-    would be the first runtime dependency in the repo. Filter 0 rather than any of the four predictors
-    costs nothing here -- the mark is large areas of three colours, which zlib flattens to a few KB
-    either way -- and it keeps this to twenty lines that cannot be wrong in an interesting way.
-    """
-    ihdr = struct.pack(">IIBBBBB", size, size, 8, 6, 0, 0, 0)
-    raw = b"".join(b"\x00" + bytes(r) for r in rows)
-    return (b"\x89PNG\r\n\x1a\n" + _chunk(b"IHDR", ihdr)
-            + _chunk(b"IDAT", zlib.compress(raw, 9)) + _chunk(b"IEND", b""))
-
-
-def ico(images: list[tuple[int, bytes]]) -> bytes:
-    """An ICO file holding PNGs, from `(pixels, png bytes)` pairs.
-
-    PNG entries rather than bitmaps, so this needs nothing but `png()` above. Every current browser reads
-    them, and so has Windows since Vista. The layout is a six-byte header (reserved, type 1 for an icon, the
-    count), then a sixteen-byte entry per image giving its size, bit depth, length and offset, then the
-    images one after another.
-    """
-    head = struct.pack("<HHH", 0, 1, len(images))
-    at = len(head) + 16 * len(images)
-    entries, body = b"", b""
-    for size, data in images:
-        # A width or height of 256 is written as 0. None here is that big.
-        entries += struct.pack("<BBBBHHII", size % 256, size % 256, 0, 0, 1, 32, len(data), at + len(body))
-        body += data
-    return head + entries + body
-
-
-def _cover(d: float) -> float:
-    """Signed distance in pixels to a 0..1 coverage, which is all the antialiasing an icon needs.
-
-    One sample per pixel and the edge softened by its distance to it, rather than supersampling: every
-    shape in the mark is a circle, an ellipse or a band, all of which have a distance function that is
-    accurate to well under a pixel at these radii. Supersampling the same result would cost nine times
-    the arithmetic in pure Python, on a stage that runs in every daily build.
-    """
-    return 0.0 if d >= 0.5 else 1.0 if d <= -0.5 else 0.5 - d
-
-
-def _over(dst: list[float], rgb: tuple[int, int, int], a: float) -> None:
-    if a <= 0.0:
-        return
-    out_a = a + dst[3] * (1.0 - a)
-    for i in range(3):
-        dst[i] = (rgb[i] * a + dst[i] * dst[3] * (1.0 - a)) / out_a if out_a else 0.0
-    dst[3] = out_a
-
-
-def icon(size: int, maskable: bool, opaque: bool) -> bytes:
-    """The mark: Archie's shaded globe face inside a white orbit, on the black plate.
-
-    The globe keeps the original Atlas mark; the blocky shades make the installed icon the same character
-    as the masthead mascot and the browser-tab SVG. Everything is drawn from primitives rather than by
-    rasterising the illustration, so the output is deterministic and still reads at launcher sizes.
-
-    The globe is the theme's brand accent and the plate is its darkest surface, so the icon is
-    recognisably the same object as the page; the ring is `--ink`, for the reason recorded beside `RING`.
-    All geometry is a fraction of the icon's edge, so the four sizes are the same drawing rather than four
-    drawings that drifted.
-    """
-    scale = 0.72 if maskable else 1.0
-    r_globe = 0.30 * scale
-    r_orbit = 0.385 * scale
-    w_orbit = 0.032 * scale
-    # Strokes as a fraction of the globe, not of the icon, so they stay the same drawing when the
-    # maskable variant shrinks the globe inside the safe circle.
-    w_grid = 0.115 * r_globe
-    w_lat = 0.085 * r_globe
-    y_lat = 0.46 * r_globe
-    a_meridian = 0.50 * r_globe
-    # Rounded like an app icon for the "any" purpose, square where the OS does its own cropping: Android
-    # masks a maskable icon and iOS masks an apple-touch-icon, and rounding underneath either shows a
-    # sliver of transparent corner inside the OS's own rounder shape.
-    r_corner = 0.0 if (maskable or opaque) else 0.115
-
-    rows: list[bytearray] = []
-    for py in range(size):
-        y = (py + 0.5) / size - 0.5
-        row = bytearray()
-        for px in range(size):
-            x = (px + 0.5) / size - 0.5
-            acc = [0.0, 0.0, 0.0, 0.0]
-
-            # The plate. A rounded rectangle's distance is the distance to the inset box, which for a
-            # square centred on the origin is this one expression.
-            qx, qy = abs(x) - (0.5 - r_corner), abs(y) - (0.5 - r_corner)
-            d_plate = (((max(qx, 0.0) ** 2 + max(qy, 0.0) ** 2) ** 0.5)
-                       + min(max(qx, qy), 0.0) - r_corner)
-            _over(acc, SURFACE, _cover(d_plate * size))
-
-            r = (x * x + y * y) ** 0.5
-            _over(acc, RING, _cover((abs(r - r_orbit) - w_orbit / 2) * size))
-
-            globe = _cover((r - r_globe) * size)
-            _over(acc, BAR, globe)
-
-            # The grid is painted in the plate's colour and clipped to the globe's coverage, so a
-            # latitude stops at the limb instead of ruling a line across the orbit outside it.
-            if globe > 0.0:
-                grid = max(
-                    _cover((abs(y) - w_grid / 2) * size),
-                    _cover((abs(abs(y) - y_lat) - w_lat / 2) * size),
-                    _cover((abs(x) - w_grid / 2) * size),
-                    # The meridians are ellipse outlines. `f - 1` scaled by the semi-minor axis is the
-                    # distance to within a fraction of a pixel near the equator, and thickens towards the
-                    # poles -- where the globe's own edge has already clipped it.
-                    _cover((abs(((x / a_meridian) ** 2 + (y / r_globe) ** 2) ** 0.5 - 1.0)
-                            * a_meridian - w_grid / 2) * size),
-                )
-                _over(acc, SURFACE, min(grid, globe))
-
-                # Archie's shades. Two rectangular lens crowns step inward along their bottom edge;
-                # the small centre bridge and checker glints make the joke readable at 16px without
-                # turning the globe into a detailed illustration. Scaled with the globe so Android's
-                # maskable version remains the same face inside its safe circle.
-                s = scale
-                lens = (
-                    ((-0.28 * s <= x <= -0.03 * s or 0.03 * s <= x <= 0.28 * s)
-                     and -0.15 * s <= y <= 0.02 * s)
-                    or ((-0.23 * s <= x <= -0.08 * s or 0.08 * s <= x <= 0.23 * s)
-                        and 0.02 * s < y <= 0.065 * s)
-                )
-                bridge = abs(x) <= 0.055 * s and -0.085 * s <= y <= -0.035 * s
-                if lens or bridge:
-                    _over(acc, SURFACE, globe)
-
-                glint = (
-                    (-0.225 * s <= x <= -0.185 * s and -0.12 * s <= y <= -0.08 * s)
-                    or (-0.185 * s < x <= -0.145 * s and -0.08 * s < y <= -0.04 * s)
-                    or (0.145 * s <= x <= 0.185 * s and -0.12 * s <= y <= -0.08 * s)
-                    or (0.185 * s < x <= 0.225 * s and -0.08 * s < y <= -0.04 * s)
-                )
-                if glint:
-                    _over(acc, RING, globe)
-
-            a = 1.0 if opaque else acc[3]
-            row += bytes((int(acc[0] + 0.5), int(acc[1] + 0.5), int(acc[2] + 0.5),
-                          int(a * 255 + 0.5)))
-        rows.append(row)
-    return png(size, rows)
+def icon_bytes(name: str) -> bytes:
+    """One of the icons, from `art/brand/`. A missing source is a clear failure, not a silent old icon."""
+    src = ICON_SRC / name
+    if not src.exists():
+        sys.exit(f"{src.relative_to(ROOT).as_posix()} is missing. Run `python art/brand/build.py` "
+                 "(needs Pillow) to cut the icons from .github/readme/icon.png.")
+    return src.read_bytes()
 
 
 # ------------------------------------------------------------------ manifest
@@ -858,11 +705,11 @@ def main() -> None:
     # Written before the hash is taken, because they are part of what is hashed. Unconditionally, like
     # every other generator here: both workflows assert that each tracked file under `docs/` was
     # rewritten by the build, and a write-if-different path would report this stage as missing.
-    for name, size, maskable, opaque in ICONS:
-        (OUT / name).write_bytes(icon(size, maskable, opaque))
+    for name, *_ in ICONS:
+        (OUT / name).write_bytes(icon_bytes(name))
     # Not hashed, since nothing precached refers to it, but written every run for the icons' reason: both
     # workflows check that a generator rewrote every tracked file under `docs/`.
-    (OUT / FAVICON[0]).write_bytes(ico([(px, icon(px, False, False)) for px in FAVICON[1]]))
+    (OUT / FAVICON[0]).write_bytes(icon_bytes(FAVICON[0]))
 
     man = manifest()
     (OUT / "manifest.webmanifest").write_text(

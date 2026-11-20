@@ -351,13 +351,16 @@ finally:
 # or a reader's browser keeps the old copy under an unchanged URL for as long as the CDN's max-age (four
 # hours on the live site). The files are enumerated from what is committed in docs/assets, not from
 # VERSIONED, since a loop over the list under test cannot notice a name missing from it: the admin panel
-# was once imported under the version and hashed by none of it. Two groups are left out, each for a reason
-# of its own: the poster, which the page names directly, and the dance script and its detector, which the
-# page loads under a version of their own (tested above).
+# was once imported under the version and hashed by none of it. Three groups are left out, each for a reason
+# of its own: the poster, which the page names directly; the brand art (`archie-mark.webp`, every page's
+# logo, and `archie-bust.webp`, the catalogue's mascot), which pages name directly too and archie.js never
+# loads; and the dance script and its detector, which the page loads under a version of their own (tested
+# above).
 ASSETS = ROOT / "docs" / "assets"
 FAMILY = sorted(p.relative_to(ASSETS).as_posix() for p in ASSETS.rglob("*") if p.is_file()
                 and p.relative_to(ASSETS).as_posix().startswith(("archie", "three-archie"))
-                and p.name != "archie-3d.webp" and p.name not in b31.DANCE)
+                and p.name not in ("archie-3d.webp", "archie-mark.webp", "archie-bust.webp")
+                and p.name not in b31.DANCE)
 true("the family enumerated off docs/assets includes the dances, the panel and the pals' stage",
      {"archie-dances.glb", "archie-admin.js", "archie-stage.js"} <= set(FAMILY), FAMILY)
 try:

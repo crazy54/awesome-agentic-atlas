@@ -38,7 +38,6 @@ from __future__ import annotations
 import re
 import struct
 import sys
-import zlib
 from pathlib import Path
 
 PAGE = Path(__file__).resolve().parent.parent / "scripts" / "19_pages.py"
@@ -537,10 +536,9 @@ for h in sorted(og_hex):
     true(f"the OG card's {h} is a dark-theme value", h in set(DARK.values()))
 true("the OG card is drawn on dark's page colour", DARK["surface"] in og_hex)
 
-# `24_pwa.py` draws the installed-app icon and writes the manifest. The manifest's two colours are dark's
+# `24_pwa.py` writes the manifest and copies the installed-app icons. The manifest's two colours are dark's
 # --plane, the same value as the page's theme-color, so an installed window's chrome does not change colour
-# between the launch frame and first paint. The icon's three are the Atlas mark's own (`scripts/mark.py`),
-# because the installed icon and the tab's favicon are one drawing.
+# between the launch frame and first paint.
 PWA = (SCRIPTS / "24_pwa.py").read_text(encoding="utf-8")
 MARK = (SCRIPTS / "mark.py").read_text(encoding="utf-8")
 
@@ -550,47 +548,52 @@ def tup(name: str) -> str:
     return "#%02X%02X%02X" % tuple(int(g, 16) for g in m.groups()) if m else "NOT FOUND"
 
 
-def mark_const(name: str) -> str:
-    m = re.search(rf'^{name} = "(#[0-9A-Fa-f]{{6}})"', MARK, re.M)
-    return m.group(1).upper() if m else "NOT FOUND"
-
-
 check("24_pwa.py's PLANE is dark --plane", tup("PLANE"), DARK["plane"])
-for const, mark in (("SURFACE", "PLATE"), ("BAR", "GLOBE"), ("RING", "LIGHT")):
-    check(f"24_pwa.py's {const} is the mark's {mark}", tup(const), mark_const(mark))
 true("the manifest's two colours are PLANE, so they match the page's theme-color",
      PWA.count('"#%02x%02x%02x" % PLANE') == 2)
-# The orbit sits outside the globe with a visible gap, so the boundary each shape actually shares is with the
-# plate, not with the other colour.
-atleast("the icon's ring is visible on its plate", ratio(tup("RING"), tup("SURFACE")), NONTEXT)
-atleast("the icon's globe is visible on its plate", ratio(tup("BAR"), tup("SURFACE")), NONTEXT)
 
 
-def png_pixel(path: Path, x: int, y: int) -> str:
-    """Read one pixel from the generator's deliberately simple filter-0 RGBA PNG."""
+def png_size(path: Path) -> tuple[int, int]:
     data = path.read_bytes()
-    width, height = struct.unpack(">II", data[16:24])
-    pos, compressed = 8, bytearray()
-    while pos < len(data):
-        length = struct.unpack(">I", data[pos:pos + 4])[0]
-        kind = data[pos + 4:pos + 8]
-        body = data[pos + 8:pos + 8 + length]
-        if kind == b"IDAT":
-            compressed.extend(body)
-        pos += length + 12
-    raw_ = zlib.decompress(compressed)
-    stride = width * 4 + 1
-    assert width == height == 192 and raw_[y * stride] == 0
-    start = y * stride + 1 + x * 4
-    return "#" + bytes(raw_[start:start + 3]).hex().upper()
+    true(f"{path.name} is a PNG", data[:8] == b"\x89PNG\r\n\x1a\n" and data[12:16] == b"IHDR")
+    return struct.unpack(">II", data[16:24])
 
 
-# The old app icon was only a globe. These two pixels sit inside that globe but away from every grid line:
-# together they prove that Archie's black pixel shades and white checker glint made it into the actual
-# generated PNG a launcher installs, not merely into a source comment or the browser-tab SVG.
-ICON_192 = SCRIPTS.parent / "docs" / "icon-192.png"
-check("the installed icon wears Archie's dark pixel shades", png_pixel(ICON_192, 115, 84), tup("SURFACE"))
-check("the installed icon carries the shades' white checker glint", png_pixel(ICON_192, 58, 77), tup("RING"))
+# THE CURRENT ARCHIE, EVERYWHERE THE FIRST ONE WAS
+#
+# The first Archie -- a black robot in pixel shades with a gold globe -- was drawn in five places: the
+# catalogue's `atlas-byte.png`, the vector mark `mark.py` put top-left on every page, its port in `30_v2.py`,
+# `favicon.svg`, and the installed icons `24_pwa.icon()` drew from primitives. The owner retired him for the
+# 3D Archie, and every one of those now comes from `art/brand/build.py`, cut from the owner's renders in
+# `.github/readme/`. The shades' path is the fingerprint: it is the one shape every copy of the old drawing
+# carried verbatim, and nothing else on the site draws it.
+SHADES = "M11 22h17v4h4v-4h21v14h-4v4H34v-4h-4v4H15v-4h-4z"
+ROOT = SCRIPTS.parent
+for gen in ("mark.py", "30_v2.py", "24_pwa.py", "19_pages.py"):
+    text = (SCRIPTS / gen).read_text(encoding="utf-8")
+    true(f"{gen} no longer draws the first Archie's shades", SHADES not in text)
+    true(f"{gen} no longer names the first Archie's art", "atlas-byte.png" not in text)
+true("the first Archie's art is gone from docs/assets/", not (ROOT / "docs" / "assets" / "atlas-byte.png").exists())
+FAVICON_SVG = (ROOT / "docs" / "favicon.svg").read_text(encoding="utf-8")
+true("favicon.svg is no longer the shades-and-globe vector", SHADES not in FAVICON_SVG)
+true("...it is Archie's tile, embedded", 'href="data:image/png;base64,' in FAVICON_SVG)
+true("mark.py points at the tile art/brand/build.py writes", 'ASSET = "assets/archie-mark.webp"' in MARK)
+true("...and that file exists", (ROOT / "docs" / "assets" / "archie-mark.webp").exists())
+true("the catalogue's mascot is the new bust", 'src="__UP__assets/archie-bust.webp"' in SRC)
+true("...and that file exists", (ROOT / "docs" / "assets" / "archie-bust.webp").exists())
+
+# The installed icons: `24_pwa.py` copies them from `art/brand/` byte for byte, at the sizes the manifest and
+# the apple-touch link declare. A committed `docs/` icon that differs from its source is one `24_pwa.py` did
+# not write, which is how the old globe could survive a change to the art.
+for name, px in (("icon-192.png", 192), ("icon-512.png", 512), ("icon-maskable-512.png", 512),
+                 ("apple-touch-icon.png", 180)):
+    src, out = ROOT / "art" / "brand" / name, ROOT / "docs" / name
+    true(f"art/brand/{name} exists", src.exists())
+    if src.exists():
+        check(f"art/brand/{name} is {px}px square", png_size(src), (px, px))
+        true(f"docs/{name} is the art/brand copy", out.exists() and out.read_bytes() == src.read_bytes())
+true("docs/favicon.ico is the art/brand copy",
+     (ROOT / "docs" / "favicon.ico").read_bytes() == (ROOT / "art" / "brand" / "favicon.ico").read_bytes())
 
 # THE OTHER CHANNEL
 #
