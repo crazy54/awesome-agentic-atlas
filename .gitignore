@@ -28,8 +28,9 @@ awesome-agentic-atlas/
 __pycache__/
 *.py[cod]
 
-# The workbooks are release assets, not repo content: ~81 MB a pair, rebuilt every run, and
-# git would keep every version for ever. `releases/latest/download/<name>` always serves the newest.
+# The workbooks were release assets, never repo content: ~81 MB a pair, and git would keep every version
+# for ever. The spreadsheet edition was retired in November 2026 and nothing builds them now; the last
+# pair is release v2026.10.22. Still ignored, so a copy downloaded into a checkout is never committed.
 Awesome-Agentic-Atlas-*.xlsx
 Awesome-Agent-Orchestrators-*.xlsx
 

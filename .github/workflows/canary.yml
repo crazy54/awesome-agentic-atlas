@@ -146,8 +146,8 @@ jobs:
         with:
           python-version: "3.12"
 
-      # 22_detail imports 19_pages, which imports the workbook builder at module scope: see tests.yml.
-      - run: bash tools/retry.sh 3 python -m pip install --upgrade pip openpyxl pillow
+      # No packages: 22_detail -> 19_pages -> 17_markdown -> 16_build_all is standard library since the
+      # workbook writer was retired. See "WHY NO PYTHON PACKAGES" in tests.yml.
 
       - name: Regenerate
         id: regen

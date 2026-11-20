@@ -3,56 +3,34 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>aoci-code (aoci-spec/aoci-code) — MCP Servers — Awesome Agentic Atlas</title>
-<meta name="description" content="A persistent, Git-versioned map of your whole codebase and database schema that coding agents read before they touch anything. Local-first MCP server + CLI…">
+<title>aoci-spec/aoci-code — MCP Servers — Awesome Agentic Atlas</title>
+<meta name="description" content="Local-first MCP server and CLI that keeps a persistent, Git-versioned index of the whole codebase and database schema, written by the coding agent and…">
 <link rel="canonical" href="https://aaa.jeremyfhall.com/repo/aoci-spec/aoci-code/">
 <meta property="og:type" content="website">
-<meta property="og:title" content="aoci-code — Awesome Agentic Atlas">
-<meta property="og:description" content="A persistent, Git-versioned map of your whole codebase and database schema that coding agents read before they touch anything. Local-first MCP server + CLI…">
+<meta property="og:title" content="aoci-spec/aoci-code — Awesome Agentic Atlas">
+<meta property="og:description" content="Local-first MCP server and CLI that keeps a persistent, Git-versioned index of the whole codebase and database schema, written by the coding agent and…">
 <meta property="og:url" content="https://aaa.jeremyfhall.com/repo/aoci-spec/aoci-code/">
 <meta property="og:image" content="https://opengraph.githubassets.com/1/aoci-spec/aoci-code">
 <link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
 <link rel="preload" href="../../../assets/fonts/geist.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../../../assets/fonts/geist-mono.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../../../assets/fonts/geist-mono-600.woff2" as="font" type="font/woff2" crossorigin>
-<meta name="theme-color" id="tc" content="#101217">
+<meta name="theme-color" id="tc" content="#1A1A1A">
 <script>
 try {
   var t = localStorage.getItem("theme");
-  if (t !== "light" && t !== "dark")
-    t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  if (localStorage.getItem("atlas-skin") !== null || localStorage.getItem("atlas-unlock") !== null) {
+    localStorage.removeItem("atlas-skin"); localStorage.removeItem("atlas-unlock");
+  }
+  if (t !== "light" && t !== "dark" && t !== "contrast")
+    t = matchMedia("(prefers-contrast: more)").matches ? "contrast"
+      : matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
   document.documentElement.dataset.theme = t;
-  // The sixteen literals track --plane in the sixteen blocks at the top of detail.css. Once detail.js has run
-  // it re-derives this from the computed value so the stylesheet stays the single source of truth; here
-  // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
-  // blocking the paint on a stylesheet.
-  //
-  // The theme axis is read and applied here but not offered here: the picker lives in the index's Settings
-  // menu, and these pages honour the choice rather than presenting it again. That is the half that has to
-  // work for the choice to mean anything -- a reader who picks Prism and follows a link to a project would
-  // otherwise watch it revert and conclude the setting had not saved. Unknown names fall back to graphite
-  // for the reason the index's copy gives: `atlas-skin` outlives the release that wrote it.
-  var PLANE = {graphite: {dark: "#101217", light: "#FAFBFC"},
-               glass: {dark: "#12141D", light: "#F8FAFF"},
-               terminal: {dark: "#0A1315", light: "#F9FCF9"},
-               prism: {dark: "#17112C", light: "#FDFBFF"},
-               sherbet: {dark: "#272040", light: "#FFFCF8"},
-               riso: {dark: "#1E1E29", light: "#FBF8F1"},
-               blueprint: {dark: "#0D4399", light: "#FBFDFF"},
-               aurora: {dark: "#101936", light: "#FBFCFF"},
-               holo: {dark: "#0D1018", light: "#FCFDFF"}};
-  // A theme in LOCKED is worn only once the admin panel has put its id in `atlas-unlock`; until then a
-  // saved name for it falls back like a withdrawn one. See `docs/assets/atlas-admin.js`.
-  var LOCKED = {holo: 1};
-  var s = localStorage.getItem("atlas-skin");
-  if (!PLANE[s] || (LOCKED[s] && ("," + (localStorage.getItem("atlas-unlock") || "") + ",")
-      .indexOf("," + s + ",") < 0)) s = "graphite";
-  document.documentElement.dataset.skin = s;
-  document.getElementById("tc").content = PLANE[s][t];
+  document.getElementById("tc").content = {light: "#FBFAF7", dark: "#1A1A1A", contrast: "#000000"}[t];
 } catch (e) {}
 </script>
 <link rel="stylesheet" href="../../detail.css">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome Agentic Atlas","item":"https://aaa.jeremyfhall.com/"},{"@type":"ListItem","position":2,"name":"MCP Servers","item":"https://aaa.jeremyfhall.com/topic/mcp-servers/"},{"@type":"ListItem","position":3,"name":"aoci-code","item":"https://aaa.jeremyfhall.com/repo/aoci-spec/aoci-code/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Awesome Agentic Atlas","item":"https://aaa.jeremyfhall.com/"},{"@type":"ListItem","position":2,"name":"MCP Servers","item":"https://aaa.jeremyfhall.com/topic/mcp-servers/"},{"@type":"ListItem","position":3,"name":"aoci-spec/aoci-code","item":"https://aaa.jeremyfhall.com/repo/aoci-spec/aoci-code/"}]}</script>
 <script src="https://jeremyfhall.com/kit/site-kit.v1.js" integrity="sha384-XSpQk1dubcVV4dWVZL3B8R6EsmEa4vwZ8PlVTkEmE+RY28H8OP2Y36BpTK7vCJI2" crossorigin="anonymous" data-site="atlas" defer></script>
 </head>
 <body>
@@ -63,9 +41,9 @@ try {
     <a href="../../../repo/">All projects</a></nav>
   <div class="top">
     <div>
-      <h1>aoci-code</h1>
+      <h1>aoci-spec/aoci-code</h1>
       <p class="nwo"><a href="https://github.com/aoci-spec/aoci-code">aoci-spec/aoci-code</a></p>
-      <p class="lead">A persistent, Git-versioned map of your whole codebase and database schema that coding agents read before they touch anything. Local-first MCP server + CLI in Go: a governed repository index of code knowledge that gives Claude Code, Codex, Cursor, and opencode long-term context, memory, and code intelligence.</p>
+      <p class="lead">Local-first MCP server and CLI that keeps a persistent, Git-versioned index of the whole codebase and database schema, written by the coding agent and flagged when the code drifts, so Claude Code, Codex, Cursor and opencode start each task with the full system in view</p>
       <p class="facts">
         <span>Go</span>
         <span>No licence declared</span>
@@ -74,7 +52,7 @@ try {
         <span id="snap" class="live"></span>
       </p>
       <p class="acts"><a class="cta" href="https://github.com/aoci-spec/aoci-code">View on GitHub &rarr;</a>
-        <a class="alt" href="../../../catalog/#q=aoci-code">Find it in the atlas</a></p>
+        <a class="alt" href="../../../catalog/#q=aoci-spec%2Faoci-code">Find it in the atlas</a></p>
     </div>
     <nav class="util">
       <a href="../../../discover/">Discover</a> ·
@@ -90,7 +68,7 @@ try {
 <main><div class="wrap">
 <section>
   <h2>Install</h2>
-  <div class="cmdrow"><code class="cmd" id="cmd">git clone https://github.com/aoci-spec/aoci-code.git</code><button class="copy" hidden data-for="cmd" aria-label="Copy install command for aoci-code">Copy</button></div>
+  <div class="cmdrow"><code class="cmd" id="cmd">git clone https://github.com/aoci-spec/aoci-code.git</code><button class="copy" hidden data-for="cmd" aria-label="Copy install command for aoci-spec/aoci-code">Copy</button></div>
 </section>
 
 <section class="source-preview" id="source-preview" aria-labelledby="source-preview-title">
@@ -134,7 +112,7 @@ try {
   <h2>Screenshot</h2>
   <figure class="shot">
     <img loading="lazy" decoding="async" src="https://opengraph.githubassets.com/1/aoci-spec/aoci-code"
-         alt="Screenshot or social card for aoci-code">
+         alt="Screenshot or social card for aoci-spec/aoci-code">
     <figcaption>GitHub's social card — no screenshot was found for this project, fetched from
       source rather than copied into this repository.</figcaption>
   </figure>
@@ -147,7 +125,7 @@ try {
 
 <section>
   <h2>Where it came from</h2>
-  <p class="lead">No curated list names this project yet: the atlas found it through its own GitHub search, which adds fast-rising agentic repositories before a list catches up.</p>
+  <p class="lead">Named by <b>1</b> of the 39 lists the atlas merges.</p><ul class="lists"><li><a href="https://github.com/punkpeye/awesome-mcp-servers">MCP Servers (punkpeye)</a></li></ul>
 </section>
 
 <section>
@@ -162,7 +140,7 @@ try {
   <h2>Related in MCP Servers</h2>
   <p class="lead">Closest first — projects that plug into the same harnesses, then the ones the most
     lists agreed on.</p>
-  <ul class="kinlist"><li><a href="../../vshulcz/deja-vu/">deja-vu</a><span class="nwo">vshulcz/deja-vu</span><span class="desc">Indexes coding-agent sessions already written to disk and serves them back over MCP with no LLM calls, embeddings, or API keys. The zero-dependency…</span></li><li><a href="../../maxbaluev/accreted-intelligence/">maxbaluev/accreted-intelligence</a><span class="nwo">maxbaluev/accreted-intelligence</span><span class="desc">Local-first learning substrate + MCP server for Claude Code, Codex, OpenCode, and Cursor. Builds a Work Model from what actually worked (graded by…</span></li><li><a href="../../contextstream/mcp-server/">ContextStream</a><span class="nwo">contextstream/mcp-server</span><span class="desc">Persistent memory for AI coding tools with semantic code search, knowledge graphs, impact analysis and decision tracking</span></li><li><a href="../../rikinshah787/dotpals/">dotpals</a><span class="nwo">Rikinshah787/dotpals</span><span class="desc">Checks what local coding agents such as Claude Code, Codex and Cursor really did: files changed, commands run and test results read from test…</span></li><li><a href="../../elleryfamilia/terminal-mcp/">terminal-mcp</a><span class="nwo">elleryfamilia/terminal-mcp</span><span class="desc">MCP server that gives AI assistants a shared view of your terminal session. Debug CLIs and TUI apps in real-time or let agents drive terminal-based…</span></li><li><a href="../../timgordontg/engrim/">timgordontg/engrim</a><span class="nwo">timgordontg/engrim</span><span class="desc">Cross-model, local-first episodic memory engine for Claude Code, Cursor, Codex, and Antigravity. SQLite FTS5 (BM25) + 8MB static model2vec CPU…</span></li><li><a href="../../vishnu-77/openreflex/">vishnu-77/openreflex</a><span class="nwo">vishnu-77/openreflex</span><span class="desc">Local execution memory for coding agents: injects what worked and known fixes before similar tasks and advises whether to continue, pivot or stop</span></li><li><a href="../../insane0777/awwwards-mcp/">Awwwards-mcp</a><span class="nwo">INSANE0777/Awwwards-mcp</span><span class="desc">Free, open-source MCP server that gives AI coding agents (Claude Code, Codex, Cursor, OpenCode, ZCode…) design inspiration from award-winning…</span></li></ul>
+  <ul class="kinlist"><li><a href="../../maxbaluev/accreted-intelligence/">maxbaluev/accreted-intelligence</a><span class="nwo">maxbaluev/accreted-intelligence</span><span class="desc">Local-first learning substrate + MCP server for Claude Code, Codex, OpenCode, and Cursor. Builds a Work Model from what actually worked (graded by…</span></li><li><a href="../../contextstream/mcp-server/">ContextStream</a><span class="nwo">contextstream/mcp-server</span><span class="desc">Persistent memory for AI coding tools with semantic code search, knowledge graphs, impact analysis and decision tracking</span></li><li><a href="../../rikinshah787/dotpals/">dotpals</a><span class="nwo">Rikinshah787/dotpals</span><span class="desc">Checks what local coding agents such as Claude Code, Codex and Cursor really did: files changed, commands run and test results read from test…</span></li><li><a href="../../markgatcha/universal-mcp-toolkit/">Markgatcha/universal-mcp-toolkit</a><span class="nwo">Markgatcha/universal-mcp-toolkit</span><span class="desc">MCP aggregator that connects agents to multiple MCP servers through one configuration, with ready-made templates and cross-repo prompt workflows</span></li><li><a href="../../elleryfamilia/terminal-mcp/">terminal-mcp</a><span class="nwo">elleryfamilia/terminal-mcp</span><span class="desc">MCP server that gives AI assistants a shared view of your terminal session. Debug CLIs and TUI apps in real-time or let agents drive terminal-based…</span></li><li><a href="../../timgordontg/engrim/">timgordontg/engrim</a><span class="nwo">timgordontg/engrim</span><span class="desc">Cross-model, local-first episodic memory engine for Claude Code, Cursor, Codex, and Antigravity. SQLite FTS5 (BM25) + 8MB static model2vec CPU…</span></li><li><a href="../../vishnu-77/openreflex/">vishnu-77/openreflex</a><span class="nwo">vishnu-77/openreflex</span><span class="desc">Local execution memory for coding agents: injects what worked and known fixes before similar tasks and advises whether to continue, pivot or stop</span></li><li><a href="../../insane0777/awwwards-mcp/">Awwwards-mcp</a><span class="nwo">INSANE0777/Awwwards-mcp</span><span class="desc">Free, open-source MCP server that gives AI coding agents (Claude Code, Codex, Cursor, OpenCode, ZCode…) design inspiration from award-winning…</span></li></ul>
 </section>
 </div></main>
 
@@ -177,7 +155,7 @@ try {
   for both. Nothing here is an endorsement, and nothing here has been run.
 </div></footer>
 <script src="../../detail.js"></script>
-<script type="module" src="../../../assets/atlas-site.js?v=4b089da430"></script>
+<script type="module" src="../../../assets/atlas-site.js?v=a4837d4f4b"></script>
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1fe3cbfd55ef4fccab981c064489e656"}'></script><!-- End Cloudflare Web Analytics -->
 <script defer src="../../../assets/traceway-1.2.1.js"></script><script defer src="../../../assets/web-vitals-6.2.3.js"></script><script defer src="../../../assets/traceway-loader.js"></script>
 </body>

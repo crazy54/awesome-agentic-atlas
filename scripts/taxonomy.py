@@ -42,7 +42,7 @@ import drift
 
 CACHE = Path(__file__).resolve().parent.parent / "cache"
 
-# Order is the display order everywhere -- workbook tab, topic hub, Pages site -- and it is also the
+# Order is the display order everywhere -- topic hub, Pages site -- and it is also the
 # tie-break when a repo's listings split evenly between two categories: the earlier one wins, so the
 # specific shelves are listed before the broad ones.
 CATEGORIES = [
@@ -999,11 +999,10 @@ def category_of(rec: dict) -> str:
         raise KeyError(
             f"{key[0]} / {key[1]!r} is not named in SECTIONS -- a curator renamed or added a section "
             f"upstream. "
-            f"Closest already mapped: {near or 'nothing similar'}. Two files need it, and the second one "
-            f"fails quietly: add the key to SECTIONS in scripts/taxonomy.py, then fold the new spelling "
-            f"into that source's existing bucket in scripts/buckets.py. Skipping the second step leaves "
-            f"the section unmapped there, and an unmapped section keeps its own name as its bucket -- "
-            f"which asks the eight-hue palette for a ninth colour without buckets.check() objecting."
+            f"Closest already mapped: {near or 'nothing similar'}. Add the key to SECTIONS in scripts/taxonomy.py. "
+            f"If the section is a rename of one that scripts/buckets.py names, add the new spelling to "
+            f"that bucket too: an unnamed section keeps its own name as its bucket, so its rows move to "
+            f"the end of the list's page instead of staying where they were."
         ) from None
 
 

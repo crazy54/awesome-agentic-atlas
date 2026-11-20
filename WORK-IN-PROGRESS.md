@@ -51,6 +51,9 @@ same artefact: it describes what was true when that box was ticked.
 
 ### Workbook branding — completed generator work; release build input unavailable
 
+*Superseded, 2026-11-19: the spreadsheet edition was retired. The cover-branding code, `workbook_branding_test.py`
+and the workbook build are gone; the last workbooks are release `v2026.10.22`, frozen.*
+
 - `scripts/16_build_all.py` now uses the shared web assets `docs/icon-192.png` and
   `docs/assets/atlas-byte.png` on each `Start Here` cover. The 32 × 32 globe mark is anchored at
   `L1`; the 86 × 90 Archie mascot is anchored at `M1`, with an `ARCHIE 'ATLAS' ALGORITHM` name tag at `M5:N5`.

@@ -15,40 +15,18 @@
 <link rel="preload" href="../../../assets/fonts/geist.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../../../assets/fonts/geist-mono.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../../../assets/fonts/geist-mono-600.woff2" as="font" type="font/woff2" crossorigin>
-<meta name="theme-color" id="tc" content="#101217">
+<meta name="theme-color" id="tc" content="#1A1A1A">
 <script>
 try {
   var t = localStorage.getItem("theme");
-  if (t !== "light" && t !== "dark")
-    t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  if (localStorage.getItem("atlas-skin") !== null || localStorage.getItem("atlas-unlock") !== null) {
+    localStorage.removeItem("atlas-skin"); localStorage.removeItem("atlas-unlock");
+  }
+  if (t !== "light" && t !== "dark" && t !== "contrast")
+    t = matchMedia("(prefers-contrast: more)").matches ? "contrast"
+      : matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
   document.documentElement.dataset.theme = t;
-  // The sixteen literals track --plane in the sixteen blocks at the top of detail.css. Once detail.js has run
-  // it re-derives this from the computed value so the stylesheet stays the single source of truth; here
-  // there is no computed value to read yet, and a chrome one shade out for one frame is the cost of not
-  // blocking the paint on a stylesheet.
-  //
-  // The theme axis is read and applied here but not offered here: the picker lives in the index's Settings
-  // menu, and these pages honour the choice rather than presenting it again. That is the half that has to
-  // work for the choice to mean anything -- a reader who picks Prism and follows a link to a project would
-  // otherwise watch it revert and conclude the setting had not saved. Unknown names fall back to graphite
-  // for the reason the index's copy gives: `atlas-skin` outlives the release that wrote it.
-  var PLANE = {graphite: {dark: "#101217", light: "#FAFBFC"},
-               glass: {dark: "#12141D", light: "#F8FAFF"},
-               terminal: {dark: "#0A1315", light: "#F9FCF9"},
-               prism: {dark: "#17112C", light: "#FDFBFF"},
-               sherbet: {dark: "#272040", light: "#FFFCF8"},
-               riso: {dark: "#1E1E29", light: "#FBF8F1"},
-               blueprint: {dark: "#0D4399", light: "#FBFDFF"},
-               aurora: {dark: "#101936", light: "#FBFCFF"},
-               holo: {dark: "#0D1018", light: "#FCFDFF"}};
-  // A theme in LOCKED is worn only once the admin panel has put its id in `atlas-unlock`; until then a
-  // saved name for it falls back like a withdrawn one. See `docs/assets/atlas-admin.js`.
-  var LOCKED = {holo: 1};
-  var s = localStorage.getItem("atlas-skin");
-  if (!PLANE[s] || (LOCKED[s] && ("," + (localStorage.getItem("atlas-unlock") || "") + ",")
-      .indexOf("," + s + ",") < 0)) s = "graphite";
-  document.documentElement.dataset.skin = s;
-  document.getElementById("tc").content = PLANE[s][t];
+  document.getElementById("tc").content = {light: "#FBFAF7", dark: "#1A1A1A", contrast: "#000000"}[t];
 } catch (e) {}
 </script>
 <link rel="stylesheet" href="../../detail.css">
@@ -147,7 +125,7 @@ try {
 
 <section>
   <h2>Where it came from</h2>
-  <p class="lead">Named by <b>1</b> of the 39 lists the atlas merges.</p><ul class="lists"><li>Gemini CLI Ecosystem</li></ul>
+  <p class="lead">Named by <b>1</b> of the 39 lists the atlas merges.</p><ul class="lists"><li><a href="https://github.com/Piebald-AI/awesome-gemini-cli">Gemini CLI Ecosystem</a></li></ul>
 </section>
 
 <section>
@@ -162,7 +140,7 @@ try {
   <h2>Related in Harnesses &amp; Runtime Infra</h2>
   <p class="lead">Closest first — projects that plug into the same harnesses, then the ones the most
     lists agreed on.</p>
-  <ul class="kinlist"><li><a href="../../kbwo/ccmanager/">ccmanager</a><span class="nwo">kbwo/ccmanager</span><span class="desc">Coding agent session manager supporting Claude Code, Gemini CLI, Codex, Cursor, Copilot, Cline, OpenCode, Kimi CLI. Smart auto-approval via Haiku…</span></li><li><a href="../../gotalab/cc-sdd/">gotalab/cc-sdd</a><span class="nwo">gotalab/cc-sdd</span><span class="desc">Spec-driven development workflow. Write specs, Codex implements, auto-validates against spec</span></li><li><a href="../../kunal12203/graperoot/">kunal12203/GrapeRoot</a><span class="nwo">kunal12203/GrapeRoot</span><span class="desc">Persistent context and a code knowledge graph for coding agents, with a Codex CLI launcher</span></li><li><a href="../../es617/claude-replay/">claude-replay</a><span class="nwo">es617/claude-replay</span><span class="desc">by es617 - An outstanding, creative library that converts Claude Code session transcripts into self-contained, embeddable HTML replays - interactive…</span></li><li><a href="../../decolua/9router/">9router</a><span class="nwo">decolua/9router</span><span class="desc">(23.7k ⭐) - Routes Claude Code, Codex, Cursor, Cline, and other coding agents to dozens of model providers with automatic fallback</span></li><li><a href="../../tojacob03/agentvcr/">agentvcr</a><span class="nwo">tojacob03/agentvcr</span><span class="desc">Turns a Gemini CLI chat from ~/.gemini/tmp/*/chats (the JSONL format with rewinds and patches, or the older JSON files) into a self-contained HTML…</span></li><li><a href="../../ssanaullahrais/chat-vault/">ChatVault</a><span class="nwo">ssanaullahrais/Chat-Vault</span><span class="desc">Windows app that reads, searches and backs up your Gemini CLI chats across accounts, and continues any chat in Gemini CLI through a handoff file…</span></li><li><a href="../../mathdevie/devie-ai-quota-tracker/">Devie AI Quota Tracker</a><span class="nwo">mathdevie/devie-ai-quota-tracker</span><span class="desc">Dashboard and macOS menu bar for tracking AI subscription quotas in one place (Claude Code, Codex, Gemini CLI, GitHub Copilot, and Cursor). Supports…</span></li></ul>
+  <ul class="kinlist"><li><a href="../../kbwo/ccmanager/">ccmanager</a><span class="nwo">kbwo/ccmanager</span><span class="desc">Coding agent session manager supporting Claude Code, Gemini CLI, Codex, Cursor, Copilot, Cline, OpenCode, Kimi CLI. Smart auto-approval via Haiku…</span></li><li><a href="../../gotalab/cc-sdd/">gotalab/cc-sdd</a><span class="nwo">gotalab/cc-sdd</span><span class="desc">Spec-driven development workflow. Write specs, Codex implements, auto-validates against spec</span></li><li><a href="../../kunal12203/graperoot/">kunal12203/GrapeRoot</a><span class="nwo">kunal12203/GrapeRoot</span><span class="desc">Persistent context and a code knowledge graph for coding agents, with a Codex CLI launcher</span></li><li><a href="../../es617/claude-replay/">claude-replay</a><span class="nwo">es617/claude-replay</span><span class="desc">by es617 - An outstanding, creative library that converts Claude Code session transcripts into self-contained, embeddable HTML replays - interactive…</span></li><li><a href="../../decolua/9router/">9router</a><span class="nwo">decolua/9router</span><span class="desc">(32.6k ⭐) - Routes Claude Code, Codex, Cursor, Cline, and other coding agents to dozens of model providers with automatic fallback</span></li><li><a href="../../tojacob03/agentvcr/">agentvcr</a><span class="nwo">tojacob03/agentvcr</span><span class="desc">Turns a Gemini CLI chat from ~/.gemini/tmp/*/chats (the JSONL format with rewinds and patches, or the older JSON files) into a self-contained HTML…</span></li><li><a href="../../dirmedmr-alt/ai-access-auditor/">AI Access Auditor</a><span class="nwo">dirmedmr-alt/ai-access-auditor</span><span class="desc">Desktop app (macOS, Windows, Linux) that lists what Gemini CLI and other coding agents are allowed to do (trusted folders, allowed tools, MCP…</span></li><li><a href="../../dichiara19/ai-meter/">AI Meter</a><span class="nwo">dichiara19/ai-meter</span><span class="desc">Native Windows 11 app that lists active Gemini CLI sessions, on Windows and in WSL, with their model and context in use, next to Google Antigravity…</span></li></ul>
 </section>
 </div></main>
 
@@ -177,7 +155,7 @@ try {
   for both. Nothing here is an endorsement, and nothing here has been run.
 </div></footer>
 <script src="../../detail.js"></script>
-<script type="module" src="../../../assets/atlas-site.js?v=4b089da430"></script>
+<script type="module" src="../../../assets/atlas-site.js?v=a4837d4f4b"></script>
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1fe3cbfd55ef4fccab981c064489e656"}'></script><!-- End Cloudflare Web Analytics -->
 <script defer src="../../../assets/traceway-1.2.1.js"></script><script defer src="../../../assets/web-vitals-6.2.3.js"></script><script defer src="../../../assets/traceway-loader.js"></script>
 </body>

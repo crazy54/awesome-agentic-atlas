@@ -85,26 +85,24 @@
 # publication, so it wants the same `chromium_headless_shell` build every time rather than whatever Chrome
 # the image happens to carry. Here the browser is an instrument, not an input to a published artifact.
 #
-# WHY openpyxl AND pillow
+# WHY NO PYTHON PACKAGES
 #
-# `media_test.py` imports both directly, at module scope -- `from openpyxl.drawing.image import Image as
-# XLImage` and `from PIL import Image as PILImage` -- because the thing it tests is the workbook writer's
-# media pool. They are the generator's dependencies rather than the suite's, which is why `tests/README.md`
-# describes the other Python harnesses as standard-library-only, and both build workflows install them
-# already. Nothing else here needs a package: `app_flags_test.py`, `theme_test.py`, `signals_test.py`,
+# This job used to install `openpyxl` and `pillow`, for `media_test.py` and `workbook_branding_test.py`,
+# which tested the workbook writer. The spreadsheet edition was retired in November 2026 and both
+# harnesses went with it, so no Python harness here needs a package: `app_flags_test.py`, `theme_test.py`, `signals_test.py`,
 # `indexnow_test.py`, `newness_test.py`, `discover_test.py`, `pagemin_test.py`, `refresh_test.py` and
 # `live_test.py` are standard library -- `newness_test.py` imports `scripts/newness.py` alone and
 # `discover_test.py` imports `scripts/discover.py` alone, neither of them anything that stage-loads, which
-# is what keeps two modules the whole ingest depends on testable on a bare clone. `scout_test.py` is the
-# exception that proves the reason: its last group imports `16_build_all.py`, and so openpyxl, to check
-# how the workbook builder's repo pool takes in a scouted listing. The Node side has no
-# `package.json` at all by design.
+# is what keeps two modules the whole ingest depends on testable on a bare clone. `scout_test.py`'s last
+# group imports `16_build_all.py` to check how the repo pool takes in a scouted listing, and that is
+# standard library too now. The Node side has no `package.json` at all by design.
 #
-# Do not trim this list by reasoning about what a test appears to need. Run 34151702414 of `og-preview.yml`
-# died on a missing `openpyxl` that had been left out on exactly that reasoning: drawing a social card
-# imports `20_landing` imports `19_pages` imports `17_markdown` imports `16_build_all`, whose line 41 is
-# `from openpyxl import Workbook` at import time. The same chain is reachable from here, because
-# `detail-churn.mjs` and `refresh_test.py` both drive stages that sit on it.
+# Do not add a package back by reasoning about what a test appears to need, and do not assume a stage
+# chain is package-free because its top file is: run 34151702414 of `og-preview.yml` died on a missing
+# `openpyxl` because drawing a social card imports `20_landing` imports `19_pages` imports `17_markdown`
+# imports `16_build_all`, which then imported openpyxl at module scope. `detail-churn.mjs` and
+# `refresh_test.py` both drive stages on that chain, so a third-party import added anywhere on it reddens
+# this job, which is the point.
 name: Tests — the eighteen-harness verification suite
 
 on:
@@ -183,8 +181,7 @@ jobs:
         with:
           python-version: "3.12"
 
-      # Retried: a PyPI hiccup is not a red suite.
-      - run: bash tools/retry.sh 3 python -m pip install --upgrade pip openpyxl pillow
+      # Nothing to install: see "WHY NO PYTHON PACKAGES" above.
 
       # Recorded before anything runs, so a failure months from now can be read off the log without
       # guessing what the environment was. The browser lines are the ones that matter: not installing one is

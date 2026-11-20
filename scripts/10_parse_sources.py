@@ -806,22 +806,19 @@ def main() -> None:
 def unmapped(rows: list[dict], provisional: bool | None = None) -> list[dict]:
     """Fail here, on the section names, rather than thousands of repo fetches later -- or, on CI, don't.
 
-    Two things every later stage assumes and neither checks while checking is still cheap.
+    One thing every later stage assumes and none checks while checking is still cheap:
     `taxonomy.category_of` is a hard `SECTIONS[...]` lookup, so one heading a curator renamed
-    upstream is a KeyError raised after the fetch stage has spent an hour; `buckets.check` only
-    counts the map it was handed, so a source with nine sections and no map at all passes it and
-    then asks an eight-hue palette for nine hues. Both are decisions a person has to make by hand,
-    so the useful thing to print is exactly which ones are outstanding.
+    upstream is a KeyError raised after the fetch stage has spent an hour. Filing a section is a
+    decision a person has to make by hand, so the useful thing to print is exactly which ones are
+    outstanding. (This also used to refuse a list that outgrew eight colour buckets, for the Excel
+    workbooks' palette. That cap went with the spreadsheet edition in November 2026: a bucket now only
+    orders a list's rows, and a section no map names sorts after the named ones.)
 
     What happens next depends on the mode (`drift.py` has the whole argument). Strict, the default
     and every local run: exit 1, as this always has. Provisional, which the workflows set: file each
     one for this run, annotate it, write the proposal, and let the build publish. Either way the
     decisions are the same records from the same `drift.place`, so the list a strict run refuses on
     is exactly the list a provisional run warns about.
-
-    The palette is counted the way `16_build_all.group_styles` hands slots out: every bucket a map
-    names, present today or not, plus each other bucket the rows bring. Counting only the buckets
-    present, as this did, passed a sheet that the workbook stage then refused for a ninth hue.
     """
     sys.path.insert(0, str(Path(__file__).parent))
     import buckets as buck  # noqa: E402
@@ -835,7 +832,6 @@ def unmapped(rows: list[dict], provisional: bool | None = None) -> list[dict]:
     drift.publish(recs, drift.degraded_from_pull(), provisional)
 
     missing = [r for r in recs if r["category"]]
-    over = sorted({r["source"] for r in recs if r["bucket_basis"] == "fold"})
 
     if missing:
         print(f"\n{len(missing)} sections no category is named for -- add each to "
@@ -844,14 +840,7 @@ def unmapped(rows: list[dict], provisional: bool | None = None) -> list[dict]:
             print(f"  ({r['source']!r}, {r['section']!r}): ...   "
                   f"[{'filed for this run under ' + repr(r['category']) if provisional else 'evidence'}: "
                   f"{drift.describe(r)}]", file=sys.stderr)
-    if over:
-        print(f"\n{len(over)} sources want more than the eight palette hues -- give each a "
-              f"buckets.BUCKETS map, or fold the new section into one:", file=sys.stderr)
-        for k in over:
-            folds = [r for r in recs if r["source"] == k and r["bucket_basis"] == "fold"]
-            print(f"  {k}: {', '.join(repr(r['section']) for r in folds)}"
-                  + (f" -> {folds[0]['bucket']!r} for this run" if provisional else ""), file=sys.stderr)
-    if (missing or over) and not provisional:
+    if missing and not provisional:
         print(f"\n(A provisional build, {drift.ENV}=1, would file them as shown and publish; the "
               f"proposal is in {drift.PROPOSAL.relative_to(ROOT).as_posix()} either way.)", file=sys.stderr)
         sys.exit(1)
@@ -860,7 +849,7 @@ def unmapped(rows: list[dict], provisional: bool | None = None) -> list[dict]:
               f"{drift.PLACEMENTS.relative_to(ROOT).as_posix()}; lines to paste in "
               f"{drift.PROPOSAL_MD.relative_to(ROOT).as_posix()}")
     else:
-        print("every section is named by taxonomy.SECTIONS and folds into <= 8 buckets")
+        print("every section is named by taxonomy.SECTIONS")
     return recs
 
 

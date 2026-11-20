@@ -81,15 +81,13 @@ jobs:
       # `pillow` because `23_og.py` re-encodes each PNG to an indexed palette, and the comparison step
       # below reads pixels.
       #
-      # `openpyxl` looks like the workbook stage's dependency and is not: run 34151702414 of this workflow
-      # died without it, and the traceback is the reason to keep it here. `23_og.py` dynamically loads
-      # `20_landing.py`, which loads `19_pages.py`, which loads `17_markdown.py`, which loads
-      # `16_build_all.py`, whose line 41 is `from openpyxl import Workbook` -- executed at import time, so
-      # the whole chain is a hard dependency of drawing a social card. `weekly.yml` installs openpyxl for
-      # the workbooks it actually builds, which is why this coupling has never been visible: no workflow
-      # has ever imported that chain without it. Do not trim this list by reasoning about what the stage
-      # appears to need.
-      - run: python -m pip install --upgrade pip pillow playwright openpyxl
+      # No `openpyxl` any more. Run 34151702414 of this workflow died without it, because `23_og.py` loads
+      # `20_landing` -> `19_pages` -> `17_markdown` -> `16_build_all`, and `16_build_all` imported openpyxl
+      # at module scope to write the workbooks. The spreadsheet edition was retired in November 2026 and
+      # `16_build_all` is a standard-library row library now, so that chain imports nothing outside the
+      # standard library. If a stage on that chain ever grows a third-party import at module scope, this
+      # is the workflow that finds out first.
+      - run: python -m pip install --upgrade pip pillow playwright
 
       # `--with-deps` for the shared libraries the headless binary links against. `23_og.py` does not
       # import playwright -- it shells out to the binary that `scripts/chrome.py` finds -- so the pip

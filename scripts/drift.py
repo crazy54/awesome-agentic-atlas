@@ -1,11 +1,12 @@
 """Upstream drift: keep publishing when a list changes under us, and keep every decision it forces visible.
 
 Thirty-nine lists the atlas does not control are pulled every day, and each one is free to rename a
-heading, translate its README, add a shelf or rearrange itself. Two modules refuse to guess about that,
-on principle: `taxonomy.category_of` raises on a `(source, section)` it does not name, because
-re-filing is the thing that module exists to make deliberate, and `buckets.py` will not hand a ninth
-hue to a palette that has eight. `10_parse_sources.unmapped` asks both questions before the expensive
-stages, and until this module existed its answer was `sys.exit(1)`.
+heading, translate its README, add a shelf or rearrange itself. `taxonomy.category_of` refuses to guess
+about that, on principle: it raises on a `(source, section)` it does not name, because re-filing is the
+thing that module exists to make deliberate. `10_parse_sources.unmapped` asks that question before the
+expensive stages, and until this module existed its answer was `sys.exit(1)`. (It used to ask a second
+one too -- would `buckets.py` have to hand a ninth hue to an eight-hue palette -- for the Excel workbooks'
+colour slots. That cap went with the spreadsheet edition, retired in November 2026.)
 
 That made every curator's edit somebody else's outage. libukai translating eight headings to English
 held the site on 2026-11-01 for over two weeks; punkpeye adding "Jobs", awesome-claude-code adding
@@ -14,12 +15,11 @@ was one line, and each time the site was frozen until somebody wrote it.
 
 So there are two modes, and the difference between them is who makes the decision and when.
 
-  STRICT (the default, and every local run and every test): unchanged. An unmapped section or a ninth
-  hue stops the parse and prints what to add.
+  STRICT (the default, and every local run and every test): unchanged. An unmapped section stops the
+  parse and prints what to add.
 
   PROVISIONAL (`AAA_PROVISIONAL=1`, which the daily and weekly workflows set for the whole job): the
-  parse files each unmapped section somewhere defensible *for this run only*, folds a ninth hue into
-  the sheet's last bucket, writes every such placement to `cache/provisional.json`, and carries on.
+  parse files each unmapped section somewhere defensible *for this run only*, writes every such placement to `cache/provisional.json`, and carries on.
   Nothing is filed for good. `taxonomy.py` and `buckets.py` are not edited -- the placements live in
   the cache, every run recomputes them from scratch, and they disappear the moment a person adds the
   real key. What a person sees instead is a `::warning` per placement, a step-summary block with the
@@ -52,7 +52,10 @@ WHERE A PROVISIONAL SECTION GOES, strongest evidence first:
   modal      -- none of the above: the category most of the list's rows already land in. This is the
                 guess the taxonomy refuses to make permanently, made for one run and labelled as such.
 
-A section that inherits an old section's mapping also inherits its bucket, so a rename keeps its hue.
+A section that inherits an old section's mapping also inherits its bucket, so a rename keeps its place in
+the list's order (`16_build_all.order_rows` sorts a list's rows by bucket). A newcomer with no
+predecessor needs no bucket: one a map does not name keeps its own name as its bucket and sorts after
+the named ones.
 """
 from __future__ import annotations
 
@@ -77,7 +80,6 @@ PROPOSAL = CACHE / "drift-proposal.json"
 PROPOSAL_MD = CACHE / "drift-proposal.md"
 PULL_REPORT = CACHE / "pull-report.json"
 
-HUES = 8
 # Half of a new section's entries from one old section is a rename; less is a reshuffle, and reading a
 # reshuffle as a rename would carry one shelf's category onto entries mostly drawn from others.
 MEMBERSHIP = 0.5
@@ -213,8 +215,8 @@ def published_pairs(nwo: str, key, folder: Path | None = None,
     Found by the repository its pages credit, and -- where more than one list credits the same one --
     by the page title too. Two synthetic sources do: the GitHub scout and the GitLab intake both name
     this repository, deliberately, because it is where their documents come from. The title alone is
-    not the key because a list with a workbook sheet publishes under the sheet's name (16_build_all's
-    SHEETS: "Agents (kyrolabs)", not SOURCES' "AI Agents (kyrolabs)"), and that table lives in a module
+    not the key because a list in 16_build_all's SHEETS publishes under its short name there
+    ("Agents (kyrolabs)", not SOURCES' "AI Agents (kyrolabs)"), and that table lives in a module
     this one does not import. So: a unique repository decides on its own; a shared one needs the title
     to match a page's `# title` exactly; and a shared one with no matching title gives no evidence,
     rather than another list's.
@@ -323,9 +325,8 @@ def place(rows: list[dict], sections: dict[tuple[str, str], str],
     `rows` are `10_parse_sources` rows (`source`, `category`) in parse order; `sections` and `buckets`
     are `taxonomy.SECTIONS` and `buckets.BUCKETS`; `moves` is `load_moves()`.
 
-    One record per `(source, section)` that needs one, carrying `category` when the taxonomy does not
-    name the section and `bucket` when the palette needs it folded; whichever the record does not need
-    is None. A source with no drift contributes nothing, and a strict run with no records is a pass.
+    One record per `(source, section)` the taxonomy does not name, carrying the `category` it is filed
+    under and, when it took over a section a bucket map names, that section's `bucket` (else None). A source with no drift contributes nothing, and a strict run with no records is a pass.
     """
     order: dict[str, list[str]] = defaultdict(list)
     counts: dict[str, Counter] = defaultdict(Counter)
@@ -393,34 +394,6 @@ def place(rows: list[dict], sections: dict[tuple[str, str], str],
             if was in fold:
                 rec["bucket"], rec["bucket_basis"] = fold[was], "inherited"
 
-        # The palette, counted the way `16_build_all.group_styles` hands out slots: every bucket the map
-        # names, present today or not, then each other bucket in the order its rows first appear.
-        named = [b for b, _ in buckets.get(src, [])]
-        own = [s for s in secs if fold.get(s) is None and (placed.get(s) or {}).get("bucket") is None]
-        extra = list(dict.fromkeys(b for b in own if b not in named))
-        if len(named) + len(extra) > HUES:
-            # Sections the taxonomy already maps keep their hues ahead of the newcomers: a fold is a
-            # demotion, and the section that arrived today is the one to demote.
-            extra.sort(key=lambda s: ((src, s) not in sections, secs.index(s)))
-            keep = extra[:max(HUES - len(named), 0)]
-            # The last bucket. In a curated map that is the catch-all every map in buckets.py ends on
-            # ("Workflow, UI & Media", "Tooling & Courses", "Guides & Collections"); in a list with no
-            # map it is the eighth section's own name. Either way the row still prints its own section,
-            # so the identity is carried by the text, as the palette method requires.
-            last = (named + keep)[HUES - 1]
-            # A list with no map needs one written, not a section added to one, so the fold carries the
-            # whole map it implies: each kept section its own bucket, in the order they appear, and the
-            # folded ones in the last. `apply_drift_proposal.py` writes it out verbatim.
-            whole = None if named else (
-                [[s, [s]] for s in keep[:-1]] + [[last, [last] + extra[len(keep):]]])
-            for s in extra[len(keep):]:
-                rec = placed.get(s) or {"source": src, "section": s, "rows": counts[src][s],
-                                        "category": None, "basis": "mapped", "evidence": {},
-                                        "bucket": None, "bucket_basis": None}
-                rec["bucket"], rec["bucket_basis"] = last, "fold"
-                if whole:
-                    rec["new_map"] = whole
-                placed[s] = rec
         out += list(placed.values())
     for rec in out:
         rec["taxonomy_line"] = taxonomy_line(rec)
@@ -437,9 +410,6 @@ def taxonomy_line(rec: dict) -> str | None:
 def buckets_note(rec: dict) -> str | None:
     if rec["bucket"] is None:
         return None
-    if rec.get("new_map"):
-        return (f"BUCKETS has no map for {rec['source']!r}: add one with {len(rec['new_map'])} buckets, "
-                f"folding {rec['section']!r} into {rec['bucket']!r}").replace("'", '"')
     return (f"BUCKETS[{rec['source']!r}]: add {rec['section']!r} to the {rec['bucket']!r} bucket"
             .replace("'", '"'))
 
@@ -539,7 +509,7 @@ def markdown(recs: list[dict], degraded: list[dict]) -> str:
                   "This build published, with these sections filed **for this run only**. Nothing is "
                   "re-filed for good until the lines below are added, by hand or by running "
                   "`python scripts/apply_drift_proposal.py` over this run's `cache/drift-proposal.json`.",
-                  "", "| list | section | rows | filed under | colour | why |", "|---|---|---|---|---|---|"]
+                  "", "| list | section | rows | filed under | group | why |", "|---|---|---|---|---|---|"]
         for r in recs:
             cat = r["category"] or "(already mapped)"
             col = (f"{r['bucket']} ({r['bucket_basis']})" if r["bucket"] else "own")
@@ -587,7 +557,7 @@ def publish(recs: list[dict], degraded: list[dict], provisional: bool) -> None:
     for r in recs:
         what = (f"filed under {r['category']!r} for this run" if r["category"] else "")
         if r["bucket"]:
-            what += (" and " if what else "") + f"coloured with the {r['bucket']!r} bucket"
+            what += (" and " if what else "") + f"grouped with the {r['bucket']!r} bucket"
         paste = "; ".join(x for x in (r["taxonomy_line"] and r["taxonomy_line"].strip(),
                                       r["buckets_note"]) if x)
         warn(f"Provisional: {r['source']} / {r['section']}",

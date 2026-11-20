@@ -133,7 +133,7 @@ def content_intact(rec: dict) -> bool:
     """Is every file this record claims still on disk at the size it claims?
 
     The commit id alone is not enough to skip a pull. `cache/` is pruned, restored partially and
-    shared with the workbook job, so "we recorded this commit" and "we still have this commit's
+    shared with the weekly job, so "we recorded this commit" and "we still have this commit's
     content" are different facts and only the second one licenses a skip.
     """
     files = rec.get("files") or {}

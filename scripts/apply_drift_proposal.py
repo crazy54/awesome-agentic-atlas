@@ -86,12 +86,7 @@ def add_buckets(text: str, recs: list[dict]) -> tuple[str, list[str]]:
         start, end = dict_span(lines, "BUCKETS")
         head = next((i for i in range(start, end) if lines[i].startswith(f"    {q(r['source'])}: [")), None)
         if head is None:
-            if not r.get("new_map"):
-                continue
-            block = [f"    {q(r['source'])}: ["] + [
-                f"        ({q(b)}, [{', '.join(q(s) for s in secs)}])," for b, secs in r["new_map"]] + ["    ],"]
-            lines[end:end] = block
-            done.append(f"{r['source']}: new map, {len(r['new_map'])} buckets")
+            # Only an inherited bucket reaches here, and it comes from a map, so its list has one.
             continue
         stop = next(i for i in range(head + 1, end) if lines[i].startswith("    ],"))
         # The bucket's opening line is `("Name", [` whether its members follow on the same line or below.

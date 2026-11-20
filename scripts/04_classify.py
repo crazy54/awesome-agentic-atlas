@@ -6,7 +6,7 @@ Precedence, strongest first:
   3. Install-manager inference (winget -> native Windows; brew -> macOS; curl|sh -> Unix)
   4. Runtime inference (Node/Python/Rust/Go are portable unless a Unix-only dep says otherwise)
 
-Every verdict carries the evidence that produced it so the spreadsheet is auditable.
+Every verdict carries the evidence that produced it so the published verdict is auditable.
 """
 import json
 import re

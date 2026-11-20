@@ -18,9 +18,9 @@ Eight groups:
                     2026-10 is the reference fixture. `record_moves` accumulates across pulls.
   placing        -- `place()`: membership, a two-hop chain, position, a close name (orphans first), the
                     list's modal category by rows and then by keys, and no records at all on a clean day.
-  the palette    -- a ninth hue folds into the last bucket of a curated map, newcomers fold before mapped
-                    sections, a list with no map gets a whole one proposed, a rename inherits its bucket,
-                    and slots are counted the way `16_build_all.group_styles` hands them out.
+  buckets        -- nothing folds any more (the eight-hue cap went with the retired workbooks): a ninth
+                    section is filed, not folded, a list with no map needs none, and a rename still
+                    inherits its predecessor's bucket so it keeps its place in the list's order.
   honouring      -- `taxonomy.category_of` and `buckets.bucket_map` use the placements under the env var and
                     ignore the same file without it; the curated map wins where both name a section.
   the parse      -- `10_parse_sources.unmapped`: strict exits 1 and writes no placements; provisional returns,
@@ -30,7 +30,7 @@ Eight groups:
                     that parses to under a quarter of the last is refused and yesterday's bytes restored,
                     `--force` takes it, and a renamed list repo is fetched under its new name and reported.
   the proposal   -- `apply_drift_proposal.py` writes each key at the end of its own list's block, after a
-                    value on its own line, into the named bucket, or as a whole new map; twice is once.
+                    value on its own line, or into the named bucket; twice is once.
   guards         -- the fetch stops when most failures are not about the repo and carries on when they are
                     404s; both workflows set the env var for the whole job; the Markdown stage unescapes an
                     upstream `\\|` in prose.
@@ -297,39 +297,37 @@ eq("...but two of each is not a pairing: both stay modal",
    (r["Video Tutorials"]["basis"], r["Other Types"]["basis"]), ("modal", "modal"))
 
 # ── the palette ───────────────────────────────────────────────────────────────────────────────────
-section("the palette")
+section("buckets")
+# The eight-bucket cap went with the Excel workbooks (retired 2026-11). A list may now outgrow eight
+# buckets: nothing is folded, and a section the taxonomy already maps needs no record at all.
 eight = [(f"B{i}", [f"s{i}"]) for i in range(1, 9)]
 smap = {("p", f"s{i}"): "Coding Agents" for i in range(1, 9)}
 rows = [{"source": "p", "category": f"s{i}"} for i in range(1, 9)] + [{"source": "p", "category": "Mods"}]
 recs = drift.place(rows, smap, {"p": eight}, {}, tax.CATEGORIES)
 r = next(x for x in recs if x["section"] == "Mods")
-eq("a ninth hue in a curated map folds into its last bucket", (r["bucket"], r["bucket_basis"]), ("B8", "fold"))
+eq("a ninth section in a curated map of eight is not folded into the last bucket",
+   (r["bucket"], r["bucket_basis"], r["buckets_note"]), (None, None, None))
 eq("...and the newcomer still gets a category", r["category"], "Coding Agents")
-eq("...and the note says where to add it", r["buckets_note"], 'BUCKETS["p"]: add "Mods" to the "B8" bucket')
-
-seven_named = [(f"B{i}", [f"s{i}"]) for i in range(1, 8)] + [("Absent", ["gone"])]
-rows = [{"source": "p", "category": f"s{i}"} for i in range(1, 8)] + [{"source": "p", "category": "New"}]
-smap2 = {("p", f"s{i}"): "Coding Agents" for i in range(1, 8)} | {("p", "New"): "Coding Agents"}
-recs = drift.place(rows, smap2, {"p": seven_named}, {}, tax.CATEGORIES)
-eq("slots count every bucket a map names, present or not (16_build_all's count, not the old one)",
-   [(x["section"], x["bucket"]) for x in recs], [("New", "Absent")])
-eq("...and a section the taxonomy maps but no bucket holds is a palette-only record",
-   (recs[0]["category"], recs[0]["basis"], recs[0]["taxonomy_line"]), (None, "mapped", None))
+eq("...and it is the only record: no palette-only record for anything", [x["section"] for x in recs], ["Mods"])
 
 nine = [f"t{i}" for i in range(1, 10)]
+rows = [{"source": "q", "category": s} for s in nine]
+eq("a list with nine mapped sections and no bucket map is clean",
+   drift.place(rows, {("q", s): "Coding Agents" for s in nine}, {}, {}, tax.CATEGORIES), [])
 rows = [{"source": "q", "category": s} for s in nine[:4] + ["Newcomer"] + nine[4:8]]
 recs = drift.place(rows, {("q", s): "Coding Agents" for s in nine[:8]}, {}, {}, tax.CATEGORIES)
-eq("with no map, the newcomer is the one folded even when it arrived in the middle",
-   [(x["section"], x["bucket"]) for x in recs if x["bucket"]], [("Newcomer", "t8")])
-eq("...and the whole map it implies is proposed, eight buckets, the fold in the last",
-   recs[0]["new_map"], [[s, [s]] for s in nine[:7]] + [["t8", ["t8", "Newcomer"]]])
-true("...and the note says a map is needed", "has no map" in recs[0]["buckets_note"], recs[0]["buckets_note"])
+eq("...and a newcomer to a list with no map gets a category and no bucket",
+   [(x["section"], x["bucket"], "new_map" in x) for x in recs], [("Newcomer", None, False)])
 
 rows = [{"source": "p", "category": f"s{i}"} for i in range(2, 9)] + [{"source": "p", "category": "S-one"}]
 recs = drift.place(rows, smap, {"p": eight},
                    {"p": {"S-one": {"from": "s1", "basis": "position", "slot": 1, "of": 8}}}, tax.CATEGORIES)
-eq("a renamed section inherits its predecessor's bucket, so it keeps its hue",
+eq("a renamed section inherits its predecessor's bucket, so it keeps its place in the list's order",
    [(x["section"], x["bucket"], x["bucket_basis"]) for x in recs], [("S-one", "B1", "inherited")])
+eq("...and the note says which bucket to add it to", recs[0]["buckets_note"],
+   'BUCKETS["p"]: add "S-one" to the "B1" bucket')
+true("buckets.check no longer refuses a map of more than eight",
+     "sources" in quiet(buckets.check)[1])
 
 # ── honouring ─────────────────────────────────────────────────────────────────────────────────────
 section("honouring")
@@ -527,8 +525,7 @@ P = [{"source": "one", "section": "Jobs", "category": "Coding Agents", "bucket":
      {"source": "two", "section": "Next", "category": "MCP Servers", "bucket": None},
      {"source": "three", "section": "首页", "category": "Agent Skills", "bucket": None},
      {"source": "one", "section": "Mods", "category": None, "bucket": "First"},
-     {"source": "four", "section": "t9", "category": None, "bucket": "t8",
-      "new_map": [["t1", ["t1"]], ["t8", ["t8", "t9"]]]}]
+     {"source": "four", "section": "t9", "category": None, "bucket": "t8"}]
 t, done = apply.add_sections(TAX, P)
 lines = t.split("\n")
 eq("a key lands at the end of its own list's block",
@@ -548,8 +545,7 @@ ns = {}
 exec(b, ns)
 eq("a section joins a multi-line bucket", dict(ns["BUCKETS"]["one"])["Catch-all"], ["Jobs", "B", "C"])
 eq("...and a single-line one", dict(ns["BUCKETS"]["one"])["First"], ["Mods", "A"])
-eq("...and a list with no map gets the whole map proposed", ns["BUCKETS"]["four"],
-   [("t1", ["t1"]), ("t8", ["t8", "t9"])])
+eq("...and a bucket for a list with no map is skipped, not invented", "four" in ns["BUCKETS"], False)
 eq("applying twice is applying once", apply.add_buckets(b, P), (b, []))
 
 # ── guards ────────────────────────────────────────────────────────────────────────────────────────
@@ -649,9 +645,9 @@ eq("Markdown prose: an upstream \\| in a description is a plain pipe outside a t
    md_ns["prose"]("a \\| b"), "a | b")
 eq("...and one escape, not two, inside one", md_ns["prose"]("a \\| b | c", table=True), "a \\| b \\| c")
 
-# The real tree: whatever is on disk today must load strict and pass the palette check.
+# The real tree: whatever is on disk today must load strict and pass the bucket check.
 _, out, _ = quiet(buckets.check)
-true("buckets.py as committed passes its own check", "sources, buckets per sheet" in out)
+true("buckets.py as committed passes its own check", "sources, buckets per list" in out)
 
 for k, v in SAVED_ENV.items():
     env(**{k: v})

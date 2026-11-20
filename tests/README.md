@@ -5,8 +5,8 @@ node tests/run.mjs
 ```
 
 That is the whole thing. It finds a Chromium the machine already has, serves `docs/` under the Pages path
-prefix `/awesome-agentic-atlas/` on a port the OS picks, runs forty harnesses in turn (twenty-six Python,
-eleven in a browser, three in plain Node), prints what each one asserted, and exits non-zero if anything failed.
+prefix `/awesome-agentic-atlas/` on a port the OS picks, runs thirty-five harnesses in turn (twenty-three Python,
+ten in a browser, two in plain Node), prints what each one asserted, and exits non-zero if anything failed.
 About 24 minutes on a Windows workstation (2026-09-25), most of it in `detail-churn.mjs` regenerating every
 detail page, `osicons_test.py` walking every built page, and the Archie browser checks; `bits-check.mjs`,
 added since, takes about half an hour more on its own (2026-10-17). No install step, no
@@ -42,8 +42,6 @@ python tests/discover_test.py
 python tests/scout_test.py
 node tests/probe.mjs
 python tests/pagemin_test.py
-python tests/media_test.py
-python tests/workbook_branding_test.py
 python tests/refresh_test.py
 python tests/live_test.py
 python tests/semantic_test.py
@@ -68,7 +66,7 @@ left out of the suite and CI by accident.
 
 ## What each one covers, and what it deliberately does not
 
-There are forty files rather than one because they are forty instruments, and the overlap between them is the
+There are thirty-five files rather than one because they are thirty-five instruments, and the overlap between them is the
 reason to keep them apart rather than the reason to merge them. Each file's header says at length what it
 cannot see; this is the summary. Assertion counts are passed plus failed from the 2026-09-25 run on
 `latest_branch` `a77b46eb`; they drift, and the floors in `run.mjs` are what is enforced.
@@ -84,8 +82,6 @@ cannot see; this is the summary. Assertion counts are passed plus failed from th
 | `detail-preview-check.mjs` | Opens a real detail page in Chromium while fulfilling the GitHub API at the browser boundary with a deterministic README, SKILL.md and repository tree. Verifies rendered Markdown is the default, raw source is secondary, nested Markdown discovery and prioritisation, active-markup stripping, repository-relative URLs, typography, dark/light colour tokens and phone layout. | GitHub's live availability and anonymous rate limit. The fixture uses the same media types and response shapes, but deliberately spends no network quota and cannot prove an upstream repository still exists. |
 | `pagemin_test.py` | `scripts/pagemin.py` against the cases the real page does not contain: template literals, `${}` substitutions, regex literals, unterminated blocks, strings that look like comments, and the whole template loaded live out of `19_pages.py`. 47 assertions. Written and owned by the JFH-204 author. | Everything about the page that is not comment stripping. |
 | `indexnow_test.py` | `scripts/26_indexnow.py` and `20_landing.py`'s key-file prune. That `url_for`'s mapped set is exactly the `<loc>` set of the two sitemaps, asserted both directions and by content rather than by count, so a page that stops being submitted and a page submitted without ever reaching a sitemap are both red. That the prune deletes a rotated `INDEXNOW_KEY` file and leaves `robots.txt`, `security.txt` and anything else whose name and content disagree. And that `IncompleteRead`/`BadStatusLine` out of the opener is a workflow warning and exit 0 rather than a traceback, including the class hierarchy that turns on. 140 assertions. | Anything on the wire. `socket.connect` is replaced with a counter that raises and the count is asserted to be zero, so the endpoint is always a stub — no key is ever validated and no real submission is ever made. Nor whether Bing does anything with what it is sent. |
-| `media_test.py` | `scripts/media.py` against a synthetic workbook of the real one's shape: that a plain `wb.save` writes one media part per *placement*, that the pool collapses those to one part per distinct picture, that nothing else in the package changes, and that every drawing relationship still resolves to a part that is present — asserted against the archive itself rather than against a reading of openpyxl. Then the entry-count projection against the 65,535-entry ZIP ceiling, written down as arithmetic that can be re-run instead of re-argued. 49 assertions. | Whether Excel draws the shared part in every cell it is anchored to: it reads the package with `zipfile` and `openpyxl`, and no spreadsheet application opens it. Nor the real workbook — stages 14+ need a crawl that is not committed, so the shape is a miniature. |
-| `workbook_branding_test.py` | A disposable pair of light/dark covers from `scripts/16_build_all.py`: both shared source assets exist, both covers embed exactly the compact logo and Archie artwork, their displayed bounds and upper-right anchors stay fixed, the mascot keeps its name tag, the theme-switch cell survives, and each archive contains one drawing part with two media parts. It also checks the package-preserving fallback used when the crawler cache is absent. 26 assertions. | The release-sized workbooks: their full data and screenshot cache are not committed, so this harness proves the cover builder and fallback without requiring a crawl to test two small cover images. |
 | `signals_test.py` | `scripts/signals.py`, the rule deciding when a cached release-asset or `action.yml` answer needs re-querying: every term of it at its boundaries, every timestamp spelling that reaches those files, every earlier schema still loading and reading as stale, and a textual tripwire that the three fetch stages still consult it and still stamp what they write. 210 assertions, no I/O, instant. | Whether GitHub answers the queries. The three stages shell out to `gh api graphql`, so the crawl itself is untested here and untestable offline — this harness only asserts which repos would be asked about. |
 | `fetch_test.py` | `graphql_batch` in `scripts/02_fetch.py`, which every stage that asks GitHub for repository nodes goes through: a batch GitHub keeps timing out on (502, 504 or a TIMEOUT error) is split and each half asked separately, with every alias back where it belongs. A rate limit, a rejected query and a single repository that times out on its own still raise. Once the split budget is spent, a timing-out batch fails as it did before. `gh` and `time.sleep` are faked. 27 assertions, instant. | Whether GitHub answers. No query leaves the machine. |
 | `ci_alert_test.py` | `tools/ci_alert.py`, the script behind the build-red issue: from logs shaped like the real ones, which lines it quotes (FAIL lines whole enough to act on, the drift block, conflicts counted), the fix it suggests for each failure shape the 45-day audit found, and the issue plan -- open once, comment only on a failure not yet announced, edit always, close on green. 35 assertions, instant. | Whether `gh` works or the issue exists. Nothing calls GitHub. |
@@ -158,11 +154,10 @@ The sixteen Python harnesses are Python because the things they test are. `pytho
 `refresh_test.py`, `live_test.py`, `collections_test.py`, `deeplinks_test.py`, `spotlight_test.py`, `osicons_test.py` and `semantic_test.py` — standard
 library only, except that `indexnow_test.py` also needs `git` on `PATH`, because it asserts against the
 *tracked* paths under `docs/` rather than a walk of the working tree, so that a local build's leftovers cannot
-change what it thinks the site contains. `media_test.py` and `workbook_branding_test.py` — the two that
-build a real `.xlsx` — need `openpyxl` and `pillow`, which are the
-generator's dependencies rather than the suite's — every workflow that needs them installs them, `tests.yml`
-included, so a checkout that can build the workbook can already test it. Missing them is an `ImportError` with no tally,
-which `run.mjs` counts as a failure and not as a skip.
+change what it thinks the site contains. No harness needs a Python package any more: the two that built a real
+`.xlsx` (`media_test.py` and `workbook_branding_test.py`, which needed `openpyxl` and `pillow`) were removed when
+the spreadsheet edition was retired in November 2026. A harness that grows a package import fails with an
+`ImportError` and no tally, which `run.mjs` counts as a failure and not as a skip.
 
 ## A harness that skips must not be able to pass
 

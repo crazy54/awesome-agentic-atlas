@@ -2445,7 +2445,7 @@ __OSSPRITE__
     <a href="__UP__repo/">All projects</a> · <a href="#browse">Topics &amp; harnesses</a><br>
     <a href="https://github.com/__REPO__">Repository</a> ·
     <a href="https://github.com/__REPO__/tree/HEAD/mega-list">Markdown</a> ·
-    <a href="https://github.com/__REPO__/releases/latest">Workbook</a><br>
+    <a href="https://github.com/__REPO__/releases/tag/v2026.10.22" title="Spreadsheet edition: retired. The last copy, built 2026-10-22, stays available but is no longer updated. The website is the maintained edition.">Workbook (retired)</a><br>
     <!-- SETTINGS: one group, Theme, of four buttons -- System, Light, Dark, High contrast. It used to be two
          groups, a light/dark toggle and eight colour themes, and the toggle went with the second axis:
          four mutually exclusive choices are one question, and a toggle beside them would be a second
