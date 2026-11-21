@@ -27,6 +27,8 @@ resolve against the stylesheet, a preload's against the document, which is why t
 """
 from __future__ import annotations
 
+import re
+
 import hashlib
 from html import escape
 from pathlib import Path
@@ -194,25 +196,25 @@ GLASS = {
         "panel": ("#24272D", 1), "panel-hi": ("#24272D", 1),
         "pools": (("#FFFFFF", .028),),
         "edge": "transparent", "ctl-edge": "transparent",
-        "raise": "9px 9px 20px rgba(0,0,0,.55),-7px -7px 18px rgba(255,255,255,.045)",
-        "raise-sm": "4px 4px 9px rgba(0,0,0,.5),-3px -3px 8px rgba(255,255,255,.05)",
-        "raise-hi": "7px 7px 15px rgba(0,0,0,.58),-5px -5px 12px rgba(255,255,255,.065)",
-        "press": "inset 4px 4px 9px rgba(0,0,0,.55),inset -3px -3px 8px rgba(255,255,255,.045)",
-        "press-sm": "inset 2px 2px 4px rgba(0,0,0,.5),inset -1px -1px 3px rgba(255,255,255,.05)",
-        "press-act": "inset 3px 3px 6px rgba(0,0,0,.38),inset -2px -2px 5px rgba(255,255,255,.28)",
-        "glow": "0 0 18px rgba(164,200,18,.38)",
+        "raise": "14px 14px 30px rgba(0,0,0,.66),-10px -10px 26px rgba(255,255,255,.08)",
+        "raise-sm": "7px 7px 14px rgba(0,0,0,.62),-5px -5px 12px rgba(255,255,255,.08)",
+        "raise-hi": "10px 10px 20px rgba(0,0,0,.66),-7px -7px 16px rgba(255,255,255,.1)",
+        "press": "inset 7px 7px 14px rgba(0,0,0,.66),inset -5px -5px 12px rgba(255,255,255,.075)",
+        "press-sm": "inset 3px 3px 7px rgba(0,0,0,.6),inset -2px -2px 5px rgba(255,255,255,.08)",
+        "press-act": "inset 4px 4px 8px rgba(0,0,0,.42),inset -3px -3px 6px rgba(255,255,255,.3)",
+        "glow": "0 0 22px rgba(164,200,18,.45)",
         "fog": ("#3A3E45", .9), "bdf": "none"},
     "light": {
         "panel": ("#E3E7ED", 1), "panel-hi": ("#E3E7ED", 1),
         "pools": (),  # its one pool is a white highlight, which only lifts the base away from the ink
         "edge": "transparent", "ctl-edge": "transparent",
-        "raise": "10px 10px 22px rgba(150,162,182,.55),-10px -10px 22px rgba(255,255,255,.9)",
-        "raise-sm": "4px 4px 9px rgba(150,162,182,.55),-4px -4px 9px rgba(255,255,255,.95)",
-        "raise-hi": "7px 7px 14px rgba(146,158,178,.6),-6px -6px 13px rgba(255,255,255,1)",
-        "press": "inset 4px 4px 9px rgba(150,162,182,.55),inset -4px -4px 9px rgba(255,255,255,.9)",
-        "press-sm": "inset 2px 2px 4px rgba(150,162,182,.55),inset -2px -2px 4px rgba(255,255,255,.95)",
-        "press-act": "inset 3px 3px 6px rgba(60,80,0,.35),inset -2px -2px 5px rgba(255,255,255,.45)",
-        "glow": "0 0 16px rgba(120,150,0,.32)",
+        "raise": "14px 14px 30px rgba(132,146,170,.7),-12px -12px 28px rgba(255,255,255,1)",
+        "raise-sm": "7px 7px 14px rgba(132,146,170,.66),-6px -6px 13px rgba(255,255,255,1)",
+        "raise-hi": "10px 10px 20px rgba(126,140,165,.72),-8px -8px 17px rgba(255,255,255,1)",
+        "press": "inset 7px 7px 14px rgba(132,146,170,.66),inset -6px -6px 13px rgba(255,255,255,.95)",
+        "press-sm": "inset 3px 3px 7px rgba(132,146,170,.62),inset -3px -3px 6px rgba(255,255,255,1)",
+        "press-act": "inset 4px 4px 8px rgba(60,80,0,.38),inset -3px -3px 6px rgba(255,255,255,.5)",
+        "glow": "0 0 20px rgba(120,150,0,.38)",
         "fog": ("#FFFFFF", .84), "bdf": "none"},
 }
 
@@ -302,6 +304,15 @@ html .cta{border-radius:999px;transition:box-shadow .16s ease,background .16s ea
 html .cta:hover{background:var(--act-hi);filter:none;
   box-shadow:inset 0 0 0 1px var(--act-edge),inset 0 1px 0 rgba(255,255,255,.35),var(--raise-hi),var(--glow)}
 html .cta:active{box-shadow:inset 0 0 0 1px var(--act-edge),var(--press-act)}
+/* SCROLLBARS: the track is a well and the thumb a raised pill in it. Colours and shadows only, so the bar
+   keeps the platform's width and no scroll container changes size. `scrollbar-color` is the standard
+   property (Firefox, and Chrome when no ::-webkit rule applies); the ::-webkit rules give the soft shape. */
+html{scrollbar-color:color-mix(in srgb,var(--muted) 55%,var(--surface)) var(--surface)}
+::-webkit-scrollbar-track{background:var(--surface);box-shadow:var(--press-sm);border-radius:999px}
+::-webkit-scrollbar-thumb{background:var(--surface);box-shadow:var(--raise-sm),inset 0 0 0 3px var(--surface),
+  inset 0 0 0 99px color-mix(in srgb,var(--muted) 30%,transparent);border-radius:999px}
+::-webkit-scrollbar-thumb:hover{box-shadow:var(--raise-hi),inset 0 0 0 99px color-mix(in srgb,var(--muted) 45%,transparent)}
+::-webkit-scrollbar-corner{background:var(--surface)}
 /* Every text field and select on the site is a well. */
 html :is(input[type=search],input[type=text],input:not([type]),textarea,select){background-color:var(--surface);
   border-color:transparent;box-shadow:var(--press)}
@@ -467,6 +478,97 @@ BUILDTAGS_CSS = """/* The build tags in the footer. See `buildtags()` in scripts
   @keyframes bpulse{50%{opacity:.35}}
 }
 @media print{.btags{display:none}}
+"""
+
+
+# THE TOP NAV, AS A SEGMENTED CONTROL. Every page family writes its header nav by hand -- each page links the
+# pages a reader there needs next, and they differ on purpose -- as runs of plain links with a `·` between
+# them. Soft UI wants each run to be one object: a raised track with the links in it, and the page the reader
+# is on pressed into it. `segnav()` does that to a page's finished markup, so every family keeps its own link
+# set and wording and none of them carries a second copy of the shape.
+#
+#   * A run is consecutive plain links (no `class`) separated by nothing but whitespace and `·`/`&middot;`.
+#     The separators go -- the track's gaps say "separate items" now -- and the run is wrapped in
+#     `<span class="seg">`. Anything else in the nav (the Star pill, buttons, `<br>`, comments) stays where it
+#     is and ends a run.
+#   * `current` is the label of the page the reader is on. If the nav has that link it gets
+#     `aria-current="page"`; if the page left itself out (most do, as a link to here goes nowhere), `href`
+#     puts it back as the first item, pressed, so the reader can see where they are in the set.
+#   * Only the first `<nav>` that is not the brand line or the breadcrumb is touched, and only once: a
+#     page that has already been through it has no `·` runs left to find.
+_NAV = re.compile(r'<nav(?: class="util")?>.*?</nav>', re.S)
+_LINK = re.compile(r'<a\b(?![^>]*\bclass=)[^>]*>.*?</a>', re.S)
+_SEP = re.compile(r'^(?:\s|·|&middot;)*$')
+
+
+def segnav(page: str, current: str | None = None, href: str | None = None) -> str:
+    m = _NAV.search(page)
+    if not m:
+        return page
+    nav = m.group(0)
+    parts, out, run, done_current = _LINK.split(nav), [], [], False
+    links = _LINK.findall(nav)
+    pieces = []
+    for i, text in enumerate(parts):
+        pieces.append(("text", text))
+        if i < len(links):
+            pieces.append(("link", links[i]))
+
+    def flush():
+        if run:
+            out.append('<span class="seg">' + "".join(run) + "</span>")
+            run.clear()
+
+    first_run = True
+    for kind, value in pieces:
+        if kind == "link":
+            label = re.sub(r"<[^>]+>", "", value).strip()
+            if current is not None and label == current and "aria-current" not in value:
+                value = value.replace("<a ", '<a aria-current="page" ', 1)
+                done_current = True
+            if not run and first_run and current is not None and href is not None and not done_current \
+                    and current not in nav:
+                run.append(f'<a href="{href}" aria-current="page">{escape(current)}</a>')
+                done_current = True
+            run.append(value)
+            first_run = False
+        elif run and _SEP.match(value):
+            continue
+        else:
+            flush()
+            out.append(value)
+    flush()
+    return page[:m.start()] + "".join(out) + page[m.end():]
+
+
+NAV_CSS = """/* THE NAV TRACK AND THE ROUND CONTROLS. See `segnav()` in scripts/sitewide.py. A raised track, its links flat
+   in it, a hovered link sunk a little and the current page pressed in with the accent as its ink. */
+.seg{display:inline-flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:3px;padding:4px;
+  margin:0 0 4px;border-radius:22px;background:var(--surface);box-shadow:var(--raise-sm);line-height:1.2;
+  vertical-align:middle;text-align:left}
+.seg a{display:inline-block;padding:7px 13px;border-radius:999px;color:var(--ink2);font-weight:550;
+  text-decoration:none;transition:box-shadow .16s ease,color .16s ease}
+.seg a:hover{color:var(--ink);text-decoration:none;box-shadow:var(--press-sm)}
+.seg a[aria-current]{color:var(--bar);font-weight:650;box-shadow:var(--press)}
+/* In a header the track is at most two balanced rows wide, so it never pushes the masthead's mascot or a title
+   off its line; on a phone it takes the width it is given. */
+@media (min-width:900px){.top nav .seg,header nav.util .seg{max-width:480px}}
+/* A round icon button, after the references' circular controls: the Settings gear, the shelves' arrows, the
+   platform filters. The shared `.chip` rules give it its raise, lift and press. */
+.iconbtn{display:inline-grid;place-items:center;width:44px;height:44px;min-width:44px;min-height:44px;
+  padding:0;border-radius:50%;line-height:1;vertical-align:middle}
+.iconbtn svg{width:19px;height:19px;display:block}
+/* Every button in a header is at least the 44px tap target, so a round control and a pill beside it are
+   one height. */
+header nav .chip{min-height:44px}
+/* Hidden from sight, still read: the word inside an icon-only control. */
+.vh{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip-path:inset(50%);
+  white-space:nowrap;border:0}
+@media (prefers-reduced-motion:reduce){.seg a{transition:none}}
+@media (prefers-contrast:more){.seg{outline:1px solid var(--ctl-edge);outline-offset:-1px}
+  .seg a[aria-current]{outline:2px solid var(--ink);outline-offset:-2px}}
+@media (forced-colors:active){.seg{outline:1px solid CanvasText}.seg a[aria-current]{outline:2px solid Highlight}}
+@media print{.seg{box-shadow:none}}
 """
 
 

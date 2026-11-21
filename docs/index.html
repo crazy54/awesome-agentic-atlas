@@ -14,7 +14,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Awesome Agentic Atlas — browse and discover agentic AI projects</title>
 <meta name="description" content="12,007 agentic AI projects merged from 39 awesome-lists, on shelves with a stated reason for each one: named by three or more lists, shipped this week, hidden gems, runs on Windows. Snapshot 2026-11-20.">
-<meta name="atlas-build" content="de8be8d60dcc">
+<meta name="atlas-build" content="9ffca0e8b43f">
 <link rel="canonical" href="https://aaa.jeremyfhall.com/">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Awesome Agentic Atlas — browse and discover agentic AI projects">
@@ -281,11 +281,12 @@ html[data-theme=light]{
 .shh h2{margin:0;font-size:16px;font-weight:650;letter-spacing:-.02em}
 .shh .ct{font-family:var(--num);font-variant-numeric:tabular-nums;font-size:11.5px;color:var(--bar)}
 .shh .spring{flex:1 1 auto}
-.shh .nav{display:flex;gap:4px}
-.shh .nav button{width:28px;height:28px;border-radius:999px;background:var(--surface);
-  border:var(--hair) solid transparent;color:var(--ink2);font-size:12px;line-height:1;display:grid;
-  place-items:center;box-shadow:var(--raise-sm)}
+.shh .nav{display:flex;gap:10px}
+.shh .nav button{width:40px;height:40px;border-radius:50%;background:var(--surface);border:var(--hair) solid transparent;
+  color:var(--ink2);font-size:15px;line-height:1;display:grid;place-items:center;
+  box-shadow:var(--raise-sm)}
 .shh .nav button:hover{border-color:transparent;color:var(--ink);box-shadow:var(--raise-hi)}
+.shh .nav button:active{box-shadow:var(--press)}
 .shwhy{margin:0 0 11px;font-size:12px;color:var(--muted);max-width:110ch;line-height:1.5}
 .shwhy b{color:var(--ink2)}
 .rowscroll{display:grid;grid-auto-flow:column;grid-auto-columns:274px;gap:14px;overflow-x:auto;
@@ -454,15 +455,8 @@ html{scrollbar-gutter:stable}
     <a class="cta" href="catalog/">Search and filter all 12,007 &rarr;</a>
   </div>
   <nav>
-    <a href="discover/">Discover</a> ·
-    <a href="local/">Run It Local</a> ·
-    <a href="alike/">Lookalikes</a> ·
-    <a href="collections/">Collections</a> ·
-    <a href="https://github.com/crazy54/awesome-agentic-atlas/blob/HEAD/mega-list/leaderboard.md">Leaderboard</a> ·
-    <a href="catalog/">Catalogue</a> ·
-    <a href="repo/">All projects</a><br>
-    <a href="https://github.com/crazy54/awesome-agentic-atlas">Repository</a> ·
-    <a href="https://github.com/crazy54/awesome-agentic-atlas/tree/HEAD/mega-list">Markdown</a>
+    <span class="seg"><a href="discover/">Discover</a><a href="local/">Run It Local</a><a href="alike/">Lookalikes</a><a href="collections/">Collections</a><a href="https://github.com/crazy54/awesome-agentic-atlas/blob/HEAD/mega-list/leaderboard.md">Leaderboard</a><a href="catalog/">Catalogue</a><a href="repo/">All projects</a></span><br>
+    <span class="seg"><a href="https://github.com/crazy54/awesome-agentic-atlas">Repository</a><a href="https://github.com/crazy54/awesome-agentic-atlas/tree/HEAD/mega-list">Markdown</a></span>
     <a class="ghstar" href="https://github.com/crazy54/awesome-agentic-atlas" target="_blank" rel="noopener" aria-label="Star the Awesome Agentic Atlas on GitHub (opens GitHub)"><span aria-hidden="true">&#9733;</span> Star<b data-gh="stars" hidden></b></a><br>
 <div class="dancewrap">
       <button class="chip" id="dancebtn" aria-expanded="false" aria-controls="dancemenu" hidden>Dance with me</button>
@@ -477,7 +471,8 @@ html{scrollbar-gutter:stable}
       </div>
     </div>
 <div class="setwrap">
-      <button class="chip" id="setbtn" aria-expanded="false" aria-controls="setmenu">Settings</button>
+      <button class="chip iconbtn" id="setbtn" aria-expanded="false" aria-controls="setmenu"
+              title="Settings"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.55V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1.11-1.55 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.55-1H3a2 2 0 1 1 0-4h.09a1.7 1.7 0 0 0 1.55-1.11 1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34H9a1.7 1.7 0 0 0 1-1.55V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1 1.55 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87V9a1.7 1.7 0 0 0 1.55 1H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.55 1z"/></svg><span class="vh">Settings</span></button>
       <div class="setmenu" id="setmenu" hidden>
         <p class="setlab" id="setthemelab">Theme</p>
         <div class="setths" role="group" aria-labelledby="setthemelab">
@@ -791,12 +786,12 @@ if ("serviceWorker" in navigator && location.protocol !== "file:") {
 })();
 </script>
 
-<script type="module" src="assets/archie.js?v=f8b3f00ccb"></script>
+<script type="module" src="assets/archie.js?v=a2b9bed498"></script>
 <script type="module" src="assets/archie-dance.js?v=07eb812405"></script>
 <script>(() => {
   const b = document.getElementById("archieadmin");
   if (!b) return;
-  const go = () => import("./assets/archie-admin.js?v=f8b3f00ccb")
+  const go = () => import("./assets/archie-admin.js?v=a2b9bed498")
     .then((m) => (b.getAttribute("aria-expanded") === "true" ? m.close() : m.open(b)))
     .catch((e) => console.warn("Archie's admin panel did not load:", e));
   b.addEventListener("click", go);

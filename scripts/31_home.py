@@ -1549,7 +1549,7 @@ def main() -> None:
     dest = Path(args.out)
     dest.mkdir(parents=True, exist_ok=True)
     page = render()
-    (dest / "index.html").write_text(page, encoding="utf-8", newline="\n")
+    (dest / "index.html").write_text(sitewide.segnav(page), encoding="utf-8", newline="\n")
     print(f"wrote {dest / 'index.html'}  {len(page):,} bytes")
     # The site's 404, here because this is the stage that owns the root. See `not_found()` in sitewide.py.
     (dest / "404.html").write_text(sitewide.not_found(REPO, b20.HEAD_THEME), encoding="utf-8", newline="\n")

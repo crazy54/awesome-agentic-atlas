@@ -5,8 +5,8 @@
 /* THE THEMES. Written by `THEME_CSS` in scripts/sitewide.py, which explains every value; do not edit the
    copy in a generated file. Dark is on `:root`, so it needs no attribute to be true -- it is the floor a
    reader with JavaScript off gets. */
-:root{color-scheme:dark;--surface:#24272D;--plane:#24272D;--band:#24272D;--ink:#E8EAED;--ink2:#C9CDD3;--muted:#A3AAB4;--title:#E8EAED;--grid:#33373E;--link:#C9E46B;--bar:#B7D63C;--good:#72D6A3;--warn:#F49A8A;--off:#A3AAB4;--onbar:#15171A;--act:#A4C812;--act-hi:#B9DD2E;--act-edge:#C4E04A;--onact:#15171A;--accent-sky:#8DC8E0;--accent-mint:#72D6A3;--accent-gold:#DFB86E;--accent-coral:#F49A8A;--accent-violet:#BCAEF2;--panel:rgba(36,39,45,1);--panel-hi:rgba(36,39,45,1);--fog:rgba(58,62,69,0.9);--bdf:none;--edge:transparent;--ctl-edge:transparent;--raise:9px 9px 20px rgba(0,0,0,.55),-7px -7px 18px rgba(255,255,255,.045);--raise-sm:4px 4px 9px rgba(0,0,0,.5),-3px -3px 8px rgba(255,255,255,.05);--raise-hi:7px 7px 15px rgba(0,0,0,.58),-5px -5px 12px rgba(255,255,255,.065);--press:inset 4px 4px 9px rgba(0,0,0,.55),inset -3px -3px 8px rgba(255,255,255,.045);--press-sm:inset 2px 2px 4px rgba(0,0,0,.5),inset -1px -1px 3px rgba(255,255,255,.05);--press-act:inset 3px 3px 6px rgba(0,0,0,.38),inset -2px -2px 5px rgba(255,255,255,.28);--glow:0 0 18px rgba(164,200,18,.38);--wash:radial-gradient(1400px 900px at 12% -10%,rgba(255,255,255,.028),transparent 70%);--ui:"Geist","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;--mono:"Geist Mono",ui-monospace,"Cascadia Mono",Consolas,"Liberation Mono",monospace;--r-card:20px;--r-ctl:14px}
-html[data-theme=light]{color-scheme:light;--surface:#E3E7ED;--plane:#E3E7ED;--band:#E3E7ED;--ink:#1C2431;--ink2:#323C4C;--muted:#4E5868;--title:#1C2431;--grid:#CDD3DC;--link:#3A5A00;--bar:#3B5C00;--good:#0E6340;--warn:#9E3726;--off:#4E5868;--onbar:#FFFFFF;--act:#A4C812;--act-hi:#B6D93A;--act-edge:#5E7A00;--onact:#1C1B1B;--accent-sky:#1C5C77;--accent-mint:#0E6340;--accent-gold:#74500C;--accent-coral:#9E3726;--accent-violet:#57479A;--panel:rgba(227,231,237,1);--panel-hi:rgba(227,231,237,1);--fog:rgba(255,255,255,0.84);--bdf:none;--edge:transparent;--ctl-edge:transparent;--raise:10px 10px 22px rgba(150,162,182,.55),-10px -10px 22px rgba(255,255,255,.9);--raise-sm:4px 4px 9px rgba(150,162,182,.55),-4px -4px 9px rgba(255,255,255,.95);--raise-hi:7px 7px 14px rgba(146,158,178,.6),-6px -6px 13px rgba(255,255,255,1);--press:inset 4px 4px 9px rgba(150,162,182,.55),inset -4px -4px 9px rgba(255,255,255,.9);--press-sm:inset 2px 2px 4px rgba(150,162,182,.55),inset -2px -2px 4px rgba(255,255,255,.95);--press-act:inset 3px 3px 6px rgba(60,80,0,.35),inset -2px -2px 5px rgba(255,255,255,.45);--glow:0 0 16px rgba(120,150,0,.32);--wash:radial-gradient(1400px 900px at 12% -10%,rgba(255,255,255,.5),transparent 70%);}
+:root{color-scheme:dark;--surface:#24272D;--plane:#24272D;--band:#24272D;--ink:#E8EAED;--ink2:#C9CDD3;--muted:#A3AAB4;--title:#E8EAED;--grid:#33373E;--link:#C9E46B;--bar:#B7D63C;--good:#72D6A3;--warn:#F49A8A;--off:#A3AAB4;--onbar:#15171A;--act:#A4C812;--act-hi:#B9DD2E;--act-edge:#C4E04A;--onact:#15171A;--accent-sky:#8DC8E0;--accent-mint:#72D6A3;--accent-gold:#DFB86E;--accent-coral:#F49A8A;--accent-violet:#BCAEF2;--panel:rgba(36,39,45,1);--panel-hi:rgba(36,39,45,1);--fog:rgba(58,62,69,0.9);--bdf:none;--edge:transparent;--ctl-edge:transparent;--raise:14px 14px 30px rgba(0,0,0,.66),-10px -10px 26px rgba(255,255,255,.08);--raise-sm:7px 7px 14px rgba(0,0,0,.62),-5px -5px 12px rgba(255,255,255,.08);--raise-hi:10px 10px 20px rgba(0,0,0,.66),-7px -7px 16px rgba(255,255,255,.1);--press:inset 7px 7px 14px rgba(0,0,0,.66),inset -5px -5px 12px rgba(255,255,255,.075);--press-sm:inset 3px 3px 7px rgba(0,0,0,.6),inset -2px -2px 5px rgba(255,255,255,.08);--press-act:inset 4px 4px 8px rgba(0,0,0,.42),inset -3px -3px 6px rgba(255,255,255,.3);--glow:0 0 22px rgba(164,200,18,.45);--wash:radial-gradient(1400px 900px at 12% -10%,rgba(255,255,255,.028),transparent 70%);--ui:"Geist","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;--mono:"Geist Mono",ui-monospace,"Cascadia Mono",Consolas,"Liberation Mono",monospace;--r-card:20px;--r-ctl:14px}
+html[data-theme=light]{color-scheme:light;--surface:#E3E7ED;--plane:#E3E7ED;--band:#E3E7ED;--ink:#1C2431;--ink2:#323C4C;--muted:#4E5868;--title:#1C2431;--grid:#CDD3DC;--link:#3A5A00;--bar:#3B5C00;--good:#0E6340;--warn:#9E3726;--off:#4E5868;--onbar:#FFFFFF;--act:#A4C812;--act-hi:#B6D93A;--act-edge:#5E7A00;--onact:#1C1B1B;--accent-sky:#1C5C77;--accent-mint:#0E6340;--accent-gold:#74500C;--accent-coral:#9E3726;--accent-violet:#57479A;--panel:rgba(227,231,237,1);--panel-hi:rgba(227,231,237,1);--fog:rgba(255,255,255,0.84);--bdf:none;--edge:transparent;--ctl-edge:transparent;--raise:14px 14px 30px rgba(132,146,170,.7),-12px -12px 28px rgba(255,255,255,1);--raise-sm:7px 7px 14px rgba(132,146,170,.66),-6px -6px 13px rgba(255,255,255,1);--raise-hi:10px 10px 20px rgba(126,140,165,.72),-8px -8px 17px rgba(255,255,255,1);--press:inset 7px 7px 14px rgba(132,146,170,.66),inset -6px -6px 13px rgba(255,255,255,.95);--press-sm:inset 3px 3px 7px rgba(132,146,170,.62),inset -3px -3px 6px rgba(255,255,255,1);--press-act:inset 4px 4px 8px rgba(60,80,0,.38),inset -3px -3px 6px rgba(255,255,255,.5);--glow:0 0 20px rgba(120,150,0,.38);--wash:radial-gradient(1400px 900px at 12% -10%,rgba(255,255,255,.5),transparent 70%);}
 html[data-fog]{--panel:var(--fog);--panel-hi:var(--fog);--surface:var(--fog);--bdf:blur(34px) saturate(.6)}
 @media (prefers-reduced-transparency:reduce){:root,html[data-theme]{--panel:var(--plane);--panel-hi:var(--plane);--bdf:none;--wash:none;}}
 @media (prefers-contrast:more){:root{--panel:var(--plane);--panel-hi:var(--plane);--bdf:none;--wash:none;--raise:none;--raise-sm:none;--raise-hi:none;--press:none;--press-sm:none;--press-act:none;--glow:none;--ink:#FFFFFF;--ink2:#F2F3F5;--muted:#DADDE2;--grid:#8A919C;--link:#E3F59A;--edge:#8A919C;--ctl-edge:#C3C8CF;}html[data-theme=light]{--panel:var(--plane);--panel-hi:var(--plane);--bdf:none;--wash:none;--raise:none;--raise-sm:none;--raise-hi:none;--press:none;--press-sm:none;--press-act:none;--glow:none;--ink:#000000;--ink2:#141A24;--muted:#262E3B;--grid:#69717E;--link:#2A4300;--edge:#69717E;--ctl-edge:#4E5868;}}
@@ -39,6 +39,15 @@ html .cta{border-radius:999px;transition:box-shadow .16s ease,background .16s ea
 html .cta:hover{background:var(--act-hi);filter:none;
   box-shadow:inset 0 0 0 1px var(--act-edge),inset 0 1px 0 rgba(255,255,255,.35),var(--raise-hi),var(--glow)}
 html .cta:active{box-shadow:inset 0 0 0 1px var(--act-edge),var(--press-act)}
+/* SCROLLBARS: the track is a well and the thumb a raised pill in it. Colours and shadows only, so the bar
+   keeps the platform's width and no scroll container changes size. `scrollbar-color` is the standard
+   property (Firefox, and Chrome when no ::-webkit rule applies); the ::-webkit rules give the soft shape. */
+html{scrollbar-color:color-mix(in srgb,var(--muted) 55%,var(--surface)) var(--surface)}
+::-webkit-scrollbar-track{background:var(--surface);box-shadow:var(--press-sm);border-radius:999px}
+::-webkit-scrollbar-thumb{background:var(--surface);box-shadow:var(--raise-sm),inset 0 0 0 3px var(--surface),
+  inset 0 0 0 99px color-mix(in srgb,var(--muted) 30%,transparent);border-radius:999px}
+::-webkit-scrollbar-thumb:hover{box-shadow:var(--raise-hi),inset 0 0 0 99px color-mix(in srgb,var(--muted) 45%,transparent)}
+::-webkit-scrollbar-corner{background:var(--surface)}
 /* Every text field and select on the site is a well. */
 html :is(input[type=search],input[type=text],input:not([type]),textarea,select){background-color:var(--surface);
   border-color:transparent;box-shadow:var(--press)}
@@ -84,8 +93,10 @@ header{background:transparent;border-bottom:1px solid transparent;padding:18px 2
 main{padding:0 20px 64px}
 footer{border-top:1px solid transparent;background:transparent;padding:22px 20px;color:var(--muted);
   font-size:13px;box-shadow:inset 0 1px 0 var(--grid)}
-h1{margin:0 0 4px;font-size:30px;letter-spacing:-.02em;overflow-wrap:anywhere}
-h2{margin:0 0 10px;font-size:15px;text-transform:uppercase;letter-spacing:.07em;color:var(--title)}
+h1{margin:0 0 4px;font-size:38px;letter-spacing:-.035em;overflow-wrap:anywhere;font-weight:750;
+  line-height:1.1}
+h2{margin:0 0 10px;font-size:15px;text-transform:uppercase;letter-spacing:.12em;color:var(--title);
+  font-weight:700}
 .crumb{font-size:13px;color:var(--muted);margin-bottom:14px}
 .top{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap}
 .top>div{min-width:0}
@@ -137,7 +148,7 @@ html[data-theme=light] .reader{--read-panel:var(--surface);--read-raised:var(--s
 .preview-intro{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:14px}
 .preview-intro h2{margin-bottom:6px;color:var(--title);font-size:19px;text-transform:none;letter-spacing:-.01em}
 .preview-intro .lead{margin:0;font-size:14.5px}
-.eyebrow{margin:0 0 3px;color:var(--bar);font-size:11px;font-weight:700;letter-spacing:.13em;
+.eyebrow{margin:0 0 3px;color:var(--bar);font-size:11px;font-weight:700;letter-spacing:.16em;
   text-transform:uppercase}
 .source-live{display:inline-flex;align-items:center;gap:7px;color:var(--muted);font-size:12px;
   white-space:nowrap;margin-bottom:3px}
@@ -317,7 +328,7 @@ ul.dir li{margin:0 0 5px;break-inside:avoid;overflow-wrap:anywhere}
   header{padding:14px 14px 18px}
   main{padding:0 14px 48px}
   footer{padding:18px 14px}
-  h1{font-size:23px}
+  h1{font-size:29px}
   .lead{font-size:15px}
   section{margin-top:26px;padding-top:18px}
   /* The button under the command rather than beside it. At 335px a flex row leaves the code element
@@ -378,3 +389,31 @@ ul.dir li{margin:0 0 5px;break-inside:avoid;overflow-wrap:anywhere}
   @keyframes bpulse{50%{opacity:.35}}
 }
 @media print{.btags{display:none}}
+/* THE NAV TRACK AND THE ROUND CONTROLS. See `segnav()` in scripts/sitewide.py. A raised track, its links flat
+   in it, a hovered link sunk a little and the current page pressed in with the accent as its ink. */
+.seg{display:inline-flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:3px;padding:4px;
+  margin:0 0 4px;border-radius:22px;background:var(--surface);box-shadow:var(--raise-sm);line-height:1.2;
+  vertical-align:middle;text-align:left}
+.seg a{display:inline-block;padding:7px 13px;border-radius:999px;color:var(--ink2);font-weight:550;
+  text-decoration:none;transition:box-shadow .16s ease,color .16s ease}
+.seg a:hover{color:var(--ink);text-decoration:none;box-shadow:var(--press-sm)}
+.seg a[aria-current]{color:var(--bar);font-weight:650;box-shadow:var(--press)}
+/* In a header the track is at most two balanced rows wide, so it never pushes the masthead's mascot or a title
+   off its line; on a phone it takes the width it is given. */
+@media (min-width:900px){.top nav .seg,header nav.util .seg{max-width:480px}}
+/* A round icon button, after the references' circular controls: the Settings gear, the shelves' arrows, the
+   platform filters. The shared `.chip` rules give it its raise, lift and press. */
+.iconbtn{display:inline-grid;place-items:center;width:44px;height:44px;min-width:44px;min-height:44px;
+  padding:0;border-radius:50%;line-height:1;vertical-align:middle}
+.iconbtn svg{width:19px;height:19px;display:block}
+/* Every button in a header is at least the 44px tap target, so a round control and a pill beside it are
+   one height. */
+header nav .chip{min-height:44px}
+/* Hidden from sight, still read: the word inside an icon-only control. */
+.vh{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip-path:inset(50%);
+  white-space:nowrap;border:0}
+@media (prefers-reduced-motion:reduce){.seg a{transition:none}}
+@media (prefers-contrast:more){.seg{outline:1px solid var(--ctl-edge);outline-offset:-1px}
+  .seg a[aria-current]{outline:2px solid var(--ink);outline-offset:-2px}}
+@media (forced-colors:active){.seg{outline:1px solid CanvasText}.seg a[aria-current]{outline:2px solid Highlight}}
+@media print{.seg{box-shadow:none}}
