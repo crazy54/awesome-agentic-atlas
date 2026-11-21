@@ -851,7 +851,8 @@ CSS = """
 .lx .wrap{max-width:980px}
 /* Several rules below set `display`, which outranks the UA's `[hidden]{display:none}`; this puts it back. */
 .lx [hidden]{display:none!important}
-.kick{margin:0 0 4px;color:var(--muted);font:600 12px/1.4 var(--mono);letter-spacing:.06em;text-transform:uppercase}
+.kick{margin:0 0 4px;color:var(--muted);font:600 12px/1.4 var(--mono);letter-spacing:.12em;
+  text-transform:uppercase}
 /* The five steps are raised slabs of the base, extruded by the two soft-UI shadows. NOT blurred: soft UI
    is opaque, and a backdrop filter would make each step a stacking context that traps the suggestion
    list under the next one. */
@@ -1032,7 +1033,8 @@ def main() -> None:
     page.parent.mkdir(parents=True, exist_ok=True)
     # Comments stripped on the way out, the way `19_pages.py` and `31_home.py` ship theirs: they are for
     # whoever edits this stage, `local_page.js` and ds-models' module, and every one stays in the source.
-    page.write_text(pagemin.strip_page(render(cat, picks, hf)), encoding="utf-8")
+    page.write_text(sitewide.segnav(pagemin.strip_page(render(cat, picks, hf)), sitewide.LOCAL_PAGE["title"], "./"),
+                    encoding="utf-8")
     print(f"{PAGE['slug']}/index.html · {b20.kb(page.stat().st_size)} · {len(cat['devices'])} devices, "
           f"{len(cat['presets'])} presets, {len(picks['picks'])} picks"
           + (f", {len(hf['rows'])} joined to the Hugging Face index" if hf else

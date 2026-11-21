@@ -281,7 +281,8 @@ def main() -> None:
     # The catalogue, at `19_pages.CATALOG`. Not `index.html`: that is the homepage `31_home.py` writes, and
     # writing this page there replaced it with a copy of the catalogue and left the real one stale.
     (OUT / b19.CATALOG).parent.mkdir(parents=True, exist_ok=True)
-    (OUT / b19.CATALOG).write_text(render(data, lists), encoding="utf-8")
+    # Through `segnav()`, as `19_pages.main()` writes it, so the two paths publish the same nav.
+    (OUT / b19.CATALOG).write_text(b19.sitewide.segnav(render(data, lists), "Catalogue", "./"), encoding="utf-8")
     reversion()
 
     for f in (b19.CATALOG.as_posix(), "data.json", "sw.js"):

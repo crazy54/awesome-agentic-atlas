@@ -503,7 +503,7 @@ def main() -> None:
     doc = json.loads(DATA.read_text(encoding="utf-8"))
     html = page(doc)
     OUT.parent.mkdir(parents=True, exist_ok=True)
-    OUT.write_text(html, encoding="utf-8")
+    OUT.write_text(sitewide.segnav(html, "Models", "./"), encoding="utf-8")
     print(f"docs/models/index.html · {doc['counts']['models']} models, first {FIRST_PAINT} in the page · {b20.kb(len(html.encode()))}")
 
 

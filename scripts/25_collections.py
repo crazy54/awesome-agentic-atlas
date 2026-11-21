@@ -687,12 +687,12 @@ def main() -> None:
     for c in colls:
         path = OUT.joinpath(*c["path"], "index.html")
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(render(c, colls, data), encoding="utf-8")
+        path.write_text(sitewide.segnav(render(c, colls, data), "Collections"), encoding="utf-8")
         written.add(path.resolve())
         total += path.stat().st_size
 
     hub = OUT / "collections" / "index.html"
-    hub.write_text(render_hub(colls, data), encoding="utf-8")
+    hub.write_text(sitewide.segnav(render_hub(colls, data), "Collections"), encoding="utf-8")
     written.add(hub.resolve())
     total += hub.stat().st_size
 

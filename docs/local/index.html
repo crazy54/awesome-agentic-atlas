@@ -36,7 +36,8 @@ try {
 <style>
 .lx .wrap{max-width:980px}
 .lx [hidden]{display:none!important}
-.kick{margin:0 0 4px;color:var(--muted);font:600 12px/1.4 var(--mono);letter-spacing:.06em;text-transform:uppercase}
+.kick{margin:0 0 4px;color:var(--muted);font:600 12px/1.4 var(--mono);letter-spacing:.12em;
+  text-transform:uppercase}
 .lxs{margin:26px 0 0;padding:20px;border:1px solid transparent;border-radius:24px;background:var(--surface);
   box-shadow:var(--raise)}
 .lxs h2{margin:0;font-size:19px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
@@ -209,12 +210,8 @@ html:not(.lxjs) #s1,html:not(.lxjs) #s2,html:not(.lxjs) #s3{display:none}
       and exactly how to start one. Nothing you pick leaves this page.</p>
   </div>
   <nav>
-    <a href="../discover/">Discover</a> &middot;
-    <a href="../collections/">Collections</a> &middot;
-    <a href="../catalog/">Catalogue</a> &middot;
-    <a href="../repo/">All projects</a><br>
-    <a href="https://github.com/crazy54/awesome-agentic-atlas">Repository</a> &middot;
-    <a href="https://github.com/crazy54/awesome-agentic-atlas/tree/HEAD/mega-list">Markdown</a><br>
+    <span class="seg"><a href="./" aria-current="page">Run It Local</a><a href="../discover/">Discover</a><a href="../collections/">Collections</a><a href="../catalog/">Catalogue</a><a href="../repo/">All projects</a></span><br>
+    <span class="seg"><a href="https://github.com/crazy54/awesome-agentic-atlas">Repository</a><a href="https://github.com/crazy54/awesome-agentic-atlas/tree/HEAD/mega-list">Markdown</a></span><br>
     <button class="chip" id="theme" aria-pressed="false">Light theme</button>
   </nav>
   </div>

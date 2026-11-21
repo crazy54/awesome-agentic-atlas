@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-skin="glass">
+<html lang="en" data-skin="soft">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -9,46 +9,165 @@
 <link rel="apple-touch-icon" href="../apple-touch-icon.png">
 <style>
 :root{
-  --surface:#070912;
-  --plane:rgba(255,255,255,.045);
-  --band:rgba(255,255,255,.085);
-  --ink:#F4F7FF;
-  --ink2:#C7D0E4;
-  --muted:#8E9AB5;
-  --grid:rgba(255,255,255,.13);
-  --link:#7CC4FF;
-  --bar:#6FE3C4;
-  --onbar:#04121A;
-  --good:#5BE0B8;
-  --warn:#FF8FA3;
-  --off:#8E9AB5;
-  --accent-sky:#7CC4FF;
-  --accent-mint:#6FE3C4;
-  --accent-gold:#FFD479;
-  --accent-coral:#FF8FA3;
-  --accent-violet:#B9A6FF;
-  --accent-slate:#8E9AB5;
-  --ui:"Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
-  --mono:"SF Mono",ui-monospace,"Cascadia Mono",Consolas,"Liberation Mono",monospace;
-  --num:"Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
-  --radius:14px;
-  --radius-sm:10px;
+  --surface:#24272D;
+  --plane:#24272D;
+  --band:#24272D;
+  --ink:#E8EAED;
+  --ink2:#C9CDD3;
+  --muted:#A3AAB4;
+  --grid:#33373E;
+  --link:#C9E46B;
+  --bar:#B7D63C;
+  --onbar:#15171A;
+  --good:#72D6A3;
+  --warn:#F49A8A;
+  --off:#A3AAB4;
+  --accent-sky:#8DC8E0;
+  --accent-mint:#72D6A3;
+  --accent-gold:#DFB86E;
+  --accent-coral:#F49A8A;
+  --accent-violet:#BCAEF2;
+  --act:#A4C812;
+  --act-hi:#B9DD2E;
+  --act-edge:#C4E04A;
+  --onact:#15171A;
+  --accent-slate:#A3AAB4;
+  --ui:"Geist","Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --mono:"Geist Mono","SF Mono",ui-monospace,"Cascadia Mono",Consolas,"Liberation Mono",monospace;
+  --num:"Geist","Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --radius:20px;
+  --radius-sm:14px;
   --hair:1px;
-  --blur:18px;
-  --panel:linear-gradient(158deg,rgba(255,255,255,.075),rgba(255,255,255,.02) 62%);
-  --panel-b:rgba(255,255,255,.14);
-  --rail-bg:rgba(10,14,28,.62);
-  --field:radial-gradient(900px 620px at 12% -8%,rgba(124,196,255,.20),transparent 62%),radial-gradient(760px 560px at 88% 4%,rgba(185,166,255,.17),transparent 60%),radial-gradient(1100px 760px at 62% 108%,rgba(111,227,196,.14),transparent 64%);
-  --shadow:0 18px 44px rgba(2,5,16,.5);
-  --lift:0 2px 8px rgba(2,5,16,.45),0 20px 46px -14px rgba(2,5,16,.66);
-  --lift-hi:0 4px 14px rgba(2,5,16,.5),0 40px 80px -20px rgba(2,5,16,.85);
-  --scrim:linear-gradient(to top,rgba(3,5,16,.92),rgba(3,5,16,.56) 38%,rgba(3,5,16,.08) 74%,transparent);
+  --blur:0px;
+  --panel:var(--surface);
+  --panel-b:transparent;
+  --rail-bg:var(--surface);
+  --field:radial-gradient(1400px 900px at 12% -10%,rgba(255,255,255,.028),transparent 70%);
+  --shadow:14px 14px 30px rgba(0,0,0,.66),-10px -10px 26px rgba(255,255,255,.08);
+  --lift:7px 7px 14px rgba(0,0,0,.62),-5px -5px 12px rgba(255,255,255,.08);
+  --lift-hi:10px 10px 20px rgba(0,0,0,.66),-7px -7px 16px rgba(255,255,255,.1);
+  --raise:14px 14px 30px rgba(0,0,0,.66),-10px -10px 26px rgba(255,255,255,.08);
+  --raise-sm:7px 7px 14px rgba(0,0,0,.62),-5px -5px 12px rgba(255,255,255,.08);
+  --raise-hi:10px 10px 20px rgba(0,0,0,.66),-7px -7px 16px rgba(255,255,255,.1);
+  --press:inset 7px 7px 14px rgba(0,0,0,.66),inset -5px -5px 12px rgba(255,255,255,.075);
+  --press-sm:inset 3px 3px 7px rgba(0,0,0,.6),inset -2px -2px 5px rgba(255,255,255,.08);
+  --press-act:inset 4px 4px 8px rgba(0,0,0,.42),inset -3px -3px 6px rgba(255,255,255,.3);
+  --glow:0 0 22px rgba(164,200,18,.45);
+  --scrim:linear-gradient(to top,rgba(10,12,16,.92),rgba(10,12,16,.56) 38%,rgba(10,12,16,.08) 74%,transparent);
   --kick-case:uppercase;
-  --kick-track:.1em;
+  --kick-track:.12em;
   --fx-glow:1;
   --fx-pulse:1;
   --fx-scan:0;
-  --fx-sheen:1;
+  --fx-sheen:0;
+  --fx-lift:1;
+}
+html[data-skin=soft]{
+  --surface:#24272D;
+  --plane:#24272D;
+  --band:#24272D;
+  --ink:#E8EAED;
+  --ink2:#C9CDD3;
+  --muted:#A3AAB4;
+  --grid:#33373E;
+  --link:#C9E46B;
+  --bar:#B7D63C;
+  --onbar:#15171A;
+  --good:#72D6A3;
+  --warn:#F49A8A;
+  --off:#A3AAB4;
+  --accent-sky:#8DC8E0;
+  --accent-mint:#72D6A3;
+  --accent-gold:#DFB86E;
+  --accent-coral:#F49A8A;
+  --accent-violet:#BCAEF2;
+  --act:#A4C812;
+  --act-hi:#B9DD2E;
+  --act-edge:#C4E04A;
+  --onact:#15171A;
+  --accent-slate:#A3AAB4;
+  --ui:"Geist","Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --mono:"Geist Mono","SF Mono",ui-monospace,"Cascadia Mono",Consolas,"Liberation Mono",monospace;
+  --num:"Geist","Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --radius:20px;
+  --radius-sm:14px;
+  --hair:1px;
+  --blur:0px;
+  --panel:var(--surface);
+  --panel-b:transparent;
+  --rail-bg:var(--surface);
+  --field:radial-gradient(1400px 900px at 12% -10%,rgba(255,255,255,.028),transparent 70%);
+  --shadow:14px 14px 30px rgba(0,0,0,.66),-10px -10px 26px rgba(255,255,255,.08);
+  --lift:7px 7px 14px rgba(0,0,0,.62),-5px -5px 12px rgba(255,255,255,.08);
+  --lift-hi:10px 10px 20px rgba(0,0,0,.66),-7px -7px 16px rgba(255,255,255,.1);
+  --raise:14px 14px 30px rgba(0,0,0,.66),-10px -10px 26px rgba(255,255,255,.08);
+  --raise-sm:7px 7px 14px rgba(0,0,0,.62),-5px -5px 12px rgba(255,255,255,.08);
+  --raise-hi:10px 10px 20px rgba(0,0,0,.66),-7px -7px 16px rgba(255,255,255,.1);
+  --press:inset 7px 7px 14px rgba(0,0,0,.66),inset -5px -5px 12px rgba(255,255,255,.075);
+  --press-sm:inset 3px 3px 7px rgba(0,0,0,.6),inset -2px -2px 5px rgba(255,255,255,.08);
+  --press-act:inset 4px 4px 8px rgba(0,0,0,.42),inset -3px -3px 6px rgba(255,255,255,.3);
+  --glow:0 0 22px rgba(164,200,18,.45);
+  --scrim:linear-gradient(to top,rgba(10,12,16,.92),rgba(10,12,16,.56) 38%,rgba(10,12,16,.08) 74%,transparent);
+  --kick-case:uppercase;
+  --kick-track:.12em;
+  --fx-glow:1;
+  --fx-pulse:1;
+  --fx-scan:0;
+  --fx-sheen:0;
+  --fx-lift:1;
+}
+html[data-skin=soft-light]{
+  --surface:#E3E7ED;
+  --plane:#E3E7ED;
+  --band:#E3E7ED;
+  --ink:#1C2431;
+  --ink2:#323C4C;
+  --muted:#4E5868;
+  --grid:#CDD3DC;
+  --link:#3A5A00;
+  --bar:#3B5C00;
+  --onbar:#FFFFFF;
+  --good:#0E6340;
+  --warn:#9E3726;
+  --off:#4E5868;
+  --accent-sky:#1C5C77;
+  --accent-mint:#0E6340;
+  --accent-gold:#74500C;
+  --accent-coral:#9E3726;
+  --accent-violet:#57479A;
+  --act:#A4C812;
+  --act-hi:#B6D93A;
+  --act-edge:#5E7A00;
+  --onact:#1C1B1B;
+  --accent-slate:#4E5868;
+  --ui:"Geist","Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --mono:"Geist Mono","SF Mono",ui-monospace,"Cascadia Mono",Consolas,"Liberation Mono",monospace;
+  --num:"Geist","Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --radius:20px;
+  --radius-sm:14px;
+  --hair:1px;
+  --blur:0px;
+  --panel:var(--surface);
+  --panel-b:transparent;
+  --rail-bg:var(--surface);
+  --field:radial-gradient(1400px 900px at 12% -10%,rgba(255,255,255,.5),transparent 70%);
+  --shadow:14px 14px 30px rgba(132,146,170,.7),-12px -12px 28px rgba(255,255,255,1);
+  --lift:7px 7px 14px rgba(132,146,170,.66),-6px -6px 13px rgba(255,255,255,1);
+  --lift-hi:10px 10px 20px rgba(126,140,165,.72),-8px -8px 17px rgba(255,255,255,1);
+  --raise:14px 14px 30px rgba(132,146,170,.7),-12px -12px 28px rgba(255,255,255,1);
+  --raise-sm:7px 7px 14px rgba(132,146,170,.66),-6px -6px 13px rgba(255,255,255,1);
+  --raise-hi:10px 10px 20px rgba(126,140,165,.72),-8px -8px 17px rgba(255,255,255,1);
+  --press:inset 7px 7px 14px rgba(132,146,170,.66),inset -6px -6px 13px rgba(255,255,255,.95);
+  --press-sm:inset 3px 3px 7px rgba(132,146,170,.62),inset -3px -3px 6px rgba(255,255,255,1);
+  --press-act:inset 4px 4px 8px rgba(60,80,0,.38),inset -3px -3px 6px rgba(255,255,255,.5);
+  --glow:0 0 20px rgba(120,150,0,.38);
+  --scrim:linear-gradient(to top,rgba(10,12,16,.92),rgba(10,12,16,.56) 38%,rgba(10,12,16,.08) 74%,transparent);
+  --kick-case:uppercase;
+  --kick-track:.12em;
+  --fx-glow:1;
+  --fx-pulse:1;
+  --fx-scan:0;
+  --fx-sheen:0;
   --fx-lift:1;
 }
 html[data-skin=graphite]{
@@ -93,6 +212,17 @@ html[data-skin=graphite]{
   --fx-scan:0;
   --fx-sheen:0;
   --fx-lift:0;
+  --raise:0 1px 2px rgba(0,0,0,.55),0 10px 24px -12px rgba(0,0,0,.8);
+  --raise-sm:0 1px 2px rgba(0,0,0,.55),0 10px 24px -12px rgba(0,0,0,.8);
+  --raise-hi:0 2px 5px rgba(0,0,0,.6),0 26px 52px -16px rgba(0,0,0,.95);
+  --press:inset 0 1px 3px rgba(0,0,0,.55);
+  --press-sm:inset 0 1px 2px rgba(0,0,0,.5);
+  --press-act:inset 0 1px 3px rgba(0,0,0,.5);
+  --glow:0 0 14px color-mix(in srgb,var(--bar) 40%,transparent);
+  --act:#D6A034;
+  --act-hi:#D6A034;
+  --act-edge:#D6A034;
+  --onact:#090A0D;
 }
 html[data-skin=glass]{
   --surface:#070912;
@@ -136,6 +266,17 @@ html[data-skin=glass]{
   --fx-scan:0;
   --fx-sheen:1;
   --fx-lift:1;
+  --raise:0 2px 8px rgba(2,5,16,.45),0 20px 46px -14px rgba(2,5,16,.66);
+  --raise-sm:0 2px 8px rgba(2,5,16,.45),0 20px 46px -14px rgba(2,5,16,.66);
+  --raise-hi:0 4px 14px rgba(2,5,16,.5),0 40px 80px -20px rgba(2,5,16,.85);
+  --press:inset 0 1px 3px rgba(0,0,0,.55);
+  --press-sm:inset 0 1px 2px rgba(0,0,0,.5);
+  --press-act:inset 0 1px 3px rgba(0,0,0,.5);
+  --glow:0 0 14px color-mix(in srgb,var(--bar) 40%,transparent);
+  --act:#6FE3C4;
+  --act-hi:#6FE3C4;
+  --act-edge:#6FE3C4;
+  --onact:#04121A;
 }
 html[data-skin=terminal]{
   --surface:#04070A;
@@ -179,6 +320,17 @@ html[data-skin=terminal]{
   --fx-scan:1;
   --fx-sheen:0;
   --fx-lift:0;
+  --raise:3px 3px 0 rgba(0,0,0,.9);
+  --raise-sm:3px 3px 0 rgba(0,0,0,.9);
+  --raise-hi:6px 6px 0 rgba(0,0,0,.95);
+  --press:inset 0 1px 3px rgba(0,0,0,.55);
+  --press-sm:inset 0 1px 2px rgba(0,0,0,.5);
+  --press-act:inset 0 1px 3px rgba(0,0,0,.5);
+  --glow:0 0 14px color-mix(in srgb,var(--bar) 40%,transparent);
+  --act:#52F2A0;
+  --act-hi:#52F2A0;
+  --act-edge:#52F2A0;
+  --onact:#04070A;
 }
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
@@ -196,7 +348,7 @@ body{background:var(--surface);color:var(--ink);font-family:var(--ui);display:fl
 .tabs button{height:28px;padding:0 13px;border:0;border-radius:999px;background:transparent;
   color:var(--muted);font:inherit;font-size:12.5px;cursor:pointer;display:flex;align-items:center;
   gap:7px}
-.tabs button[aria-pressed=true]{background:var(--bar);color:var(--onbar);font-weight:600}
+.tabs button[aria-pressed=true]{background:var(--surface);color:var(--bar);font-weight:600;box-shadow:var(--press)}
 .tabs i{width:9px;height:9px;border-radius:50%;display:block}
 .spring{flex:1 1 auto}
 .hint{font-size:11.5px;color:var(--muted)}
@@ -211,7 +363,7 @@ iframe{flex:1 1 auto;width:100%;border:0;display:block;background:var(--surface)
 <div class="top">
   <h1>Atlas redesign <span>&mdash; three layouts and a project page, three skins</span></h1>
   <div class="grp"><span class="lab">Layout</span><div class="tabs" id="lt"><button data-layout="rail" aria-pressed="true">A &middot; Rail + deck + cards</button><button data-layout="console" aria-pressed="false">C &middot; Three-pane console</button><button data-layout="matrix" aria-pressed="false">M &middot; Topic &times; harness</button><button data-layout="lab" aria-pressed="false">L &middot; Card directions</button><button data-layout="shelves" aria-pressed="false">S &middot; Browse &amp; discover</button><button data-layout="discover" aria-pressed="false">D &middot; Daily carousel</button><button data-layout="detail" aria-pressed="false">P &middot; Project page</button></div></div>
-  <div class="grp"><span class="lab">Skin</span><div class="tabs" id="st"><button data-skin="graphite" aria-pressed="false"><i style="background:#D6A034"></i>Graphite</button><button data-skin="glass" aria-pressed="false"><i style="background:#6FE3C4"></i>Glass Console</button><button data-skin="terminal" aria-pressed="false"><i style="background:#52F2A0"></i>Neon Terminal</button></div></div>
+  <div class="grp"><span class="lab">Skin</span><div class="tabs" id="st"><button data-skin="soft" aria-pressed="false"><i style="background:#A4C812"></i>Soft UI</button><button data-skin="soft-light" aria-pressed="false"><i style="background:#A4C812"></i>Soft UI light</button><button data-skin="graphite" aria-pressed="false"><i style="background:#D6A034"></i>Graphite</button><button data-skin="glass" aria-pressed="false"><i style="background:#6FE3C4"></i>Glass Console</button><button data-skin="terminal" aria-pressed="false"><i style="background:#52F2A0"></i>Neon Terminal</button></div></div>
   <span class="spring"></span>
   <span class="hint"><kbd>A</kbd><kbd>C</kbd><kbd>M</kbd><kbd>L</kbd><kbd>S</kbd><kbd>D</kbd><kbd>P</kbd> layout &middot; <kbd>1</kbd>&ndash;<kbd>3</kbd> skin
     &middot; <kbd>T</kbd> cycles inside the page</span>
@@ -220,12 +372,12 @@ iframe{flex:1 1 auto;width:100%;border:0;display:block;background:var(--surface)
 <iframe id="f" title="Layout preview"></iframe>
 <script>
 const NOTES = {"rail": "Layout A. One 52px sticky rail, a left facet rail whose bars are proportional to real counts, a five-tile deck, and cards with a signal row. Hover a card for the sheen; the bars ease in on load.", "console": "Layout C. Same rail and facets; the middle column becomes a dense index and the right pane inspects the selection with no navigation. Click a row, or use j and k.", "matrix": "Layout M. Topic down, harness across, real counts at the 130 occupied crossings of 168. Hover for the crosshair and the readout, click to hold one. This is the question the site cannot answer today at any price.", "lab": "Layout L. Five ways to draw the same project, all on real rows \u2014 poster, dossier, contact sheet, terminal record and a portrait generated from the project's own facts. Plus the border states, and three A/B comparisons: where the name goes, what an imageless card shows, and how platform compatibility reads. Hover everything; the copy buttons work.", "shelves": "Layout S. Browsing without a ranking. A spotlight that rotates over the 1,094 projects outside the top 200, then a shelf per reason-to-be-shown: consensus across 39 lists, pushed this week, hidden gems, Windows-native, by language, the deep cuts, and one whole topic small enough to read to the end. The arithmetic of what that reaches is at the foot of the page.", "discover": "Layout D. Discover \u2014 the rolling daily carousel. Fifty projects a day, rolling over at your local midnight, and star counts are not consulted anywhere in the picking. The week is dealt by scripts/discover.py against a committed ledger of when each project was last featured, so the Sunday deploy bakes seven dated days and the client picks the one you are in. Past days in the week replay; future days are locked. Every category appears every day. The track rolls on its own and stops the moment you touch it.", "detail": "The project page \u2014 where a card goes when you click it. Same rail, same skin, same topic accent; no facet rail, because there is nothing to filter. Stars, last push and rank are fetched after paint rather than baked in. Reachable from any card in A or the inspector in C, and Esc comes back."};
-const SKINS = ["graphite", "glass", "terminal"];
+const SKINS = ["soft", "soft-light", "graphite", "glass", "terminal"];
 const KEYS = {"a": "rail", "c": "console", "m": "matrix", "l": "lab", "s": "shelves", "d": "discover", "p": "detail"};
 // A URL per tab rather than "<key>.html": the project page is not a layout, it is where a layout goes when
 // you click something, and it lives at the shipped address shape -- repo/<owner>/<name>/.
-const URLS = {"rail": "rail.html", "console": "console.html", "matrix": "matrix.html", "lab": "lab.html", "shelves": "shelves.html", "discover": "discover.html", "detail": "repo/mattpocock/skills.html"};
-let layout = "rail", skin = "glass";
+const URLS = {"rail": "rail.html", "console": "console.html", "matrix": "matrix.html", "lab": "lab.html", "shelves": "shelves.html", "discover": "discover.html", "detail": "repo/morluto/rea.html"};
+let layout = "rail", skin = "soft";
 const f = document.getElementById("f");
 function go() {
   document.documentElement.dataset.skin = skin;

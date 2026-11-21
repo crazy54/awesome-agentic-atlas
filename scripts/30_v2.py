@@ -400,7 +400,56 @@ SKINS: dict[str, dict] = {
     },
 }
 
-DEFAULT_SKIN = "glass"
+
+# THE SITE'S OWN SOFT UI, as two v2 skins, built from `sitewide.py` rather than copied out of it -- so the beta
+# wears what the live site wears and a palette edit there is an edit here. Every surface is the base, raised
+# or pressed by the site's two-shadow tokens; the lime is the accent. These are the default, and the three
+# skins above stay in the picker as the studies they were.
+import sitewide  # noqa: E402
+
+
+def _soft(theme: str, name: str, note: str) -> dict:
+    P, G = sitewide.PALETTE[theme], sitewide.GLASS[theme]
+    tokens = {k: P[k] for k in ("surface", "plane", "band", "ink", "ink2", "muted", "grid", "link", "bar", "onbar",
+                                "good", "warn", "off", "accent-sky", "accent-mint", "accent-gold", "accent-coral",
+                                "accent-violet", "act", "act-hi", "act-edge", "onact")}
+    tokens |= {"accent-slate": P["muted"],
+               "ui": '"Geist",' + UI_SANS, "mono": '"Geist Mono",' + UI_MONO, "num": '"Geist",' + UI_SANS,
+               "radius": "20px", "radius-sm": "14px", "hair": "1px", "blur": "0px",
+               "panel": "var(--surface)", "panel-b": "transparent", "rail-bg": "var(--surface)",
+               "field": sitewide.WASH[theme], "shadow": G["raise"],
+               "lift": G["raise-sm"], "lift-hi": G["raise-hi"],
+               "raise": G["raise"], "raise-sm": G["raise-sm"], "raise-hi": G["raise-hi"],
+               "press": G["press"], "press-sm": G["press-sm"], "press-act": G["press-act"], "glow": G["glow"],
+               "scrim": ("linear-gradient(to top,rgba(10,12,16,.92),rgba(10,12,16,.56) 38%,"
+                         "rgba(10,12,16,.08) 74%,transparent)"),
+               "kick-case": "uppercase", "kick-track": ".12em",
+               "fx-glow": "1", "fx-pulse": "1", "fx-scan": "0", "fx-sheen": "0", "fx-lift": "1"}
+    return {"name": name, "mode": theme, "note": note,
+            "swatch": (P["surface"], P["act"], P["link"]), "tokens": tokens}
+
+
+SKINS = {"soft": _soft("dark", "Soft UI", "The live site's design: one surface, raised and pressed by light."),
+         "soft-light": _soft("light", "Soft UI light", "The same, on the light base."),
+         **SKINS}
+
+# The studies predate the soft tokens, and the card CSS the homepage shares with this page reads them, so each
+# study maps them onto its own depth: raised is its lift, pressed a plain inset, the glow its own accent.
+for _sk in SKINS.values():
+    _t = _sk["tokens"]
+    _t.setdefault("raise", _t["lift"])
+    _t.setdefault("raise-sm", _t["lift"])
+    _t.setdefault("raise-hi", _t["lift-hi"])
+    _t.setdefault("press", "inset 0 1px 3px rgba(0,0,0,.55)")
+    _t.setdefault("press-sm", "inset 0 1px 2px rgba(0,0,0,.5)")
+    _t.setdefault("press-act", "inset 0 1px 3px rgba(0,0,0,.5)")
+    _t.setdefault("glow", "0 0 14px color-mix(in srgb,var(--bar) 40%,transparent)")
+    _t.setdefault("act", _t["bar"])
+    _t.setdefault("act-hi", _t["bar"])
+    _t.setdefault("act-edge", _t["bar"])
+    _t.setdefault("onact", _t["onbar"])
+
+DEFAULT_SKIN = "soft"
 
 
 def skin_css() -> str:
@@ -453,9 +502,10 @@ button{cursor:pointer}
 /* ---- the one sticky layer ----
    Today's page pins the masthead and the filter bar separately and spends 148px of a 900px viewport on
    chrome before a single row. This is 52px, and it is the only thing that pins. */
-.rail{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:12px;height:52px;
-  padding:0 16px;background:var(--rail-bg);border-bottom:var(--hair) solid var(--grid);
-  backdrop-filter:blur(var(--blur)) saturate(1.3);-webkit-backdrop-filter:blur(var(--blur)) saturate(1.3)}
+.rail{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:12px;height:52px;padding:0 16px;
+  background:var(--rail-bg);border-bottom:var(--hair) solid transparent;
+  backdrop-filter:blur(var(--blur)) saturate(1.3);
+  -webkit-backdrop-filter:blur(var(--blur)) saturate(1.3);box-shadow:var(--raise)}
 .mark{display:flex;align-items:center;gap:9px;font-weight:600;letter-spacing:-.01em;white-space:nowrap}
 /* The mark has no tile, and losing it was the point. The first version set `background:var(--bar)` on this
    box and centred a glyph in it, which is fine for a letter and fatal for this drawing: the mark's own
@@ -488,8 +538,8 @@ button{cursor:pointer}
 .qwrap{position:relative;flex:1 1 auto;max-width:520px;min-width:0}
 .qwrap .mag{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--muted);
   font-size:13px;pointer-events:none}
-#q{width:100%;height:34px;padding:0 74px 0 31px;border-radius:999px;
-  border:var(--hair) solid var(--grid);background:var(--band);color:var(--ink);font-size:13.5px}
+#q{width:100%;height:34px;padding:0 74px 0 31px;border-radius:999px;border:var(--hair) solid transparent;
+  background:var(--surface);color:var(--ink);font-size:13.5px;box-shadow:var(--press)}
 #q::placeholder{color:var(--muted)}
 .qwrap .kbd{position:absolute;right:8px;top:50%;transform:translateY(-50%);font-family:var(--mono);
   font-size:10.5px;color:var(--muted);border:var(--hair) solid var(--grid);border-radius:5px;
@@ -500,23 +550,22 @@ button{cursor:pointer}
 .spring{flex:1 1 auto}
 /* The segmented view switch and the skin button share one shape, so the rail reads as one instrument
    rather than a row of unrelated widgets -- which is the single biggest complaint about today's bar. */
-.seg{display:flex;gap:2px;padding:2px;border-radius:999px;background:var(--band);
-  border:var(--hair) solid var(--grid)}
+.seg{display:flex;gap:3px;padding:4px;border-radius:999px;background:var(--surface);
+  border:var(--hair) solid transparent;box-shadow:var(--raise-sm)}
 .seg button{height:26px;padding:0 11px;border:0;border-radius:999px;background:transparent;
   color:var(--muted);font-size:12px;letter-spacing:.01em}
-.seg button[aria-pressed=true]{background:var(--bar);color:var(--onbar);font-weight:600;
-  box-shadow:0 0 calc(14px * var(--fx-glow)) color-mix(in srgb,var(--bar) 45%,transparent)}
-.ghost{height:30px;padding:0 12px;border-radius:999px;background:var(--band);
-  border:var(--hair) solid var(--grid);color:var(--ink2);font-size:12.5px;display:flex;
-  align-items:center;gap:7px;white-space:nowrap}
-.ghost:hover{color:var(--ink);border-color:var(--bar)}
+.seg button[aria-pressed=true]{background:var(--surface);color:var(--bar);font-weight:600;box-shadow:var(--press)}
+.ghost{height:30px;padding:0 12px;border-radius:999px;background:var(--surface);
+  border:var(--hair) solid transparent;color:var(--ink2);font-size:12.5px;display:flex;
+  align-items:center;gap:7px;white-space:nowrap;box-shadow:var(--raise-sm)}
+.ghost:hover{color:var(--ink);border-color:transparent;box-shadow:var(--raise-hi)}
 .dotrow{display:flex;gap:3px}
 .dotrow i{width:8px;height:8px;border-radius:50%;display:block}
 
 /* ---- skin picker ---- */
 .picker{position:relative}
 .menu{position:absolute;right:0;top:38px;min-width:266px;padding:6px;border-radius:var(--radius);
-  background:var(--panel);border:var(--hair) solid var(--panel-b);box-shadow:var(--shadow);
+  background:var(--surface);border:var(--hair) solid transparent;box-shadow:var(--raise);
   backdrop-filter:blur(calc(var(--blur) + 8px));-webkit-backdrop-filter:blur(calc(var(--blur) + 8px));
   z-index:70}
 .menu[hidden]{display:none}
@@ -524,8 +573,8 @@ button{cursor:pointer}
   letter-spacing:var(--kick-track);color:var(--muted);font-weight:600}
 .menu button{display:flex;width:100%;gap:10px;align-items:flex-start;padding:9px 9px;border:0;
   border-radius:var(--radius-sm);background:transparent;text-align:left}
-.menu button:hover{background:var(--band)}
-.menu button[aria-pressed=true]{background:var(--band);outline:var(--hair) solid var(--bar)}
+.menu button:hover{background:var(--surface);box-shadow:var(--raise-sm)}
+.menu button[aria-pressed=true]{background:var(--surface);outline:none;box-shadow:var(--press)}
 .menu .sw{display:flex;flex:none;gap:0;margin-top:2px;border-radius:5px;overflow:hidden;
   border:1px solid var(--grid)}
 .menu .sw i{width:12px;height:22px;display:block}
@@ -1035,7 +1084,7 @@ a.ghost:hover{text-decoration:none}
   border:var(--hair) solid var(--grid);flex:none}
 .rtabs button{height:22px;padding:0 11px;border:0;border-radius:999px;background:transparent;
   color:var(--muted);font-size:11px}
-.rtabs button[aria-pressed=true]{background:var(--bar);color:var(--onbar);font-weight:600}
+.rtabs button[aria-pressed=true]{background:var(--surface);color:var(--bar);font-weight:600;box-shadow:var(--press)}
 .rbody{padding:16px 18px 18px;min-height:186px}
 .sk-line{height:11px;border-radius:3px;margin:0 0 12px;background:var(--band);
   background-image:linear-gradient(90deg,var(--band),var(--grid),var(--band));background-size:220% 100%;
@@ -2957,11 +3006,12 @@ SHELF_CSS = CARD_CSS + r"""
 .shh h2{margin:0;font-size:16px;font-weight:650;letter-spacing:-.02em}
 .shh .ct{font-family:var(--num);font-variant-numeric:tabular-nums;font-size:11.5px;color:var(--bar)}
 .shh .spring{flex:1 1 auto}
-.shh .nav{display:flex;gap:4px}
-.shh .nav button{width:28px;height:28px;border-radius:999px;background:var(--surface);
-  border:var(--hair) solid transparent;color:var(--ink2);font-size:12px;line-height:1;display:grid;
-  place-items:center;box-shadow:var(--raise-sm)}
+.shh .nav{display:flex;gap:10px}
+.shh .nav button{width:40px;height:40px;border-radius:50%;background:var(--surface);border:var(--hair) solid transparent;
+  color:var(--ink2);font-size:15px;line-height:1;display:grid;place-items:center;
+  box-shadow:var(--raise-sm)}
 .shh .nav button:hover{border-color:transparent;color:var(--ink);box-shadow:var(--raise-hi)}
+.shh .nav button:active{box-shadow:var(--press)}
 .shwhy{margin:0 0 11px;font-size:12px;color:var(--muted);max-width:110ch;line-height:1.5}
 .shwhy b{color:var(--ink2)}
 /* A row rather than a grid, and the overflow is the point: a shelf says "there is more of this" by being
@@ -4253,7 +4303,7 @@ body{background:var(--surface);color:var(--ink);font-family:var(--ui);display:fl
 .tabs button{height:28px;padding:0 13px;border:0;border-radius:999px;background:transparent;
   color:var(--muted);font:inherit;font-size:12.5px;cursor:pointer;display:flex;align-items:center;
   gap:7px}
-.tabs button[aria-pressed=true]{background:var(--bar);color:var(--onbar);font-weight:600}
+.tabs button[aria-pressed=true]{background:var(--surface);color:var(--bar);font-weight:600;box-shadow:var(--press)}
 .tabs i{width:9px;height:9px;border-radius:50%;display:block}
 .spring{flex:1 1 auto}
 .hint{font-size:11.5px;color:var(--muted)}
