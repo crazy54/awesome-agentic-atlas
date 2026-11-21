@@ -2056,7 +2056,7 @@ html[data-view=cards] :where(#out) tr.nw{border-color:transparent;
 @media(hover:hover){
   html[data-view=cards] :where(#out) tr:hover td{background:transparent}
   html[data-view=cards] :where(#out) tr:hover{border-color:transparent;
-  box-shadow:var(--raise-hi),0 0 22px color-mix(in srgb,var(--card-accent) 30%,transparent);
+  box-shadow:0 0 0 2px var(--card-accent),var(--raise-hi),0 0 22px color-mix(in srgb,var(--card-accent) 30%,transparent);
   transform:translateY(-1px);animation:card-glow 1.5s ease-in-out infinite alternate}
 }
 html[data-view=cards] :where(#out) tr:focus-within{border-color:transparent;box-shadow:var(--raise-hi),0 0 0 2px var(--card-accent)}
