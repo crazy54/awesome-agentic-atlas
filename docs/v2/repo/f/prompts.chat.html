@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-skin="glass" data-theme="dark">
+<html lang="en" data-skin="soft" data-theme="dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -10,7 +10,7 @@
      root-absolute for the reason `peer_href` records. -->
 <link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="../../../apple-touch-icon.png">
-<meta name="theme-color" id="tc" content="rgba(10,14,28,.62)">
+<meta name="theme-color" id="tc" content="#24272D">
 <!-- Ahead of the stylesheet and inline, for the same reason the shipped page does it: the skin has to
      settle before first paint or a reader who chose Neon Terminal gets a frame of somebody else's
      palette. Phase 2 emits this one function into all five generators. -->
@@ -18,9 +18,9 @@
 try {
   var s = new URLSearchParams(location.search).get("skin")
        || localStorage.getItem("atlas-skin");
-  if (!{"graphite":"#090A0D","glass":"rgba(10,14,28,.62)","terminal":"#050B0D"}[s]) s = "glass";
+  if (!{"soft":"#24272D","soft-light":"#E3E7ED","graphite":"#090A0D","glass":"rgba(10,14,28,.62)","terminal":"#050B0D"}[s]) s = "soft";
   document.documentElement.dataset.skin = s;
-  document.getElementById("tc").content = {"graphite":"#090A0D","glass":"rgba(10,14,28,.62)","terminal":"#050B0D"}[s];
+  document.getElementById("tc").content = {"soft":"#24272D","soft-light":"#E3E7ED","graphite":"#090A0D","glass":"rgba(10,14,28,.62)","terminal":"#050B0D"}[s];
   // Written back, not just read. A skin that arrived in the URL has to become the preference or it lasts
   // exactly one page: click a card from a ?skin=terminal page and the project page would read whatever
   // was in storage and flip palette mid-navigation. Sharing a skin is also choosing it.
@@ -29,46 +29,165 @@ try {
 </script>
 <style>
 :root{
-  --surface:#070912;
-  --plane:rgba(255,255,255,.045);
-  --band:rgba(255,255,255,.085);
-  --ink:#F4F7FF;
-  --ink2:#C7D0E4;
-  --muted:#8E9AB5;
-  --grid:rgba(255,255,255,.13);
-  --link:#7CC4FF;
-  --bar:#6FE3C4;
-  --onbar:#04121A;
-  --good:#5BE0B8;
-  --warn:#FF8FA3;
-  --off:#8E9AB5;
-  --accent-sky:#7CC4FF;
-  --accent-mint:#6FE3C4;
-  --accent-gold:#FFD479;
-  --accent-coral:#FF8FA3;
-  --accent-violet:#B9A6FF;
-  --accent-slate:#8E9AB5;
-  --ui:"Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
-  --mono:"SF Mono",ui-monospace,"Cascadia Mono",Consolas,"Liberation Mono",monospace;
-  --num:"Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
-  --radius:14px;
-  --radius-sm:10px;
+  --surface:#24272D;
+  --plane:#24272D;
+  --band:#24272D;
+  --ink:#E8EAED;
+  --ink2:#C9CDD3;
+  --muted:#A3AAB4;
+  --grid:#33373E;
+  --link:#C9E46B;
+  --bar:#B7D63C;
+  --onbar:#15171A;
+  --good:#72D6A3;
+  --warn:#F49A8A;
+  --off:#A3AAB4;
+  --accent-sky:#8DC8E0;
+  --accent-mint:#72D6A3;
+  --accent-gold:#DFB86E;
+  --accent-coral:#F49A8A;
+  --accent-violet:#BCAEF2;
+  --act:#A4C812;
+  --act-hi:#B9DD2E;
+  --act-edge:#C4E04A;
+  --onact:#15171A;
+  --accent-slate:#A3AAB4;
+  --ui:"Geist","Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --mono:"Geist Mono","SF Mono",ui-monospace,"Cascadia Mono",Consolas,"Liberation Mono",monospace;
+  --num:"Geist","Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --radius:20px;
+  --radius-sm:14px;
   --hair:1px;
-  --blur:18px;
-  --panel:linear-gradient(158deg,rgba(255,255,255,.075),rgba(255,255,255,.02) 62%);
-  --panel-b:rgba(255,255,255,.14);
-  --rail-bg:rgba(10,14,28,.62);
-  --field:radial-gradient(900px 620px at 12% -8%,rgba(124,196,255,.20),transparent 62%),radial-gradient(760px 560px at 88% 4%,rgba(185,166,255,.17),transparent 60%),radial-gradient(1100px 760px at 62% 108%,rgba(111,227,196,.14),transparent 64%);
-  --shadow:0 18px 44px rgba(2,5,16,.5);
-  --lift:0 2px 8px rgba(2,5,16,.45),0 20px 46px -14px rgba(2,5,16,.66);
-  --lift-hi:0 4px 14px rgba(2,5,16,.5),0 40px 80px -20px rgba(2,5,16,.85);
-  --scrim:linear-gradient(to top,rgba(3,5,16,.92),rgba(3,5,16,.56) 38%,rgba(3,5,16,.08) 74%,transparent);
+  --blur:0px;
+  --panel:var(--surface);
+  --panel-b:transparent;
+  --rail-bg:var(--surface);
+  --field:radial-gradient(1400px 900px at 12% -10%,rgba(255,255,255,.028),transparent 70%);
+  --shadow:14px 14px 30px rgba(0,0,0,.66),-10px -10px 26px rgba(255,255,255,.08);
+  --lift:7px 7px 14px rgba(0,0,0,.62),-5px -5px 12px rgba(255,255,255,.08);
+  --lift-hi:10px 10px 20px rgba(0,0,0,.66),-7px -7px 16px rgba(255,255,255,.1);
+  --raise:14px 14px 30px rgba(0,0,0,.66),-10px -10px 26px rgba(255,255,255,.08);
+  --raise-sm:7px 7px 14px rgba(0,0,0,.62),-5px -5px 12px rgba(255,255,255,.08);
+  --raise-hi:10px 10px 20px rgba(0,0,0,.66),-7px -7px 16px rgba(255,255,255,.1);
+  --press:inset 7px 7px 14px rgba(0,0,0,.66),inset -5px -5px 12px rgba(255,255,255,.075);
+  --press-sm:inset 3px 3px 7px rgba(0,0,0,.6),inset -2px -2px 5px rgba(255,255,255,.08);
+  --press-act:inset 4px 4px 8px rgba(0,0,0,.42),inset -3px -3px 6px rgba(255,255,255,.3);
+  --glow:0 0 22px rgba(164,200,18,.45);
+  --scrim:linear-gradient(to top,rgba(10,12,16,.92),rgba(10,12,16,.56) 38%,rgba(10,12,16,.08) 74%,transparent);
   --kick-case:uppercase;
-  --kick-track:.1em;
+  --kick-track:.12em;
   --fx-glow:1;
   --fx-pulse:1;
   --fx-scan:0;
-  --fx-sheen:1;
+  --fx-sheen:0;
+  --fx-lift:1;
+}
+html[data-skin=soft]{
+  --surface:#24272D;
+  --plane:#24272D;
+  --band:#24272D;
+  --ink:#E8EAED;
+  --ink2:#C9CDD3;
+  --muted:#A3AAB4;
+  --grid:#33373E;
+  --link:#C9E46B;
+  --bar:#B7D63C;
+  --onbar:#15171A;
+  --good:#72D6A3;
+  --warn:#F49A8A;
+  --off:#A3AAB4;
+  --accent-sky:#8DC8E0;
+  --accent-mint:#72D6A3;
+  --accent-gold:#DFB86E;
+  --accent-coral:#F49A8A;
+  --accent-violet:#BCAEF2;
+  --act:#A4C812;
+  --act-hi:#B9DD2E;
+  --act-edge:#C4E04A;
+  --onact:#15171A;
+  --accent-slate:#A3AAB4;
+  --ui:"Geist","Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --mono:"Geist Mono","SF Mono",ui-monospace,"Cascadia Mono",Consolas,"Liberation Mono",monospace;
+  --num:"Geist","Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --radius:20px;
+  --radius-sm:14px;
+  --hair:1px;
+  --blur:0px;
+  --panel:var(--surface);
+  --panel-b:transparent;
+  --rail-bg:var(--surface);
+  --field:radial-gradient(1400px 900px at 12% -10%,rgba(255,255,255,.028),transparent 70%);
+  --shadow:14px 14px 30px rgba(0,0,0,.66),-10px -10px 26px rgba(255,255,255,.08);
+  --lift:7px 7px 14px rgba(0,0,0,.62),-5px -5px 12px rgba(255,255,255,.08);
+  --lift-hi:10px 10px 20px rgba(0,0,0,.66),-7px -7px 16px rgba(255,255,255,.1);
+  --raise:14px 14px 30px rgba(0,0,0,.66),-10px -10px 26px rgba(255,255,255,.08);
+  --raise-sm:7px 7px 14px rgba(0,0,0,.62),-5px -5px 12px rgba(255,255,255,.08);
+  --raise-hi:10px 10px 20px rgba(0,0,0,.66),-7px -7px 16px rgba(255,255,255,.1);
+  --press:inset 7px 7px 14px rgba(0,0,0,.66),inset -5px -5px 12px rgba(255,255,255,.075);
+  --press-sm:inset 3px 3px 7px rgba(0,0,0,.6),inset -2px -2px 5px rgba(255,255,255,.08);
+  --press-act:inset 4px 4px 8px rgba(0,0,0,.42),inset -3px -3px 6px rgba(255,255,255,.3);
+  --glow:0 0 22px rgba(164,200,18,.45);
+  --scrim:linear-gradient(to top,rgba(10,12,16,.92),rgba(10,12,16,.56) 38%,rgba(10,12,16,.08) 74%,transparent);
+  --kick-case:uppercase;
+  --kick-track:.12em;
+  --fx-glow:1;
+  --fx-pulse:1;
+  --fx-scan:0;
+  --fx-sheen:0;
+  --fx-lift:1;
+}
+html[data-skin=soft-light]{
+  --surface:#E3E7ED;
+  --plane:#E3E7ED;
+  --band:#E3E7ED;
+  --ink:#1C2431;
+  --ink2:#323C4C;
+  --muted:#4E5868;
+  --grid:#CDD3DC;
+  --link:#3A5A00;
+  --bar:#3B5C00;
+  --onbar:#FFFFFF;
+  --good:#0E6340;
+  --warn:#9E3726;
+  --off:#4E5868;
+  --accent-sky:#1C5C77;
+  --accent-mint:#0E6340;
+  --accent-gold:#74500C;
+  --accent-coral:#9E3726;
+  --accent-violet:#57479A;
+  --act:#A4C812;
+  --act-hi:#B6D93A;
+  --act-edge:#5E7A00;
+  --onact:#1C1B1B;
+  --accent-slate:#4E5868;
+  --ui:"Geist","Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --mono:"Geist Mono","SF Mono",ui-monospace,"Cascadia Mono",Consolas,"Liberation Mono",monospace;
+  --num:"Geist","Inter","Segoe UI",system-ui,-apple-system,Helvetica,Arial,sans-serif;
+  --radius:20px;
+  --radius-sm:14px;
+  --hair:1px;
+  --blur:0px;
+  --panel:var(--surface);
+  --panel-b:transparent;
+  --rail-bg:var(--surface);
+  --field:radial-gradient(1400px 900px at 12% -10%,rgba(255,255,255,.5),transparent 70%);
+  --shadow:14px 14px 30px rgba(132,146,170,.7),-12px -12px 28px rgba(255,255,255,1);
+  --lift:7px 7px 14px rgba(132,146,170,.66),-6px -6px 13px rgba(255,255,255,1);
+  --lift-hi:10px 10px 20px rgba(126,140,165,.72),-8px -8px 17px rgba(255,255,255,1);
+  --raise:14px 14px 30px rgba(132,146,170,.7),-12px -12px 28px rgba(255,255,255,1);
+  --raise-sm:7px 7px 14px rgba(132,146,170,.66),-6px -6px 13px rgba(255,255,255,1);
+  --raise-hi:10px 10px 20px rgba(126,140,165,.72),-8px -8px 17px rgba(255,255,255,1);
+  --press:inset 7px 7px 14px rgba(132,146,170,.66),inset -6px -6px 13px rgba(255,255,255,.95);
+  --press-sm:inset 3px 3px 7px rgba(132,146,170,.62),inset -3px -3px 6px rgba(255,255,255,1);
+  --press-act:inset 4px 4px 8px rgba(60,80,0,.38),inset -3px -3px 6px rgba(255,255,255,.5);
+  --glow:0 0 20px rgba(120,150,0,.38);
+  --scrim:linear-gradient(to top,rgba(10,12,16,.92),rgba(10,12,16,.56) 38%,rgba(10,12,16,.08) 74%,transparent);
+  --kick-case:uppercase;
+  --kick-track:.12em;
+  --fx-glow:1;
+  --fx-pulse:1;
+  --fx-scan:0;
+  --fx-sheen:0;
   --fx-lift:1;
 }
 html[data-skin=graphite]{
@@ -113,6 +232,17 @@ html[data-skin=graphite]{
   --fx-scan:0;
   --fx-sheen:0;
   --fx-lift:0;
+  --raise:0 1px 2px rgba(0,0,0,.55),0 10px 24px -12px rgba(0,0,0,.8);
+  --raise-sm:0 1px 2px rgba(0,0,0,.55),0 10px 24px -12px rgba(0,0,0,.8);
+  --raise-hi:0 2px 5px rgba(0,0,0,.6),0 26px 52px -16px rgba(0,0,0,.95);
+  --press:inset 0 1px 3px rgba(0,0,0,.55);
+  --press-sm:inset 0 1px 2px rgba(0,0,0,.5);
+  --press-act:inset 0 1px 3px rgba(0,0,0,.5);
+  --glow:0 0 14px color-mix(in srgb,var(--bar) 40%,transparent);
+  --act:#D6A034;
+  --act-hi:#D6A034;
+  --act-edge:#D6A034;
+  --onact:#090A0D;
 }
 html[data-skin=glass]{
   --surface:#070912;
@@ -156,6 +286,17 @@ html[data-skin=glass]{
   --fx-scan:0;
   --fx-sheen:1;
   --fx-lift:1;
+  --raise:0 2px 8px rgba(2,5,16,.45),0 20px 46px -14px rgba(2,5,16,.66);
+  --raise-sm:0 2px 8px rgba(2,5,16,.45),0 20px 46px -14px rgba(2,5,16,.66);
+  --raise-hi:0 4px 14px rgba(2,5,16,.5),0 40px 80px -20px rgba(2,5,16,.85);
+  --press:inset 0 1px 3px rgba(0,0,0,.55);
+  --press-sm:inset 0 1px 2px rgba(0,0,0,.5);
+  --press-act:inset 0 1px 3px rgba(0,0,0,.5);
+  --glow:0 0 14px color-mix(in srgb,var(--bar) 40%,transparent);
+  --act:#6FE3C4;
+  --act-hi:#6FE3C4;
+  --act-edge:#6FE3C4;
+  --onact:#04121A;
 }
 html[data-skin=terminal]{
   --surface:#04070A;
@@ -199,6 +340,17 @@ html[data-skin=terminal]{
   --fx-scan:1;
   --fx-sheen:0;
   --fx-lift:0;
+  --raise:3px 3px 0 rgba(0,0,0,.9);
+  --raise-sm:3px 3px 0 rgba(0,0,0,.9);
+  --raise-hi:6px 6px 0 rgba(0,0,0,.95);
+  --press:inset 0 1px 3px rgba(0,0,0,.55);
+  --press-sm:inset 0 1px 2px rgba(0,0,0,.5);
+  --press-act:inset 0 1px 3px rgba(0,0,0,.5);
+  --glow:0 0 14px color-mix(in srgb,var(--bar) 40%,transparent);
+  --act:#52F2A0;
+  --act-hi:#52F2A0;
+  --act-edge:#52F2A0;
+  --onact:#04070A;
 }
 
 *{box-sizing:border-box}
@@ -232,9 +384,10 @@ button{cursor:pointer}
 /* ---- the one sticky layer ----
    Today's page pins the masthead and the filter bar separately and spends 148px of a 900px viewport on
    chrome before a single row. This is 52px, and it is the only thing that pins. */
-.rail{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:12px;height:52px;
-  padding:0 16px;background:var(--rail-bg);border-bottom:var(--hair) solid var(--grid);
-  backdrop-filter:blur(var(--blur)) saturate(1.3);-webkit-backdrop-filter:blur(var(--blur)) saturate(1.3)}
+.rail{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:12px;height:52px;padding:0 16px;
+  background:var(--rail-bg);border-bottom:var(--hair) solid transparent;
+  backdrop-filter:blur(var(--blur)) saturate(1.3);
+  -webkit-backdrop-filter:blur(var(--blur)) saturate(1.3);box-shadow:var(--raise)}
 .mark{display:flex;align-items:center;gap:9px;font-weight:600;letter-spacing:-.01em;white-space:nowrap}
 /* The mark has no tile, and losing it was the point. The first version set `background:var(--bar)` on this
    box and centred a glyph in it, which is fine for a letter and fatal for this drawing: the mark's own
@@ -267,8 +420,8 @@ button{cursor:pointer}
 .qwrap{position:relative;flex:1 1 auto;max-width:520px;min-width:0}
 .qwrap .mag{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--muted);
   font-size:13px;pointer-events:none}
-#q{width:100%;height:34px;padding:0 74px 0 31px;border-radius:999px;
-  border:var(--hair) solid var(--grid);background:var(--band);color:var(--ink);font-size:13.5px}
+#q{width:100%;height:34px;padding:0 74px 0 31px;border-radius:999px;border:var(--hair) solid transparent;
+  background:var(--surface);color:var(--ink);font-size:13.5px;box-shadow:var(--press)}
 #q::placeholder{color:var(--muted)}
 .qwrap .kbd{position:absolute;right:8px;top:50%;transform:translateY(-50%);font-family:var(--mono);
   font-size:10.5px;color:var(--muted);border:var(--hair) solid var(--grid);border-radius:5px;
@@ -279,23 +432,22 @@ button{cursor:pointer}
 .spring{flex:1 1 auto}
 /* The segmented view switch and the skin button share one shape, so the rail reads as one instrument
    rather than a row of unrelated widgets -- which is the single biggest complaint about today's bar. */
-.seg{display:flex;gap:2px;padding:2px;border-radius:999px;background:var(--band);
-  border:var(--hair) solid var(--grid)}
+.seg{display:flex;gap:3px;padding:4px;border-radius:999px;background:var(--surface);
+  border:var(--hair) solid transparent;box-shadow:var(--raise-sm)}
 .seg button{height:26px;padding:0 11px;border:0;border-radius:999px;background:transparent;
   color:var(--muted);font-size:12px;letter-spacing:.01em}
-.seg button[aria-pressed=true]{background:var(--bar);color:var(--onbar);font-weight:600;
-  box-shadow:0 0 calc(14px * var(--fx-glow)) color-mix(in srgb,var(--bar) 45%,transparent)}
-.ghost{height:30px;padding:0 12px;border-radius:999px;background:var(--band);
-  border:var(--hair) solid var(--grid);color:var(--ink2);font-size:12.5px;display:flex;
-  align-items:center;gap:7px;white-space:nowrap}
-.ghost:hover{color:var(--ink);border-color:var(--bar)}
+.seg button[aria-pressed=true]{background:var(--surface);color:var(--bar);font-weight:600;box-shadow:var(--press)}
+.ghost{height:30px;padding:0 12px;border-radius:999px;background:var(--surface);
+  border:var(--hair) solid transparent;color:var(--ink2);font-size:12.5px;display:flex;
+  align-items:center;gap:7px;white-space:nowrap;box-shadow:var(--raise-sm)}
+.ghost:hover{color:var(--ink);border-color:transparent;box-shadow:var(--raise-hi)}
 .dotrow{display:flex;gap:3px}
 .dotrow i{width:8px;height:8px;border-radius:50%;display:block}
 
 /* ---- skin picker ---- */
 .picker{position:relative}
 .menu{position:absolute;right:0;top:38px;min-width:266px;padding:6px;border-radius:var(--radius);
-  background:var(--panel);border:var(--hair) solid var(--panel-b);box-shadow:var(--shadow);
+  background:var(--surface);border:var(--hair) solid transparent;box-shadow:var(--raise);
   backdrop-filter:blur(calc(var(--blur) + 8px));-webkit-backdrop-filter:blur(calc(var(--blur) + 8px));
   z-index:70}
 .menu[hidden]{display:none}
@@ -303,8 +455,8 @@ button{cursor:pointer}
   letter-spacing:var(--kick-track);color:var(--muted);font-weight:600}
 .menu button{display:flex;width:100%;gap:10px;align-items:flex-start;padding:9px 9px;border:0;
   border-radius:var(--radius-sm);background:transparent;text-align:left}
-.menu button:hover{background:var(--band)}
-.menu button[aria-pressed=true]{background:var(--band);outline:var(--hair) solid var(--bar)}
+.menu button:hover{background:var(--surface);box-shadow:var(--raise-sm)}
+.menu button[aria-pressed=true]{background:var(--surface);outline:none;box-shadow:var(--press)}
 .menu .sw{display:flex;flex:none;gap:0;margin-top:2px;border-radius:5px;overflow:hidden;
   border:1px solid var(--grid)}
 .menu .sw i{width:12px;height:22px;display:block}
@@ -573,7 +725,7 @@ a.ghost:hover{text-decoration:none}
   border:var(--hair) solid var(--grid);flex:none}
 .rtabs button{height:22px;padding:0 11px;border:0;border-radius:999px;background:transparent;
   color:var(--muted);font-size:11px}
-.rtabs button[aria-pressed=true]{background:var(--bar);color:var(--onbar);font-weight:600}
+.rtabs button[aria-pressed=true]{background:var(--surface);color:var(--bar);font-weight:600;box-shadow:var(--press)}
 .rbody{padding:16px 18px 18px;min-height:186px}
 .sk-line{height:11px;border-radius:3px;margin:0 0 12px;background:var(--band);
   background-image:linear-gradient(90deg,var(--band),var(--grid),var(--band));background-size:220% 100%;
@@ -664,11 +816,11 @@ table.plat .pv{white-space:nowrap;font-weight:600}
 </head>
 <body>
 <div class="scan" aria-hidden="true"></div>
-<header class="rail"><span class="mark"><span class="glyph" aria-hidden="true"><svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" focusable="false"><image href="../../../assets/archie-mark.webp" width="64" height="64"/></svg></span><b>Atlas</b><span class="ver">v2 demo</span></span><span class="qwrap"><span class="mag">&#9906;</span><input id="q" type="search" placeholder="Search is inert in this demo" aria-label="Search (inert in this demo)"><span class="kbd">/</span></span><a class="ghost" href="../../rail.html" title="Back to the results (Esc)"><span aria-hidden="true">&larr;</span> All projects</a><span class="spring"></span><div class="picker"><button class="ghost" id="skinbtn" aria-expanded="false"><span class="dotrow"><i style="background:#D6A034"></i><i style="background:#6FE3C4"></i><i style="background:#52F2A0"></i></span>Skin</button><div class="menu" id="skinmenu" hidden><h3>Skin <kbd>T</kbd> cycles</h3><button data-skin="graphite" aria-pressed="false"><span class="sw"><i style="background:#090A0D"></i><i style="background:#D6A034"></i><i style="background:#78B7F4"></i></span><span><span class="nm">Graphite</span><span class="ds">Hairline precision. One accent, mono numerals, no glow.</span></span></button><button data-skin="glass" aria-pressed="false"><span class="sw"><i style="background:#070912"></i><i style="background:#6FE3C4"></i><i style="background:#7CC4FF"></i></span><span><span class="nm">Glass Console</span><span class="ds">Frosted planes over a lit field. Floating rail, pointer sheen, live glow.</span></span></button><button data-skin="terminal" aria-pressed="false"><span class="sw"><i style="background:#04070A"></i><i style="background:#52F2A0"></i><i style="background:#57D9FF"></i></span><span><span class="nm">Neon Terminal</span><span class="ds">All monospace. Phosphor green, bracket chips, panes not cards, scanline.</span></span></button></div></div></header><div class="dshell"><nav class="crumb" aria-label="Breadcrumb"><a href="../../rail.html">Atlas</a><span class="sep" aria-hidden="true">&rsaquo;</span><a href="../../rail.html">Docs, Learning &amp; Lists</a><span class="sep" aria-hidden="true">&rsaquo;</span><b>f/awesome-chatgpt-prompts</b></nav><section class="hero" style="--ac:var(--accent-gold)"><div><div class="kick">Docs, Learning &amp; Lists</div><h1>f/awesome-chatgpt-prompts</h1><a class="hnwo" href="https://github.com/f/prompts.chat">f/prompts.chat</a><p class="lead">World&#x27;s largest open-source prompt library. 1000s of prompts for all major models</p><div class="hacts"><a class="go" href="https://github.com/f/prompts.chat">View on GitHub <span aria-hidden="true">&#8599;</span></a><a class="ghost" href="../../rail.html">Find it in the atlas</a></div></div><div class="hshot"><img src="https://raw.githubusercontent.com/f/prompts.chat/main/public/sponsors/clemta.webp" alt="" loading="lazy" decoding="async"><p class="cap">The project's own screenshot. Fetched from source, never copied into this repository.</p></div></section><div class="deck"><div class="tile lit"><div class="k">stars</div><div class="v" data-live="stars"><span class="sk"></span></div></div><div class="tile"><div class="k">last push</div><div class="v" data-live="pushed"><span class="sk"></span></div><span class="u" id="pushedon"></span></div><div class="tile"><div class="k">rank by stars</div><div class="v" data-live="rank"><span class="sk"></span></div><span class="u" id="rankof"></span><div class="pbar"><i></i></div><div class="pctl" id="pctl"></div></div><div class="tile"><div class="k">named by</div><div class="v">3</div><span class="u">of 39 lists</span></div><div class="tile"><div class="k">harnesses</div><div class="v">3</div><span class="u">of 12</span></div></div><div class="dgrid"><main><section class="panel"><h2>Install</h2><div class="cmdrow"><code class="cmd">npx prompts.chat new my-prompt-library</code><button class="ghost" id="copy">Copy</button></div></section><section class="panel"><h2>Repository reader<em>read it before you clone it</em></h2><div class="reader" data-tab="rendered"><div class="rchrome"><span class="dots"><i></i><i></i><i></i></span><span class="rpath">README.md</span><span class="rtabs"><button data-tab="rendered" aria-pressed="true">Rendered</button><button data-tab="source" aria-pressed="false">Source</button></span></div><div class="rbody"><div class="sk-line" style="width:94%"></div><div class="sk-line" style="width:100%"></div><div class="sk-line" style="width:88%"></div><div class="sk-line" style="width:62%"></div><div class="sk-line" style="width:97%"></div><div class="sk-line" style="width:74%"></div></div></div><p class="pnote">The shipped page loads the project&rsquo;s README, skills and supporting Markdown from the GitHub API on demand, rendered here, source one click away. It is a skeleton in this demo rather than invented prose &mdash; the frame is the thing being judged.</p></section><section class="panel"><h2>Platform support</h2><table class="plat"><thead><tr><th>Platform</th><th>Runs here</th><th>On what evidence</th></tr></thead><tbody><tr><td class="pn">Windows</td><td class="pv vL"><i class="sl l"></i>Likely</td><td>Inferred from the language or runtime. Nothing in the project says so.</td></tr><tr><td class="pn">WSL2</td><td class="pv vL"><i class="sl l"></i>Likely</td><td>Inferred from the language or runtime. Nothing in the project says so.</td></tr><tr><td class="pn">macOS</td><td class="pv vL"><i class="sl l"></i>Likely</td><td>Inferred from the language or runtime. Nothing in the project says so.</td></tr><tr><td class="pn">Linux</td><td class="pv vL"><i class="sl l"></i>Likely</td><td>Inferred from the language or runtime. Nothing in the project says so.</td></tr><tr><td class="pn">Docker</td><td class="pv vN"><i class="sl n"></i>No</td><td>No evidence of support anywhere in the project.</td></tr></tbody></table><p class="pnote">Derived from the project&rsquo;s own README, install route, CI configuration and release assets &mdash; not from running it.</p></section></main><aside class="spec"><section class="panel"><h2>At a glance</h2><dl class="kv2"><dt>Topic</dt><dd><a href="../../rail.html">Docs, Learning &amp; Lists</a></dd><dt>Harness</dt><dd><span class="chips"><span class="tag">Claude / Anthropic</span><span class="tag">Codex / OpenAI</span><span class="tag">Gemini / Google</span></span></dd><dt>Language</dt><dd>HTML</dd><dt>Licence</dt><dd>none declared</dd><dt>Platform</dt><dd><span class="meter" aria-hidden="true"><i class="sl l" title="Windows"></i><i class="sl l" title="WSL2"></i><i class="sl l" title="macOS"></i><i class="sl l" title="Linux"></i><i class="sl n" title="Docker"></i></span></dd></dl></section><section class="panel"><h2>Where it came from</h2><div class="cons" aria-hidden="true"><i class="on" title="7,638 projects are named by 1"></i><i class="on" title="840 projects are named by 2"></i><i class="on" title="230 projects are named by 3"></i><i class="" title="70 projects are named by 4"></i><i class="" title="32 projects are named by 5"></i><i class="" title="20 projects are named by 6"></i><i class="" title="13 projects are named by 7"></i><i class="" title="9 projects are named by 8"></i><i class="" title="2 projects are named by 9"></i><i class="" title="3 projects are named by 10"></i><i class="" title="0 projects are named by 11"></i><i class="" title="0 projects are named by 12"></i><i class="" title="1 projects are named by 13"></i></div><p class="consn"><b>3</b> of the 39 lists name it, independently of each other. Only <b>380</b> of 8,858 projects manage that &mdash; 4.3%.</p><div class="chips" style="margin-top:11px"><span class="tag">AAS Skill Sources</span><span class="tag">Agent Skill Security</span><span class="tag">Prompt Engineering (promptslab)</span></div></section><section class="panel"><h2>Related in Docs, Learning &amp; Lists<em>142 in total</em></h2><div class="rel"><a class="rrow" href="../../../repo/bradagi/awesome-cli-coding-agents/"><span class="rn">bradAGI/awesome-cli-coding-agents</span><span class="rs">3 shared</span></a><a class="rrow" href="../../../repo/e2b-dev/awesome-ai-agents/"><span class="rn">awesome-ai-agents</span><span class="rs">2 shared</span></a><a class="rrow" href="../ykdojo/claude-code-tips.html"><span class="rn">claude-code-tips</span><span class="rs">2 shared</span></a><a class="rrow" href="../../../repo/tallesborges/agentic-system-prompts/"><span class="rn">AI Agent System Prompts Library</span><span class="rs">2 shared</span></a><a class="rrow" href="../../../repo/jnmetacode/ai-coding-guide/"><span class="rn">AI Coding Guide (中文)</span><span class="rs">2 shared</span></a><a class="rrow" href="../../../repo/openai/codex-plugin-cc/"><span class="rn">Codex Plugin for Claude Code</span><span class="rs">2 shared</span></a></div><p class="pnote">Ranked by shared harnesses, then by how many lists named it &mdash; properties of the curation, not of a star count that moves daily.</p></section></aside></div><footer style="margin-top:26px;padding-top:16px;border-top:var(--hair) solid var(--grid);color:var(--muted);font-size:12px">One project page. Stars, last push and rank are fetched from <code style="font-family:var(--mono)">docs/live.json</code> after paint and are not in these bytes &mdash; which is what keeps 1,294 of these from being rewritten on every daily run. The reader is a skeleton here. <a href="../../rail.html">Cards</a> &middot; <a href="../../console.html">Console</a> &middot; <a href="../../app.html">Back to the switcher</a></footer></div>
+<header class="rail"><span class="mark"><span class="glyph" aria-hidden="true"><svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" focusable="false"><image href="../../../assets/archie-mark.webp" width="64" height="64"/></svg></span><b>Atlas</b><span class="ver">v2 demo</span></span><span class="qwrap"><span class="mag">&#9906;</span><input id="q" type="search" placeholder="Search is inert in this demo" aria-label="Search (inert in this demo)"><span class="kbd">/</span></span><a class="ghost" href="../../rail.html" title="Back to the results (Esc)"><span aria-hidden="true">&larr;</span> All projects</a><span class="spring"></span><div class="picker"><button class="ghost" id="skinbtn" aria-expanded="false"><span class="dotrow"><i style="background:#A4C812"></i><i style="background:#A4C812"></i><i style="background:#D6A034"></i><i style="background:#6FE3C4"></i><i style="background:#52F2A0"></i></span>Skin</button><div class="menu" id="skinmenu" hidden><h3>Skin <kbd>T</kbd> cycles</h3><button data-skin="soft" aria-pressed="false"><span class="sw"><i style="background:#24272D"></i><i style="background:#A4C812"></i><i style="background:#C9E46B"></i></span><span><span class="nm">Soft UI</span><span class="ds">The live site&#x27;s design: one surface, raised and pressed by light.</span></span></button><button data-skin="soft-light" aria-pressed="false"><span class="sw"><i style="background:#E3E7ED"></i><i style="background:#A4C812"></i><i style="background:#3A5A00"></i></span><span><span class="nm">Soft UI light</span><span class="ds">The same, on the light base.</span></span></button><button data-skin="graphite" aria-pressed="false"><span class="sw"><i style="background:#090A0D"></i><i style="background:#D6A034"></i><i style="background:#78B7F4"></i></span><span><span class="nm">Graphite</span><span class="ds">Hairline precision. One accent, mono numerals, no glow.</span></span></button><button data-skin="glass" aria-pressed="false"><span class="sw"><i style="background:#070912"></i><i style="background:#6FE3C4"></i><i style="background:#7CC4FF"></i></span><span><span class="nm">Glass Console</span><span class="ds">Frosted planes over a lit field. Floating rail, pointer sheen, live glow.</span></span></button><button data-skin="terminal" aria-pressed="false"><span class="sw"><i style="background:#04070A"></i><i style="background:#52F2A0"></i><i style="background:#57D9FF"></i></span><span><span class="nm">Neon Terminal</span><span class="ds">All monospace. Phosphor green, bracket chips, panes not cards, scanline.</span></span></button></div></div></header><div class="dshell"><nav class="crumb" aria-label="Breadcrumb"><a href="../../rail.html">Atlas</a><span class="sep" aria-hidden="true">&rsaquo;</span><a href="../../rail.html">Docs, Learning &amp; Lists</a><span class="sep" aria-hidden="true">&rsaquo;</span><b>f/awesome-chatgpt-prompts</b></nav><section class="hero" style="--ac:var(--accent-gold)"><div><div class="kick">Docs, Learning &amp; Lists</div><h1>f/awesome-chatgpt-prompts</h1><a class="hnwo" href="https://github.com/f/prompts.chat">f/prompts.chat</a><p class="lead">World&#x27;s largest open-source prompt library. 1000s of prompts for all major models</p><div class="hacts"><a class="go" href="https://github.com/f/prompts.chat">View on GitHub <span aria-hidden="true">&#8599;</span></a><a class="ghost" href="../../rail.html">Find it in the atlas</a></div></div><div class="hshot"><img src="https://raw.githubusercontent.com/f/prompts.chat/main/public/sponsors/clemta.webp" alt="" loading="lazy" decoding="async"><p class="cap">The project's own screenshot. Fetched from source, never copied into this repository.</p></div></section><div class="deck"><div class="tile lit"><div class="k">stars</div><div class="v" data-live="stars"><span class="sk"></span></div></div><div class="tile"><div class="k">last push</div><div class="v" data-live="pushed"><span class="sk"></span></div><span class="u" id="pushedon"></span></div><div class="tile"><div class="k">rank by stars</div><div class="v" data-live="rank"><span class="sk"></span></div><span class="u" id="rankof"></span><div class="pbar"><i></i></div><div class="pctl" id="pctl"></div></div><div class="tile"><div class="k">named by</div><div class="v">3</div><span class="u">of 39 lists</span></div><div class="tile"><div class="k">harnesses</div><div class="v">3</div><span class="u">of 12</span></div></div><div class="dgrid"><main><section class="panel"><h2>Install</h2><div class="cmdrow"><code class="cmd">npx prompts.chat new my-prompt-library</code><button class="ghost" id="copy">Copy</button></div></section><section class="panel"><h2>Repository reader<em>read it before you clone it</em></h2><div class="reader" data-tab="rendered"><div class="rchrome"><span class="dots"><i></i><i></i><i></i></span><span class="rpath">README.md</span><span class="rtabs"><button data-tab="rendered" aria-pressed="true">Rendered</button><button data-tab="source" aria-pressed="false">Source</button></span></div><div class="rbody"><div class="sk-line" style="width:94%"></div><div class="sk-line" style="width:100%"></div><div class="sk-line" style="width:88%"></div><div class="sk-line" style="width:62%"></div><div class="sk-line" style="width:97%"></div><div class="sk-line" style="width:74%"></div></div></div><p class="pnote">The shipped page loads the project&rsquo;s README, skills and supporting Markdown from the GitHub API on demand, rendered here, source one click away. It is a skeleton in this demo rather than invented prose &mdash; the frame is the thing being judged.</p></section><section class="panel"><h2>Platform support</h2><table class="plat"><thead><tr><th>Platform</th><th>Runs here</th><th>On what evidence</th></tr></thead><tbody><tr><td class="pn">Windows</td><td class="pv vL"><i class="sl l"></i>Likely</td><td>Inferred from the language or runtime. Nothing in the project says so.</td></tr><tr><td class="pn">WSL2</td><td class="pv vL"><i class="sl l"></i>Likely</td><td>Inferred from the language or runtime. Nothing in the project says so.</td></tr><tr><td class="pn">macOS</td><td class="pv vL"><i class="sl l"></i>Likely</td><td>Inferred from the language or runtime. Nothing in the project says so.</td></tr><tr><td class="pn">Linux</td><td class="pv vL"><i class="sl l"></i>Likely</td><td>Inferred from the language or runtime. Nothing in the project says so.</td></tr><tr><td class="pn">Docker</td><td class="pv vN"><i class="sl n"></i>No</td><td>No evidence of support anywhere in the project.</td></tr></tbody></table><p class="pnote">Derived from the project&rsquo;s own README, install route, CI configuration and release assets &mdash; not from running it.</p></section></main><aside class="spec"><section class="panel"><h2>At a glance</h2><dl class="kv2"><dt>Topic</dt><dd><a href="../../rail.html">Docs, Learning &amp; Lists</a></dd><dt>Harness</dt><dd><span class="chips"><span class="tag">Claude / Anthropic</span><span class="tag">Codex / OpenAI</span><span class="tag">Gemini / Google</span></span></dd><dt>Language</dt><dd>MDX</dd><dt>Licence</dt><dd>none declared</dd><dt>Platform</dt><dd><span class="meter" aria-hidden="true"><i class="sl l" title="Windows"></i><i class="sl l" title="WSL2"></i><i class="sl l" title="macOS"></i><i class="sl l" title="Linux"></i><i class="sl n" title="Docker"></i></span></dd></dl></section><section class="panel"><h2>Where it came from</h2><div class="cons" aria-hidden="true"><i class="on" title="8,850 projects are named by 1"></i><i class="on" title="960 projects are named by 2"></i><i class="on" title="279 projects are named by 3"></i><i class="" title="93 projects are named by 4"></i><i class="" title="48 projects are named by 5"></i><i class="" title="29 projects are named by 6"></i><i class="" title="13 projects are named by 7"></i><i class="" title="8 projects are named by 8"></i><i class="" title="5 projects are named by 9"></i><i class="" title="3 projects are named by 10"></i><i class="" title="1 projects are named by 11"></i><i class="" title="0 projects are named by 12"></i><i class="" title="1 projects are named by 13"></i></div><p class="consn"><b>3</b> of the 39 lists name it, independently of each other. Only <b>480</b> of 12,007 projects manage that &mdash; 4.0%.</p><div class="chips" style="margin-top:11px"><span class="tag">AAS Skill Sources</span><span class="tag">Agent Skill Security</span><span class="tag">Prompt Engineering (promptslab)</span></div></section><section class="panel"><h2>Related in Docs, Learning &amp; Lists<em>148 in total</em></h2><div class="rel"><a class="rrow" href="../../../repo/bradagi/awesome-cli-coding-agents/"><span class="rn">bradAGI/awesome-cli-coding-agents</span><span class="rs">3 shared</span></a><a class="rrow" href="../../../repo/e2b-dev/awesome-ai-agents/"><span class="rn">awesome-ai-agents</span><span class="rs">2 shared</span></a><a class="rrow" href="../../../repo/ykdojo/claude-code-tips/"><span class="rn">claude-code-tips</span><span class="rs">2 shared</span></a><a class="rrow" href="../../../repo/tallesborges/agentic-system-prompts/"><span class="rn">AI Agent System Prompts Library</span><span class="rs">2 shared</span></a><a class="rrow" href="../../../repo/jnmetacode/ai-coding-guide/"><span class="rn">AI Coding Guide (中文)</span><span class="rs">2 shared</span></a><a class="rrow" href="../../../repo/openai/codex-plugin-cc/"><span class="rn">Codex Plugin for Claude Code</span><span class="rs">2 shared</span></a></div><p class="pnote">Ranked by shared harnesses, then by how many lists named it &mdash; properties of the curation, not of a star count that moves daily.</p></section></aside></div><footer style="margin-top:26px;padding-top:16px;border-top:var(--hair) solid var(--grid);color:var(--muted);font-size:12px">One project page. Stars, last push and rank are fetched from <code style="font-family:var(--mono)">docs/live.json</code> after paint and are not in these bytes &mdash; which is what keeps 1,294 of these from being rewritten on every daily run. The reader is a skeleton here. <a href="../../rail.html">Cards</a> &middot; <a href="../../console.html">Console</a> &middot; <a href="../../app.html">Back to the switcher</a></footer></div>
 <script>
 // Everything below is demo scaffolding for the parts of "is this nice to use" that a static page cannot
 // answer: the skin swap, the bars, the deck, the sheen and the selection. There is no search here.
-const SKIN_PLANE = {"graphite":"#090A0D","glass":"rgba(10,14,28,.62)","terminal":"#050B0D"};
+const SKIN_PLANE = {"soft":"#24272D","soft-light":"#E3E7ED","graphite":"#090A0D","glass":"rgba(10,14,28,.62)","terminal":"#050B0D"};
 
 // ---- skins. One attribute on <html>; no other JS and no CSS rule knows which skin is active. ----
 const skinBtn = document.getElementById("skinbtn");

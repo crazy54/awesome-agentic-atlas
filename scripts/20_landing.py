@@ -153,19 +153,19 @@ CSS = """/* Written by scripts/20_landing.py. Shared by every page under docs/to
 """ + sitewide.THEME_CSS + """*{box-sizing:border-box}
 /* --ui is the page's own font stack in both themes. The field is `body::before` in `THEME_CSS` above;
    this sets --surface, the base every surface on the page is made of. */
-body{margin:0;background:var(--surface);color:var(--ink);font:15px/1.5 var(--ui)}
+body{margin:0;background:var(--surface);color:var(--ink);font:15px/1.55 var(--ui)}
 a{color:var(--link);text-decoration:none}
 a:hover{text-decoration:underline}
 /* The header is the base, transparent over the field: soft UI draws no bar and no rule under it. */
 header{background:transparent;border-bottom:1px solid transparent;padding:22px 20px 16px}
 .wrap{max-width:1500px;margin:0 auto}
-h1{margin:0 0 6px;font-size:26px;letter-spacing:-.02em}
-h2{margin:34px 0 8px;font-size:16px;letter-spacing:-.01em}
-.sub{color:var(--ink2);font-size:14px;margin:0}
+h1{margin:0 0 6px;font-size:34px;letter-spacing:-.035em;font-weight:750;line-height:1.1}
+h2{margin:34px 0 8px;font-size:20px;letter-spacing:-.02em;font-weight:650}
+.sub{color:var(--ink2);font-size:15px;margin:0}
 .sub b{color:var(--ink)}
 .top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
 .top nav{font-size:13px;color:var(--muted);text-align:right;line-height:1.9}
-.blurb{color:var(--muted);font-size:13px;margin:6px 0 0;max-width:70ch}
+.blurb{color:var(--muted);font-size:14px;margin:6px 0 0;max-width:70ch;line-height:1.55}
 button{font:inherit;cursor:pointer}
 .chip{display:inline-block;background:var(--surface);color:var(--ink2);border:1px solid transparent;
   border-radius:999px;padding:5px 12px;font-size:13px;white-space:nowrap;margin:0 5px 5px 0}
@@ -182,8 +182,8 @@ button{font:inherit;cursor:pointer}
 main{padding:0 20px 64px}
 table{width:100%;border-collapse:separate;margin-top:14px;border-spacing:0;background:var(--surface);
   box-shadow:var(--raise);border-radius:var(--r-card);padding:6px 8px}
-th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);
-  padding:8px 10px;border-bottom:1px solid var(--grid);background:transparent}
+th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);
+  padding:8px 10px;border-bottom:1px solid var(--grid);background:transparent;font-weight:700}
 th.n,td.n{text-align:right}
 th.c,td.c{text-align:center}
 td{padding:12px 10px;border-bottom:1px solid var(--grid);vertical-align:top}
@@ -198,7 +198,7 @@ td{padding:12px 10px;border-bottom:1px solid var(--grid);vertical-align:top}
    across every row on the page, and neither a slash nor a comma is a break opportunity in Chrome or
    Safari, so a repo name and a blurb naming six agents between them demand more than the content box
    has -- which the document then has to scroll sideways to satisfy. */
-.nm{font-weight:600;font-size:15px;overflow-wrap:anywhere}
+.nm{font-weight:650;font-size:16px;overflow-wrap:anywhere;letter-spacing:-.01em}
 .nwo{display:block;color:var(--muted);font-size:12px;margin-top:2px;word-break:break-all}
 /* The `nwo` is a link out to GitHub and the name above it is a link into this site, so the two need to
    be told apart without colour doing it -- muted is the right weight for the secondary line and the
@@ -209,7 +209,7 @@ a.nwo:hover{color:var(--ink)}
 .forge{display:inline-block;border:1px solid transparent;border-radius:5px;padding:0 5px;
   background:var(--surface);font-size:10.5px;font-weight:600;color:var(--ink2);white-space:nowrap;
   vertical-align:1px;box-shadow:var(--press-sm)}
-.st{font-size:16px;font-weight:700;font-variant-numeric:tabular-nums}
+.st{font-size:18px;font-weight:750;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
 .st.none{font-size:13px;font-weight:400;color:var(--muted)}
 .meta{color:var(--muted);font-size:12px;margin-top:5px}
 .desc{color:var(--ink2);font-size:13.5px;max-width:44em;overflow-wrap:anywhere}
@@ -256,7 +256,8 @@ a.nwo:hover{color:var(--ink)}
    would duplicate all of that to add the ten rules below, and cost a second blocking request on the
    page most likely to be somebody's first. `22_detail.py` does ship its own -- a detail page is a
    different layout -- and that is the line: same shell, same sheet. */
-.kick{margin:0 0 4px;font-size:11px;text-transform:uppercase;letter-spacing:.09em;color:var(--bar)}
+.kick{margin:0 0 4px;font-size:11.5px;text-transform:uppercase;letter-spacing:.14em;color:var(--bar);
+  font-weight:700}
 .intro{color:var(--ink2);font-size:14px;margin:10px 0 0;max-width:74ch}
 .take{max-width:52ch}
 /* The numbers are ours, in `.slot`, so the marker has to go. A collection is read as slots, and an
@@ -421,7 +422,7 @@ footer .wrap{max-width:1500px}
   header{padding:16px 14px 12px}
   main{padding:0 14px 48px}
   footer{padding:18px 14px}
-  h1{font-size:21px}
+  h1{font-size:27px}
   .top nav{text-align:left;line-height:2.1}
   /* A row stops being a row. Four columns cannot share 335px -- the blurb on its own wants more than
      that -- so each row becomes a card, and the headings, no longer above anything, go away. */
@@ -1181,13 +1182,14 @@ def main() -> None:
     for p in pages:
         p.path.parent.mkdir(parents=True, exist_ok=True)
         text = render(p, pages, data, cards)
-        p.path.write_text(text, encoding="utf-8")
+        p.path.write_text(sitewide.segnav(text, "Topics & harnesses"), encoding="utf-8")
         written += 1
         total += p.path.stat().st_size
 
     # The typefaces and the build tags ride at the end of the shared shell, for every page that links it:
     # the facets here, the collections, the homepage and Discover. See scripts/sitewide.py.
-    (OUT / "pages.css").write_text(CSS + sitewide.font_faces("") + sitewide.BUILDTAGS_CSS, encoding="utf-8")
+    (OUT / "pages.css").write_text(CSS + sitewide.font_faces("") + sitewide.BUILDTAGS_CSS + sitewide.NAV_CSS,
+                                   encoding="utf-8")
     colls = collection_urls(data)
     disc = discover_urls()
     local = local_urls()

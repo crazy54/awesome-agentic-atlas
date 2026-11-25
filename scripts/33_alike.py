@@ -195,7 +195,8 @@ def render() -> str:
     examples = " ".join(f'<a class="chip" data-ex href="{esc(h)}">{esc(t)}</a>' for h, t in EXAMPLES)
     stars = "".join(f'<option value="{v}">{esc(t)}</option>' for v, t in
                     ((0, "Any"), (10, "10+"), (100, "100+"), (1000, "1,000+"), (10000, "10,000+")))
-    return f"""{head(title, desc, url)}<body>
+    # Through `segnav()`, so the header nav is the raised track with this page pressed in it.
+    return sitewide.segnav(f"""{head(title, desc, url)}<body>
 <header><div class="wrap">
   <nav class="brandbar">{mark.brand(rel())}</nav><div class="top">
   <div>
@@ -270,7 +271,7 @@ def render() -> str:
 {PAGE_JS}</script>
 {sitewide.site_script(rel())}{THEME_JS}{b19.follow()}{b19.beacon()}</body>
 </html>
-"""
+""", sitewide.ALIKE_PAGE["title"], "./")
 
 
 # The page's own rules. Colour comes only from the site's custom properties (`sitewide.THEME_CSS`), so
@@ -279,7 +280,8 @@ def render() -> str:
 CSS = """
 .lk .wrap{max-width:980px}
 .lk [hidden]{display:none!important}
-.kick{margin:0 0 4px;color:var(--muted);font:600 12px/1.4 var(--mono);letter-spacing:.06em;text-transform:uppercase}
+.kick{margin:0 0 4px;color:var(--muted);font:600 12px/1.4 var(--mono);letter-spacing:.12em;
+  text-transform:uppercase}
 .lks{margin:26px 0 0;padding:20px;border:1px solid transparent;border-radius:24px;background:var(--surface);
   box-shadow:var(--raise)}
 .lks h2{margin:0;font-size:19px}

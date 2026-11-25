@@ -49,6 +49,10 @@
     s.style.cssText = "position:absolute;right:18px;bottom:-12px;width:150px;height:150px;pointer-events:none";
     d.appendChild(s);
     document.body.appendChild(d);
+    // He stands in a gutter of his own, never over the page: `html.archie-docked` reserves his slot's width
+    // down the right of the page wherever he is shown (900px and up), so no card, count or link can scroll
+    // under him. See the rule beside `.archie-dock` in CSS below.
+    document.documentElement.classList.add("archie-docked");
     return s;
   };
   const home = document.querySelector(".mhmascot");
@@ -1061,6 +1065,9 @@
   border-radius:45% 45% 30% 30%;cursor:pointer}
 .archie-poke:focus-visible{outline:2px solid var(--link);outline-offset:2px}
 .archie-dock .archie-poke{pointer-events:auto}
+/* His gutter: the slot is 150px wide, 18px in from the right edge, so the page keeps 176px clear. On the
+   body, so the header, the pinned bar, the results and the footer all stop short of him alike. */
+@media (min-width:900px){html.archie-docked body{padding-right:176px}}
 .archie-sr{position:absolute;width:1px;height:1px;margin:0;overflow:hidden;clip-path:inset(50%);
   white-space:nowrap}
 .archie-heart{position:absolute;z-index:3;color:#ff2bd6;font:700 20px/1 var(--ui);pointer-events:none;

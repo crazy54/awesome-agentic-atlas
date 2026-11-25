@@ -806,14 +806,15 @@ def main() -> None:
     total = 0
     for repo in repos:
         repo.path.parent.mkdir(parents=True, exist_ok=True)
-        repo.path.write_text(render(repo, by_cat, lists, data), encoding="utf-8")
+        repo.path.write_text(sitewide.segnav(render(repo, by_cat, lists, data)), encoding="utf-8")
         total += repo.path.stat().st_size
 
     base = out / "repo"
     base.mkdir(parents=True, exist_ok=True)
-    (base / "index.html").write_text(directory(repos, data), encoding="utf-8")
+    (base / "index.html").write_text(sitewide.segnav(directory(repos, data), "All projects", "./"), encoding="utf-8")
     # detail.css is one level below `docs/`, so its font URLs are `../`. See scripts/sitewide.py.
-    (base / "detail.css").write_text(CSS + sitewide.font_faces("../") + sitewide.BUILDTAGS_CSS, encoding="utf-8")
+    (base / "detail.css").write_text(CSS + sitewide.font_faces("../") + sitewide.BUILDTAGS_CSS + sitewide.NAV_CSS,
+                                     encoding="utf-8")
     (base / "detail.js").write_text(JS, encoding="utf-8")
     (out / "sitemap-repos.xml").write_text(sitemap(repos), encoding="utf-8")
 
@@ -864,8 +865,10 @@ header{background:transparent;border-bottom:1px solid transparent;padding:18px 2
 main{padding:0 20px 64px}
 footer{border-top:1px solid transparent;background:transparent;padding:22px 20px;color:var(--muted);
   font-size:13px;box-shadow:inset 0 1px 0 var(--grid)}
-h1{margin:0 0 4px;font-size:30px;letter-spacing:-.02em;overflow-wrap:anywhere}
-h2{margin:0 0 10px;font-size:15px;text-transform:uppercase;letter-spacing:.07em;color:var(--title)}
+h1{margin:0 0 4px;font-size:38px;letter-spacing:-.035em;overflow-wrap:anywhere;font-weight:750;
+  line-height:1.1}
+h2{margin:0 0 10px;font-size:15px;text-transform:uppercase;letter-spacing:.12em;color:var(--title);
+  font-weight:700}
 .crumb{font-size:13px;color:var(--muted);margin-bottom:14px}
 .top{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap}
 .top>div{min-width:0}
@@ -917,7 +920,7 @@ html[data-theme=light] .reader{--read-panel:var(--surface);--read-raised:var(--s
 .preview-intro{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:14px}
 .preview-intro h2{margin-bottom:6px;color:var(--title);font-size:19px;text-transform:none;letter-spacing:-.01em}
 .preview-intro .lead{margin:0;font-size:14.5px}
-.eyebrow{margin:0 0 3px;color:var(--bar);font-size:11px;font-weight:700;letter-spacing:.13em;
+.eyebrow{margin:0 0 3px;color:var(--bar);font-size:11px;font-weight:700;letter-spacing:.16em;
   text-transform:uppercase}
 .source-live{display:inline-flex;align-items:center;gap:7px;color:var(--muted);font-size:12px;
   white-space:nowrap;margin-bottom:3px}
@@ -1067,7 +1070,7 @@ ul.dir li{margin:0 0 5px;break-inside:avoid;overflow-wrap:anywhere}
   header{padding:14px 14px 18px}
   main{padding:0 14px 48px}
   footer{padding:18px 14px}
-  h1{font-size:23px}
+  h1{font-size:29px}
   .lead{font-size:15px}
   section{margin-top:26px;padding-top:18px}
   /* The button under the command rather than beside it. At 335px a flex row leaves the code element

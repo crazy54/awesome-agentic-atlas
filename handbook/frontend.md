@@ -79,6 +79,21 @@ has the same pair inside it. Nothing has a visible border and nothing is translu
 | `dark` | A cool charcoal base (`#24272D`), near-white ink, the lime for the active state, glows, progress and key numbers | on `:root`, so it is the JavaScript-off floor |
 | `light` | A cool grey-white base (`#E3E7ED`), navy-graphite ink, the lime deepened to an olive wherever it is text | the bright lime appears only as a fill (`--act`) |
 
+**The top nav is a segmented control.** Every page family writes its own header nav as runs of plain links,
+and `sitewide.segnav()` turns each run into a raised track (`.seg`) on the way out, with the page the reader
+is on pressed into it (`aria-current="page"`, and put back as the first item when the page leaves itself
+out). Icon-only controls -- the Settings gear, the shelves' arrows, the catalogue's platform filters -- are
+round 44px buttons (`.iconbtn`), with their word kept as visually hidden text. Both are `NAV_CSS`.
+
+**Type.** Geist, on a larger and heavier scale: display titles 34px at 750 (38px on a project page), section
+titles 20px, star counts 18px at 750, project names 16px at 650, and small caps for labels tracked wide.
+
+**Archie never covers the page.** When he follows a reader off the homepage he docks at the bottom right, and
+`html.archie-docked` reserves his slot as a right gutter (900px and up), so nothing scrolls under him.
+
+**The v2 beta** wears the same soft UI by default: `30_v2.py` builds its `soft` and `soft-light` skins from
+`sitewide.PALETTE` and `GLASS`, and keeps its three older skins in the picker.
+
 The accent is rationed, the way the reference designs ration theirs: titles and body text are the neutral
 inks. The masthead behind Archie is light, not a picture: the base's own highlight and a faint lime glow
 where he stands.

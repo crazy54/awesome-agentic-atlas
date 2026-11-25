@@ -519,7 +519,7 @@ def substitute(page: str, data: dict, repo: str, site: str) -> str:
             # The typefaces, the build tags and the site script, which every page family carries; see
             # scripts/sitewide.py. Constants, so stripped on the way in like the platform marks above.
             .replace("__FONTPRELOAD__", sitewide.font_preload(UP))
-            .replace("__SITECSS__", pagemin.strip_css(sitewide.font_faces(UP) + sitewide.BUILDTAGS_CSS))
+            .replace("__SITECSS__", pagemin.strip_css(sitewide.font_faces(UP) + sitewide.BUILDTAGS_CSS + sitewide.NAV_CSS))
             .replace("__BUILDTAGS__", sitewide.buildtags(repo))
             .replace("__SITEJS__", sitewide.site_script(UP))
             .replace("__SITEKIT__", sitewide.SITE_KIT)
@@ -752,7 +752,11 @@ header.setopen{z-index:30}
 # the markup because it is what a reader who has chosen nothing is on, and that is also the JavaScript-off
 # floor, where `paintSettings()` never runs.
 SETTINGS_MENU = r"""<div class="setwrap">
-      <button class="chip" id="setbtn" aria-expanded="false" aria-controls="setmenu">Settings</button>
+      <!-- A round icon button, as the references draw their controls. The word stays, visually hidden, so
+           the button is still named "Settings" to every reader and every script; `title` shows it on
+           hover. -->
+      <button class="chip iconbtn" id="setbtn" aria-expanded="false" aria-controls="setmenu"
+              title="Settings"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.55V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1.11-1.55 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.55-1H3a2 2 0 1 1 0-4h.09a1.7 1.7 0 0 0 1.55-1.11 1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34H9a1.7 1.7 0 0 0 1-1.55V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1 1.55 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87V9a1.7 1.7 0 0 0 1.55 1H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.55 1z"/></svg><span class="vh">Settings</span></button>
       <div class="setmenu" id="setmenu" hidden>
         <p class="setlab" id="setthemelab">Theme</p>
         <div class="setths" role="group" aria-labelledby="setthemelab">
@@ -830,7 +834,7 @@ __THEMECSS__
    colours -- is not drawn here: it is `body::before` in THEME_CSS, fixed to the window for every page family,
    because at 11,000 rows a field that scrolled with the document is a field nobody ever sees the end of.
    This only sets --surface, the colour the field is translucent over. */
-body{margin:0;background:var(--surface);color:var(--ink);font:15px/1.5 var(--ui)}
+body{margin:0;background:var(--surface);color:var(--ink);font:15px/1.55 var(--ui)}
 a{color:var(--link);text-decoration:none}
 a:hover{text-decoration:underline}
 /* Only #q had a focus ring, so every chip, the sort menu and both nav buttons were invisible to anyone
@@ -873,9 +877,9 @@ a:hover{text-decoration:underline}
 header{position:relative;z-index:10;background:transparent;border-bottom:1px solid transparent;
   padding:22px 20px 16px}
 .wrap{max-width:1500px;margin:0 auto}
-h1{margin:0 0 4px;font-size:26px;letter-spacing:-.02em}
-h1 span{color:var(--muted);font-weight:400;font-size:15px;letter-spacing:0}
-.sub{color:var(--ink2);font-size:14px;margin:0}
+h1{margin:0 0 4px;font-size:34px;letter-spacing:-.035em;font-weight:750;line-height:1.1}
+h1 span{color:var(--muted);font-weight:400;font-size:15px;letter-spacing:0;display:block;margin-top:4px}
+.sub{color:var(--ink2);font-size:15px;margin:0}
 .sub b{color:var(--ink)}
 /* The snapshot's age, shown only when it is bad news. A green "3 days ago" beside the date was telling
    the reader twice over that the site is current, because the "last deployed" badge below says it in the
@@ -895,6 +899,8 @@ h1 span{color:var(--muted);font-weight:400;font-size:15px;letter-spacing:0}
 /* The tighter badge fits a 320px phone with both words intact, so its accessible and visible labels stay
    the same at every width. */
 .top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+/* The title block gives way first, so the side column (nav, Settings, mascot) keeps its place at the right. */
+.top>div:first-child{flex:1 1 360px;min-width:0}
 .headside{display:flex;align-items:flex-start;justify-content:flex-end;gap:18px}
 .top nav{font-size:13px;color:var(--muted);text-align:right;line-height:1.9}
 .atlas-byte-wrap{position:relative;flex:0 0 auto;width:128px;isolation:isolate;
@@ -1201,8 +1207,9 @@ __SETCSS__
 #fbb{display:none}
 main{padding:0 20px 64px}
 table{width:100%;border-collapse:collapse;margin-top:14px}
-th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);
-  padding:8px 10px;border-bottom:1px solid var(--grid);position:sticky;top:0;background:var(--surface)}
+th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);
+  padding:8px 10px;border-bottom:1px solid var(--grid);position:sticky;top:0;background:var(--surface);
+  font-weight:700}
 th.n,td.n{text-align:right}
 th.c,td.c{text-align:center}
 td{padding:12px 10px;border-bottom:1px solid var(--grid);vertical-align:top}
@@ -1289,7 +1296,7 @@ html[data-view=table][data-density=expanded] .cmdrow{max-width:56em}
    Safari -- so `muratcankoylan/Agent-` and a blurb naming
    `.cursorrules/CLAUDE.md/Copilot/Windsurf/Cline/Aider` were between them demanding ~530px of a 335px
    content box, which the document then had to scroll sideways to satisfy. */
-.nm{font-weight:600;font-size:15px;overflow-wrap:anywhere}
+.nm{font-weight:650;font-size:16px;overflow-wrap:anywhere;letter-spacing:-.01em}
 /* owner/name is now the link out to GitHub, the title having been given to the local detail page. It stays
    muted rather than picking up `--link`, because it is the secondary of the two links in the cell and a
    second accent-coloured line under every title would fight the title for attention. The class selector
@@ -1297,7 +1304,7 @@ html[data-view=table][data-density=expanded] .cmdrow{max-width:56em}
    which is what tells a reader it is clickable at all now that the colour does not. */
 .nwo{display:block;color:var(--muted);font-size:12px;margin-top:2px;word-break:break-all}
 a.nwo:hover{color:var(--ink)}
-.st{font-size:16px;font-weight:700;font-variant-numeric:tabular-nums}
+.st{font-size:18px;font-weight:750;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
 .st.none{font-size:13px;font-weight:400;color:var(--muted)}
 .meta{color:var(--muted);font-size:12px;margin-top:5px}
 .desc{color:var(--ink2);font-size:13.5px;max-width:44em;overflow-wrap:anywhere}
@@ -1635,7 +1642,7 @@ dialog#mapdlg::backdrop{background:rgba(0,0,0,.74)}
 .more:active{box-shadow:var(--press)}
 footer{border-top:1px solid transparent;background:transparent;padding:22px 20px;color:var(--muted);
   font-size:13px;box-shadow:inset 0 1px 0 var(--grid)}
-.blurb{color:var(--muted);font-size:13px;margin:2px 0 0}
+.blurb{color:var(--muted);font-size:14px;margin:2px 0 0;line-height:1.55}
 /* Screen readers and screens both have the address bar; only paper does not. The `@media print` block at the
    end of this stylesheet is the one place this is ever visible. */
 #printurl{display:none}
@@ -1793,7 +1800,7 @@ footer{border-top:1px solid transparent;background:transparent;padding:22px 20px
   .subbar{padding:0 14px 7px}
   main{padding:0 14px 48px}
   footer{padding:18px 14px}
-  h1{font-size:21px}
+  h1{font-size:27px}
   h1 span{display:block;font-size:13px}
   .top{gap:8px}
   .headside{width:100%;align-items:center;justify-content:space-between;gap:12px}
@@ -2049,7 +2056,7 @@ html[data-view=cards] :where(#out) tr.nw{border-color:transparent;
 @media(hover:hover){
   html[data-view=cards] :where(#out) tr:hover td{background:transparent}
   html[data-view=cards] :where(#out) tr:hover{border-color:transparent;
-  box-shadow:var(--raise-hi),0 0 22px color-mix(in srgb,var(--card-accent) 30%,transparent);
+  box-shadow:0 0 0 2px var(--card-accent),var(--raise-hi),0 0 22px color-mix(in srgb,var(--card-accent) 30%,transparent);
   transform:translateY(-1px);animation:card-glow 1.5s ease-in-out infinite alternate}
 }
 html[data-view=cards] :where(#out) tr:focus-within{border-color:transparent;box-shadow:var(--raise-hi),0 0 0 2px var(--card-accent)}
@@ -2444,7 +2451,7 @@ __OSSPRITE__
     <a href="__UP__repo/">All projects</a> · <a href="#browse">Topics &amp; harnesses</a><br>
     <a href="https://github.com/__REPO__">Repository</a> ·
     <a href="https://github.com/__REPO__/tree/HEAD/mega-list">Markdown</a> ·
-    <a href="https://github.com/__REPO__/releases/tag/v2026.10.22" title="Spreadsheet edition: retired. The last copy, built 2026-10-22, stays available but is no longer updated. The website is the maintained edition.">Workbook (retired)</a><br>
+    <a href="https://github.com/__REPO__/releases/tag/v2026.10.22" title="Spreadsheet edition: retired. The last copy, built 2026-10-22, stays available but is no longer updated. The website is the maintained edition.">Workbook (retired)</a>
     <!-- SETTINGS: one group, Theme, of four buttons -- System, Light, Dark, High contrast. It used to be two
          groups, a light/dark toggle and eight colour themes, and the toggle went with the second axis:
          four mutually exclusive choices are one question, and a toggle beside them would be a second
@@ -3325,7 +3332,8 @@ wire();
 // has to read "Windows" after. `aria-pressed` is untouched by either branch and still carries the state.
 function chip(parent, label, pressed, onclick, title, icon) {
   const b = document.createElement("button");
-  b.className = "chip";
+  // A chip that shows a mark instead of its word is a round icon button (`.iconbtn`, sitewide.NAV_CSS).
+  b.className = icon ? "chip iconbtn" : "chip";
   if (icon) b.innerHTML = icon + '<span class="sr">' + esc(label) + "</span>";
   else b.textContent = label;
   b.setAttribute("aria-pressed", pressed ? "true" : "false");
@@ -6797,7 +6805,7 @@ def main() -> None:
     # the homepage, the facet pages and the detail pages read it too, and moving it would be 180-odd
     # relative URLs elsewhere to save one here. See `UP`.
     (OUT / CATALOG).parent.mkdir(parents=True, exist_ok=True)
-    (OUT / CATALOG).write_text(page, encoding="utf-8")
+    (OUT / CATALOG).write_text(sitewide.segnav(page, "Catalogue", "./"), encoding="utf-8")
 
     for f in (CATALOG, Path("data.json")):
         print(f"{str(f):20s} {(OUT / f).stat().st_size / 1024:8.1f} KB")

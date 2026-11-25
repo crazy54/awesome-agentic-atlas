@@ -738,7 +738,7 @@ def main() -> None:
     (out / "discover.json").write_text(
         json.dumps(published, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
     page = out / "discover" / "index.html"
-    page.write_text(render(published, data, day), encoding="utf-8")
+    page.write_text(sitewide.segnav(render(published, data, day), "Discover", "./"), encoding="utf-8")
     # Only on a run that picked, and only into the real tree: a dry run that stamped the ledger would move
     # every row it dealt to the back of its queue and change what the next real build publishes.
     if state is not None and not args.out:
