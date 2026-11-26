@@ -2,62 +2,80 @@
 
 Capability bundles an agent loads on demand — SKILL.md packages, subagents, slash commands, and the directories that collect them.
 
-**1,607 projects** · 1,456 with stars to rank by · 7,980,030 combined stars
+**1,623 projects** · 1,466 with stars to rank by · 8,032,521 combined stars
 
 [← every topic](README.md) · [← back to the mega list](../README.md) · [**filter this live →**](https://aaa.jeremyfhall.com/catalog/#topic=agent-skills)
 
-✨ **165 new to the atlas** in the 11/20/26 import — marked below, and [filterable on the site](https://aaa.jeremyfhall.com/catalog/#topic=agent-skills&new=1).
+✨ **59 new to the atlas** in the 11/26/26 import — marked below, and [filterable on the site](https://aaa.jeremyfhall.com/catalog/#topic=agent-skills&new=1).
 
 Page **3** of 3, because this list is longer than the 512 KB GitHub will render in one file. In order: [1](agent-skills.md) · [2](agent-skills-2.md) · **3**.
 
-## Also here, unranked (151)
+## Also here, unranked (157)
 
 No stars of their own to rank by — a folder inside someone else's repository, or a link GitHub no longer serves. Listed anyway, so nothing quietly disappears from a count.
 
-<sub>Projects 115–151 of 151. The rest are on this page's other parts, linked above and below.</sub>
+<sub>Projects 103–157 of 157. The rest are on this page's other parts, linked above and below.</sub>
 
-- **[reliefeai/browser-relay](https://github.com/reliefeai/browser-relay/tree/v1.4.1/skills/browser-relay)** — Control an existing logged-in Chrome without stealing focus
-- **[replicate/replicate](https://github.com/replicate/skills)** — Discover and run AI models via API
-- **[resend/resend](https://github.com/resend/resend-skills/tree/main/skills/resend)** — Email deliverability and design best practices
-- **[rhiever/evident-charts](https://github.com/rhiever/evident-charts/tree/main/skills/evident-charts)** ✨ <sub>Added 11/20/26</sub> — Makes and critiques charts and checks the rendered image
+- **[moooai/parcel-coupon](https://github.com/moooai/parcel-coupon)** — MIT source for the parcel-coupon skill - courier and parcel-delivery coupon feeds with verbatim codes and claim pages
+- **[moooai/trip-coupon](https://github.com/moooai/trip-coupon)** — MIT source for the trip-coupon skill - Didi ride-hailing and hotel coupon feeds with verbatim codes and claim pages
+- **[netlify/netlify-functions](https://github.com/netlify/context-and-tools/tree/main/skills/netlify-functions)** — Build serverless API endpoints and background tasks
+- **[noamshorts22-prog/usage-engineer](https://github.com/noamshorts22-prog/usage-engineer)** — Source for usage-engineer
+- **[omkamal/pypict-skill](https://github.com/omkamal/pypict-claude-skill/blob/main/SKILL.md)** — A claude skill that generate test cases using N-wise test cases using the pypict library
+- **[open-salesblink/cold-email-salesblink](https://github.com/open-salesblink/skill/tree/main/skills/cold-email-salesblink)** — Agent Skill so that your AI Assistant can help you setup cold email sequences &amp; more.
+- **[opencanviz/opencanviz-skills-repo](https://github.com/opencanviz/opencanviz-skills-repo)** — Official openCanviz source for the opencanviz-json skill - write an openCanviz video project as JSON with a standard-library Python builder and validator (text entrances, 22 scene transitions, motion…
+- **[orziz/odai](https://github.com/orziz/odai/tree/main/skills/odai)** — AI agent 通用任务治理框架：对齐目标与事实，规划和调度能力，守住授权与风险边界，治理任务执行到真实验收与交付。Governance framework for evidence-driven planning, orchestration, and verified delivery.
+- **[Outreachgenie/outreachgenie-linkedin-mcp](https://github.com/Outreachgenie/outreachgenie-linkedin-mcp)** — MIT source for outreachgenie-list-audit, a read-only saved-list and template audit with local Python reports. Connected use requires an OutreachGenie workspace and compatible MCP host
+- **[pachca/pachca](https://github.com/pachca/openapi/tree/main/plugins/pachca/skills/pachca)** — Pachca API platform: MCP server and plugin for AI agents (Claude Code, Codex, VS Code, Cursor) with skills and commands, OpenAPI spec, CLI, SDKs (TypeScript, Python, Go, Kotlin, Swift, C#) and n8n no…
+- **[paperandbeyond23-gif/restosignals-mcp](https://github.com/paperandbeyond23-gif/restosignals-mcp)** — Source for restosignals
+- **[penthera](https://github.com/danoszz/penthera/tree/main/skills/penthera)** — Offline cyber security agent for your apps and AI coding tools. Open R&amp;D: measured in public, improved every release.
+- **[PersonaXpand](https://github.com/hayat-nextoriainfotech/social-media-skills)** — MIT skills for drafting replies, triaging messages, and planning posts from supplied text. Sending or posting requires the hosted connector and approval of the exact text. Submitted by the Nextoria t…
+- **[posthog-llm-analytics](https://github.com/PostHog/skills/tree/main/skills/posthog/llm-analytics)** — PostHog skills (under construction)
+- **[prateeks367/voicemoat-skills](https://github.com/prateeks367/voicemoat-skills)** — Official VoiceMoat source for eight Twitter/X and LinkedIn skills (write-in-my-voice, turn-this-into-a-thread, same-idea-both-platforms, repurpose-into-a-post, define-my-content-pillars, why-did-this…
+- **[qrdxinc/generate-qr](https://github.com/qrdxinc/qrdx/tree/main/skills/generate-qr)** ✨ <sub>Added 11/26/26</sub> — Open-source QR code platform: free static codes with no sign-up or watermark, dynamic codes with hosted pages and scan analytics, a REST API, image API, MCP server, CLI and React library. Self-hostab…
+- **[reliefeai/browser-relay](https://github.com/reliefeai/browser-relay/tree/v1.4.1/skills/browser-relay)** — Let AI agents share your everyday, logged-in Chrome through a Skill + CLI — locally or across multiple machines.
+- **[resend/resend](https://github.com/resend/resend-skills/tree/main/skills/resend)** — Agent Skills for working with Resend to send and receive emails.
+- **[rhiever/evident-charts](https://github.com/rhiever/evident-charts/tree/main/skills/evident-charts)** — Teaches AI coding agents to make clear, honest charts, and checks each one before you see it. For Claude Code, Codex, Cursor, and more.
 - **[robinfaraj/postel-mcp](https://github.com/robinfaraj/postel-mcp)** — Source for postel-writing
-- **[ruslanlap/cavemenko](https://github.com/ruslanlap/cavemenko/tree/main/skills/cavemenko)** — Ukrainian pro-drop reply style, measured -49% tokens
-- **[sanity-io/sanity-best-practices](https://github.com/sanity-io/agent-toolkit/tree/main/skills/sanity-best-practices)** — Guidelines for designing scalable content models in Sanity
-- **[ScrapingBee/scrapingbee-cli](https://github.com/ScrapingBee/scrapingbee-cli/tree/main/.agents/skills/scrapingbee-cli)** ✨ <sub>Added 11/20/26</sub> — Scrape any page, search the web, crawl sites, extract data
+- **[ruslanlap/cavemenko](https://github.com/ruslanlap/cavemenko/tree/main/skills/cavemenko)** — 🦴 Ukrainian caveman mode for Claude Code — native Ukrainian pro-drop, real measured token stats, no invented numbers. Measured savings published.
+- **[sanity-io/sanity-best-practices](https://github.com/sanity-io/agent-toolkit/tree/main/skills/sanity-best-practices)** — Collection of resources to help AI agents build better with Sanity.
+- **[santowilem/clone-ui](https://github.com/santowilem/skills/tree/main/skills/clone-ui)** ✨ <sub>Added 11/26/26</sub> — Pixel-faithful UI cloning skill for Claude Code, Cursor, Codex CLI, ChatGPT, and Copilot. Anti-hallucination contract + adversarial verification. Built on the SKILL.md open standard.
+- **[seankwon816/foragent-skills](https://github.com/seankwon816/foragent-skills)** ✨ <sub>Added 11/26/26</sub> — Source for foragent-call
 - **[Search-3D/electron-drive-skill](https://github.com/Search-3D/electron-drive-skill)** — Source for the electron-drive-skill skill - launching and driving Electron apps under Playwright on a scratch profile (MIT)
 - **[Sketchjar/stipple-agent-skills](https://github.com/Sketchjar/stipple-agent-skills)** — Source for seven Stipple-backed document trust skills covering document forensics, identity-pack gaps, grounded extraction, citation checks, AI-text triage, adverse-media review, and AU/NZ tender mat…
 - **[SkillNav](https://github.com/skillnav-dev/skillnav-skill)** — Search 3,900+ MCP servers with install commands, get daily AI brief, query arXiv papers, and discover trending tools -- all in Chinese. Curated by skillnav.dev editorial team
+- **[skulitom/pixelbolt-pixel-art](https://github.com/skulitom/Pixelbolt/tree/main/skills/pixel-art)** ✨ <sub>Added 11/26/26</sub> — Agent-first pixel art and animation toolkit. JSON recipes to PNG, APNG and sprite atlases via CLI, MCP server and local studio. Zero dependencies. MIT.
 - **[stefanautomateed/shipvela-codex](https://github.com/stefanautomateed/shipvela-codex)** — MIT source for shipvela-publish — owner-confirmed website publishing and exact deployment tracking through an already connected Shipvela account. The hosted service is proprietary and plan-limited
-- **[stevyhacker/lokalbot-cli](https://github.com/stevyhacker/lokalbot/tree/master/.agents/skills/lokalbot-cli)** — Retrieve recorded meetings and separately authorized screen memory on macOS
-- **[suggesting-cursor-rules](https://github.com/spencerpauly/awesome-cursor-skills/tree/HEAD/resources/suggesting-cursor-rules/SKILL.md)** — Safely update an npm package: check npmjs.com for the latest version, read release notes, auto-apply minor updates, and for major updates find the migration guide and produce a detailed validation re…
-- **[swiftlysingh/excalidraw-cli](https://github.com/swiftlysingh/excalidraw-cli/tree/main/skills/excalidraw-cli)** ✨ <sub>Added 11/20/26</sub> — Turn text, JSON, or Graphviz DOT into editable Excalidraw diagrams
+- **[stevyhacker/lokalbot-cli](https://github.com/stevyhacker/lokalbot/tree/master/.agents/skills/lokalbot-cli)** — Your personal context engine for macOS, with Windows and Linux in alpha: on-device meeting notes, screen recall, dictation, and autocomplete that you and your AI agents can search. Free and open sour…
+- **[suggesting-cursor-rules](https://github.com/spencerpauly/awesome-cursor-skills/tree/HEAD/resources/suggesting-cursor-rules/SKILL.md)** — A curated list of awesome skills for Cursor
+- **[swiftlysingh/excalidraw-cli](https://github.com/swiftlysingh/excalidraw-cli/tree/main/skills/excalidraw-cli)** — Generate editable Excalidraw diagrams from text or JSON for agents and developer workflows
 - **[target1m/footval-mcp](https://github.com/target1m/footval-mcp)** — Source for footval-follow-matches-and-tables, footval-scout-and-rank-players, footval-stats-and-transfer-news, footval-value-and-compare-players
 - **[teableio/teable-assistant-ops](https://github.com/teableio/agent-skills/tree/main/skills/teable-assistant-ops)** — Manage Teable data, SQL queries, automations, and apps
-- **[thedesignproject/agentic-design-systems](https://github.com/thedesignproject/agent-skills/tree/main/skills/agentic-design-systems)** ✨ <sub>Added 11/20/26</sub> — Scaffolds AI-readable design systems for agents
 - **[timini/agentic-verification](https://github.com/timini/agentic-verification)** — MIT source for the agentic-verify and agentic-test-audit skills - check a Python change by running every mutant of the changed lines and writing tests until they catch them, and audit a pytest suite…
 - **[tinybirdco/tinybird-best-practices](https://github.com/tinybirdco/tinybird-agent-skills/tree/main/skills/tinybird-best-practices)** — Tinybird project guidelines for datasources, pipes, endpoints, and SQL
+- **[tiptreesystems/lacuna-code-to-paper](https://github.com/tiptreesystems/lacuna-research-mcp/tree/main/skills/lacuna-code-to-paper)** ✨ <sub>Added 11/26/26</sub> — MCP server for Lacuna, a research map for machine learning: search directions, papers, authors, venues, and AI-generated research proposals.
 - **[tomelias10/mcp-drift-check](https://github.com/tomelias10/mcp-drift-check)** — MIT source for the mcp-dependency-drift-audit skill — zero-execution review of mutable npm/npx package references in MCP configuration, with a manual static fallback and CI/SARIF guidance
-- **[tw93/mole](https://github.com/tw93/Mole/tree/main/skills/mole)** ✨ <sub>Added 11/20/26</sub> — Drive the Mole CLI to clean macOS and Windows
-- **[twoicewoo/awesome-copilot](https://github.com/twoicewoo/awesome-copilot/tree/886bf799bb05501bfd1afa7aae9cc5a77dedb03e/skills/break-ai-fix-loops)** — Pinned MIT source for the break-ai-fix-loops skill - bounded AI repair loops with stable failure fingerprints, real-path proof, negative controls, and rollback verification (MIT)
-- **[typefully/typefully](https://github.com/typefully/agent-skills/tree/main/skills/typefully)** — Create, schedule, and publish social media content
+- **[tw93/mole](https://github.com/tw93/Mole/tree/main/skills/mole)** — 🐹 Open-source Mac and PC cleaner. Keep your machine clean, light, and running like new. Fast CLI, plus native Mac and Windows apps.
+- **[twoicewoo/awesome-copilot](https://github.com/twoicewoo/awesome-copilot/tree/886bf799bb05501bfd1afa7aae9cc5a77dedb03e/skills/break-ai-fix-loops)** — Community-contributed instructions, agents, skills, and configurations to help you make the most of GitHub Copilot.
+- **[typefully/typefully](https://github.com/typefully/agent-skills/tree/main/skills/typefully)** — AI agent skills for drafting and scheduling social media posts via Typefully
 - **[UmarSiddiqui/obsess](https://github.com/UmarSiddiqui/obsess)** — MIT source for the obsess skill - a bounded perfectionist loop for one target that keeps the best evidence-backed attempt and stops on an attempt or time budget
-- **[unbrowse-ai/unbrowse](https://github.com/unbrowse-ai/unbrowse/tree/main/skill)** — Search, call, and read websites through a hosted API or MCP
-- **[vargHQ/how-to-make-ai-video](https://github.com/vargHQ/skills/tree/main/how-to-make-ai-video)** ✨ <sub>Added 11/20/26</sub> — How to make any AI video: find the skill, the options to show and the steps. No key needed
-- **[verdikta/verdikta-bounties-onboarding](https://github.com/verdikta/verdikta-applications/tree/main/skills/verdikta-bounties-onboarding)** — Hunt and post AI-judged escrow bounties on Base
-- **[voltagent/create-voltagent](https://github.com/VoltAgent/skills/tree/main/skills/create-voltagent)** — Lookup embedded docs from @voltagent/core for version-matched documentation
+- **[unbrowse-ai/unbrowse](https://github.com/unbrowse-ai/unbrowse/tree/main/skill)** — Unbrowse - agents use the web faster without a browser
+- **[vargHQ/how-to-make-ai-video](https://github.com/vargHQ/skills/tree/main/how-to-make-ai-video)** — Video skills for Claude Code, Codex, Grok, Cursor and Gemini CLI: 83 AI video skills for UGC ads, product videos, music videos, consistent characters, captions, motion graphics and FFmpeg edits. Seed…
+- **[verdikta/verdikta-bounties-onboarding](https://github.com/verdikta/verdikta-applications/tree/main/skills/verdikta-bounties-onboarding)** — Example applications using the Verdikta blockchain.
+- **[voltagent/create-voltagent](https://github.com/VoltAgent/skills/tree/main/skills/create-voltagent)** — Project setup guide with CLI and manual steps
 - **[work0r-ai/agent-kit](https://github.com/work0r-ai/agent-kit)** — Source for the workorai skill — agent kit workflows (MIT)
-- **[worktable/worktable-plugin](https://github.com/worktable/worktable-plugin)** ✨ <sub>Added 11/20/26</sub> — Source for worktable-mcp
+- **[worktable/worktable-plugin](https://github.com/worktable/worktable-plugin)** — Source for worktable-mcp
 - **[wyattau/memory-handoff-skill](https://github.com/WyattAu/memory-handoff-skill)** — Source for memory-handoff
-- **[xberg-io/xberg](https://github.com/xberg-io/xberg/tree/main/plugin/skills/xberg)** — Extract text, tables, and metadata from 101+ document formats
+- **[xberg-io/xberg](https://github.com/xberg-io/xberg/tree/main/plugin/skills/xberg)** — The fast, precise document-intelligence engine for every language: text, tables and metadata from 100+ formats, with OCR, transcription and code intelligence.
+- **[yan0lovesha/hiring-intent-mcp](https://github.com/yan0lovesha/hiring-intent-mcp)** ✨ <sub>Added 11/26/26</sub> — Source for b2b-hiring-intent-radar
 - **[yanniskiefer/harvey-specter](https://github.com/YannisKiefer/harvey-specter)** — Source for harvey-specter
 - **[zenlee123/routerbase-agent-skills](https://github.com/zenlee123/routerbase-agent-skills)** — Source for the routerbase-model-gateway skill — OpenAI-compatible RouterBase model gateway setup, model-routing plans, server-side credential handling, and fallback validation patterns (MIT-0)
-- **[zhuyansen/backlink-guard](https://github.com/zhuyansen/backlink-guard/tree/main/skills/backlink-guard)** ✨ <sub>Added 11/20/26</sub> — Vet link sources before you submit, verify listings, and audit backlinks for link spam
-- **[zincio/universal-checkout](https://github.com/zincio/skills/tree/master/skills/universal-checkout)** — Official Zinc API (zinc.com) checkout across 50+ US retailers
+- **[zhuyansen/backlink-guard](https://github.com/zhuyansen/backlink-guard/tree/main/skills/backlink-guard)** — Check a link source before you submit to it, verify the listing, and audit your own backlinks for link-spam patterns. A CLI and an agent skill.
+- **[zincio/universal-checkout](https://github.com/zincio/skills/tree/master/skills/universal-checkout)** — AI agent skill for the Zinc API. Search, buy, track, and return across Amazon, Walmart, Target, and 50+ US retailers. Buy anything with a URL.
 
 Page **3** of 3, because this list is longer than the 512 KB GitHub will render in one file. In order: [1](agent-skills.md) · [2](agent-skills-2.md) · **3**.
 
 ---
 
-Snapshot 2026-11-20. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-11-26. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
-The same data with screenshots embedded, filterable, is in the workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/latest/download/Awesome-Agentic-Atlas-LIGHT.xlsx). Or filter it in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/).
+Filter the same data in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/). Spreadsheet edition: retired. The last copy, built 2026-10-22, stays available but is no longer updated. The website is the maintained edition. Its last workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/download/v2026.10.22/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/download/v2026.10.22/Awesome-Agentic-Atlas-LIGHT.xlsx).

@@ -17,13 +17,10 @@ Page **2** of 2, because this list is longer than the 512 KB GitHub will render 
 
 ## Security
 
-<sub>Entries 15–38 of 38. The rest are on this page's other parts, linked above and below.</sub>
+<sub>Entries 16–38 of 38. The rest are on this page's other parts, linked above and below.</sub>
 
-- **[Airmageddon](https://github.com/RamonBeast/airmageddon)** — AIrmageddon is a home security AI Agent
-  <sub>★ 11 · Python · GPL-3.0 · clone · pushed 2024-08-30 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`git clone https://github.com/RamonBeast/airmageddon.git`</sub>
 - **[Multi-Agent-Secops-Llm](https://github.com/tegridydev/multi-agent-secops-llm)** — This project is a multi-agent security framework that utilizes multiple LLM models to analyze and generate comprehensive security briefs
-  <sub>★ 10 · Python · MIT · clone · pushed 2024-05-17 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 10 · Python · MIT · source · pushed 2026-11-25 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/tegridydev/multi-agent-secops-llm.git`</sub>
 - **[Agriaid](https://github.com/shamspias/AgriAid)** — AgriAid is an AI-powered tool for farmers &amp; agricultural agents in Bangladesh, offering plant disease forecasting &amp; identification. Using…
   <sub>★ 7 · Python · clone · pushed 2023-03-31 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -95,34 +92,34 @@ Page **2** of 2, because this list is longer than the 512 KB GitHub will render 
 ## Benchmarks
 
 - **[Osworld](https://github.com/xlang-ai/OSWorld)** — [NeurIPS 2024] OSWorld - Benchmarking Multimodal Agents for Open-Ended Tasks in Real Computer Environments
-  <sub>★ 3.3k · Python · Apache-2.0 · clone · pushed 2026-11-14 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 3.3k · Python · Apache-2.0 · clone · pushed 2026-11-23 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/xlang-ai/OSWorld`</sub>
 - **[Awesome-Llm-Long-Context-Modeling](https://github.com/Xnhyacinth/Awesome-LLM-Long-Context-Modeling)** — Must-read papers and blogs on LLM based Long Context Modeling 🔥
   <sub>★ 2.2k · MIT · source · pushed 2026-11-13 · Win?</sub>
   <sub>`git clone https://github.com/Xnhyacinth/Awesome-LLM-Long-Context-Modeling.git`</sub>
 - **[Theagentcompany](https://github.com/TheAgentCompany/TheAgentCompany)** — An agent benchmark with tasks in a simulated software company
-  <sub>★ 822 · Python · MIT · script · pushed 2025-11-17 · Win? · WSL2 · macOS · Linux · Docker</sub>
+  <sub>★ 821 · Python · MIT · script · pushed 2025-11-17 · Win? · WSL2 · macOS · Linux · Docker</sub>
   <sub>`curl -fsSL https://github.com/TheAgentCompany/the-agent-company-backup-data/releases/download/setup-script-20241208/setup.sh | sh`</sub>
 - **[Agentlab](https://github.com/ServiceNow/AgentLab)** — AgentLab - An open-source framework for developing, testing, and benchmarking web agents on diverse tasks, designed for scalability and re…
-  <sub>★ 668 · Python · pip · pushed 2026-10-06 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 669 · Python · pip · pushed 2026-10-06 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install agentlab`</sub>
 - **[Appworld](https://github.com/StonyBrookNLP/appworld)** — Repository for "AppWorld - A Controllable World of Apps and People for Benchmarking Interactive Coding Agent", ACL'24 Best Resource Paper
-  <sub>★ 557 · Python · Apache-2.0 · pip · pushed 2026-11-15 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 560 · Python · Apache-2.0 · pip · pushed 2026-11-15 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install appworld`</sub>
 - **[Bigcodebench](https://github.com/bigcode-project/bigcodebench)** — BigCodeBench - Benchmarking Code Generation Towards AGI
   <sub>★ 517 · Python · Apache-2.0 · pip · pushed 2026-01-03 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install bigcodebench --upgrade`</sub>
 - **[Visualwebarena](https://github.com/web-arena-x/visualwebarena)** — VisualWebArena is a benchmark for multimodal agents
-  <sub>★ 489 · Python · MIT · source · pushed 2024-11-09 · WSL2 · Linux · Docker</sub>
+  <sub>★ 490 · Python · MIT · source · pushed 2024-11-09 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/web-arena-x/visualwebarena.git`</sub>
 - **[Balrog](https://github.com/balrog-ai/BALROG)** — Benchmarking Agentic LLM and VLM Reasoning On Games
-  <sub>★ 277 · Python · MIT · clone · pushed 2026-04-09 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 278 · Python · MIT · clone · pushed 2026-04-09 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/balrog-ai/BALROG.git`</sub>
 - **[Comfybench](https://github.com/xxyQwQ/ComfyBench)** — Implementation for the paper "ComfyBench - Benchmarking LLM-based Agents in ComfyUI for Autonomously Designing Collaborative AI Systems"
-  <sub>★ 206 · Python · clone · pushed 2025-12-24 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 207 · Python · clone · pushed 2025-12-24 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/xxyQwQ/ComfyBench`</sub>
 - **[Llm-Agent-Benchmark-List](https://github.com/zhangxjohn/LLM-Agent-Benchmark-List)** — A banchmark list for evaluation of large language models
-  <sub>★ 175 · Apache-2.0 · source · pushed 2026-11-18</sub>
+  <sub>★ 175 · Apache-2.0 · source · pushed 2026-11-25</sub>
   <sub>`git clone https://github.com/zhangxjohn/LLM-Agent-Benchmark-List.git`</sub>
 - **[Weblinx](https://github.com/McGill-NLP/weblinx)** — WebLINX is a benchmark for building web navigation agents with conversational capabilities
   <sub>★ 165 · Python · Apache-2.0 · pip · pushed 2026-08-16 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -134,7 +131,7 @@ Page **2** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 117 · Python · source · pushed 2026-01-11 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Lordog/R-Judge.git`</sub>
 - **[Shortcutsbench](https://github.com/EachSheep/ShortcutsBench)** — ShortcutsBench - A Large-Scale Real-World Benchmark for API-Based Agents
-  <sub>★ 113 · Python · Apache-2.0 · source · pushed 2025-06-24 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 114 · Python · Apache-2.0 · source · pushed 2025-06-24 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/EachSheep/ShortcutsBench.git`</sub>
 - **[Llf-Bench](https://github.com/microsoft/LLF-Bench)** — A benchmark for evaluating learning agents based on just language feedback
   <sub>★ 99 · Python · MIT · source · pushed 2026-03-26 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -173,7 +170,7 @@ Page **2** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 19 · Python · MIT-0 · source · pushed 2024-12-10 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/aws-samples/multiagent-collab-scenario-benchmark.git`</sub>
 - **[Appworld-Leaderboard](https://github.com/StonyBrookNLP/appworld-leaderboard)** — Leaderboard Repository for "AppWorld - A Controllable World of Apps and People for Benchmarking Interactive Coding Agent", ACL2024
-  <sub>★ 7 · Python · pip · pushed 2026-11-04 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 8 · Python · pip · pushed 2026-11-04 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install appworld`</sub>
 - **[Llm_Scavengerhunt](https://github.com/Kyunnilee/llm_scavengerhunt)** — A New Benchmark made for tasks for Large Language Model Agents - UC Berkeley Scavenger Hunt
   <sub>★ 6 · Python · source · pushed 2024-12-21 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -243,6 +240,6 @@ Page **2** of 2, because this list is longer than the 512 KB GitHub will render 
 
 ---
 
-Snapshot 2026-11-20. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-11-26. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
 Filter the same data in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/). Spreadsheet edition: retired. The last copy, built 2026-10-22, stays available but is no longer updated. The website is the maintained edition. Its last workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/download/v2026.10.22/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/download/v2026.10.22/Awesome-Agentic-Atlas-LIGHT.xlsx).
