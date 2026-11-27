@@ -2,7 +2,7 @@
 
 Targets aider.
 
-**45 projects** · 43 with stars to rank by · 76,198 combined stars
+**45 projects** · 43 with stars to rank by · 76,232 combined stars
 
 [← every target](README.md) · [← back to the mega list](../README.md) · [**filter this live →**](https://aaa.jeremyfhall.com/catalog/#target=aider)
 
@@ -28,7 +28,7 @@ Targets aider.
 | 9 | **[bernstein](https://github.com/sipyourdrink-ltd/bernstein)**<br><sub>sipyourdrink-ltd/bernstein</sub> | 1.2k | 13 | <sub>Orchestrators &amp; Multi-Agent</sub> | <sub>Win? · WSL2? · macOS? · Linux? · Docker</sub> | `uv tool install bernstein # or: pipx install bernstein` | Deterministic scheduler for 40+ CLI coding agents running in parallel git worktrees with an HMAC-signed audit chain, signed agent cards, and per-artefact lineage. The zero-LLM coo… |
 | 10 | **[Multi-Agent-CAD](https://github.com/Pan-Chera/Multi-Agent-CAD)**<br><sub>Pan-Chera/Multi-Agent-CAD</sub> | 1.1k | 0 | <sub>Orchestrators &amp; Multi-Agent</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `git clone https://github.com/Pan-Chera/Multi-Agent-CAD.git` | MAC (Multi-Agent CAD): A decoupled multi-agent framework for text-to-CAD generation via constrained test-time compute |
 | 11 | **[ai-maestro](https://github.com/23blocks-OS/ai-maestro)**<br><sub>23blocks-OS/ai-maestro</sub> | 858 | 2 | <sub>Orchestrators &amp; Multi-Agent</sub> | <sub>WSL2 · macOS · Linux</sub> | `curl -fsSL aimaestro.sh/install \| bash` | Dashboard spanning multiple machines, adding memory search, code-graph queries, and agent-to-agent messaging. Claude, Aider, Cursor. |
-| 12 | **[agent-style](https://github.com/yzhao062/agent-style)**<br><sub>yzhao062/agent-style</sub> | 750 | 0 | <sub>Assistants &amp; Domain Agents</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `npx --yes agent-style` | 21 writing rules for AI coding and writing agents. Drop-in for Claude Code, Codex, Copilot, Cursor, and Aider, so their output reads like a tech pro. |
+| 12 | **[agent-style](https://github.com/yzhao062/agent-style)**<br><sub>yzhao062/agent-style</sub> | 751 | 0 | <sub>Assistants &amp; Domain Agents</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `npx --yes agent-style` | 21 writing rules for AI coding and writing agents. Drop-in for Claude Code, Codex, Copilot, Cursor, and Aider, so their output reads like a tech pro. |
 | 13 | **[AI Coding Guide (中文)](https://github.com/jnMetaCode/ai-coding-guide)**<br><sub>jnMetaCode/ai-coding-guide</sub> | 559 | 1 | <sub>Docs, Learning &amp; Lists</sub> | <sub>—</sub> | `git clone https://github.com/jnMetaCode/ai-coding-guide.git` | Chinese best practices for 8 AI coding tools (Claude Code, Cursor, Copilot, Windsurf, Gemini CLI, Kiro, Aider, Trae) with copy-paste config templates and multi-tool collaboration… |
 | 14 | **[ClawMetry](https://github.com/vivekchand/clawmetry)**<br><sub>vivekchand/clawmetry</sub> | 440 | 5 | <sub>Observability &amp; Evals</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `npx skills add vivekchand/clawmetry --skill agent-kill-switch` | Self-hosted, local-first observability and kill switch for coding agents, reading Gemini CLI sessions alongside Claude Code, Codex, Cursor, OpenClaw, Aider, Goose, and others. Rea… |
 | 15 | **[agent-design-patterns](https://github.com/huangjia2019/agent-design-patterns)**<br><sub>huangjia2019/agent-design-patterns</sub> | 356 | 0 | <sub>Orchestrators &amp; Multi-Agent</sub> | <sub>—</sub> | `git clone https://github.com/huangjia2019/agent-design-patterns.git` | A 7×6 framework for agent architecture. 28 patterns, each placed at a coordinate, runnable Python code with verified engineering slices from Claude Code, Aider, OpenHands, DeerFlo… |
@@ -71,6 +71,6 @@ No stars of their own to rank by — a folder inside someone else's repository, 
 
 ---
 
-Snapshot 2026-11-26. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-11-27. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
 Filter the same data in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/). Spreadsheet edition: retired. The last copy, built 2026-10-22, stays available but is no longer updated. The website is the maintained edition. Its last workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/download/v2026.10.22/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/download/v2026.10.22/Awesome-Agentic-Atlas-LIGHT.xlsx).

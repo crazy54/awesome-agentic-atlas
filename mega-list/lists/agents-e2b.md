@@ -45,10 +45,10 @@ Curated by **[e2b-dev/awesome-ai-agents](https://github.com/e2b-dev/awesome-ai-a
 ## Coding
 
 - **[OpenDevin](https://github.com/OpenHands/OpenHands)** — 🙌 OpenHands: AI-Driven Development
-  <sub>★ 94.4k · TypeScript · MIT · npm · pushed 2026-11-26 · Win? · WSL2 · macOS? · Linux? · Docker</sub>
+  <sub>★ 94.4k · TypeScript · MIT · npm · pushed 2026-11-27 · Win? · WSL2 · macOS? · Linux? · Docker</sub>
   <sub>`npm install -g @openhands/agent-canvas`</sub>
 - **[Open Interpreter](https://github.com/openinterpreter/openinterpreter)** — A coding agent for open models like Kimi K3.1 and GLM 5.3
-  <sub>★ 69k · Rust · Apache-2.0 · psh · pushed 2026-11-26 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 69k · Rust · Apache-2.0 · psh · pushed 2026-11-27 · Win · WSL2? · macOS · Linux</sub>
   <sub>`irm https://www.openinterpreter.com/install.ps1 | iex`</sub>
 - **[GPT Engineer](https://github.com/AntonOsika/gpt-engineer)** — CLI platform to experiment with codegen. Precursor to: https://lovable.dev
   <sub>★ 54.9k · Python · MIT · clone · pushed 2025-05-14 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -57,7 +57,7 @@ Curated by **[e2b-dev/awesome-ai-agents](https://github.com/e2b-dev/awesome-ai-a
   <sub>★ 50.3k · Python · Apache-2.0 · source · pushed 2026-05-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/paul-gauthier/aider.git`</sub>
 - **[Continue](https://github.com/continuedev/continue)** — open-source coding agent
-  <sub>★ 36.6k · TypeScript · Apache-2.0 · source · pushed 2026-11-26 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 36.6k · TypeScript · Apache-2.0 · source · pushed 2026-11-27 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/continuedev/continue.git`</sub>
 - **[ChatDev](https://github.com/OpenBMB/ChatDev)** — ChatDev 2.0: Dev All through LLM-powered Multi-Agent Collaboration
   <sub>★ 34.9k · Python · Apache-2.0 · source · pushed 2026-11-06 · Win? · WSL2 · macOS? · Linux · Docker</sub>
@@ -78,7 +78,7 @@ Curated by **[e2b-dev/awesome-ai-agents](https://github.com/e2b-dev/awesome-ai-a
   <sub>★ 19.5k · Python · MIT · clone · pushed 2025-09-25 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/stitionai/devika.git`</sub>
 - **[Wren](https://github.com/Canner/WrenAI)** — GenBI (Generative BI) for AI agents, an open-source, governed text-to-SQL through an open context layer that turns natural-language questions into trusted dashboards, charts, and SQL across 20+ data sources, such as BigQuery, Snowflake, PostgreSQL, ClickHouse, Amazon Redshift, Databricks and more.
-  <sub>★ 18.4k · Python · npx · pushed 2026-11-26 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 18.4k · Python · npx · pushed 2026-11-27 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npx skills add Canner/WrenAI`</sub>
 - **[Smol developer](https://github.com/smol-ai/developer)** — the first library to let you embed a developer agent in your own app!
   <sub>★ 12.2k · Python · MIT · clone · pushed 2024-04-07 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -318,10 +318,10 @@ Curated by **[e2b-dev/awesome-ai-agents](https://github.com/e2b-dev/awesome-ai-a
   <sub>★ 1.1k · TypeScript · MIT · clone · pushed 2024-07-19 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/agentcoinorg/evo.ninja`</sub>
 - **[AgentForge](https://github.com/DataBassGit/AgentForge)** — Extensible AGI Framework
-  <sub>★ 865 · Python · GPL-3.0 · source · pushed 2026-08-10 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 865 · Python · GPL-3.0 · source · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/DataBassGit/AgentForge.git`</sub>
 - **[AgentPilot](https://github.com/jbexta/AgentPilot)** — A versatile workflow automation platform to create, organize, and execute AI workflows, from a single LLM to complex AI-driven workflows.
-  <sub>★ 575 · Python · AGPL-3.0 · source · pushed 2026-11-06 · Win · WSL2? · Linux</sub>
+  <sub>★ 576 · Python · AGPL-3.0 · source · pushed 2026-11-06 · Win · WSL2? · Linux</sub>
   <sub>`git clone https://github.com/jbexta/AgentPilot.git`</sub>
 - **[Multi GPT](https://github.com/sidhq/Multi-GPT)** — An experimental open-source attempt to make GPT-4 fully autonomous.
   <sub>★ 563 · Python · MIT · clone · pushed 2023-10-10 · Win? · WSL2 · macOS? · Linux · Docker</sub>
@@ -330,7 +330,7 @@ Curated by **[e2b-dev/awesome-ai-agents](https://github.com/e2b-dev/awesome-ai-a
   <sub>★ 508 · Python · MIT · source · pushed 2024-07-07 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/LehengTHU/Agent4Rec.git`</sub>
 - **[BeeBot](https://github.com/erik-megarad/beebot)** — An Autonomous AI Agent that works
-  <sub>★ 450 · Python · MIT · clone · pushed 2023-10-22 · Win? · WSL2 · Linux · Docker</sub>
+  <sub>★ 451 · Python · MIT · clone · pushed 2023-10-22 · Win? · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/AutoPackAI/beebot.git`</sub>
 - **[Godmode](https://github.com/FOLLGAD/godmode)** — Godmode.space. Reached one million users in 3 months
   <sub>★ 234 · Python · source · pushed 2026-11-14 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -348,7 +348,7 @@ Curated by **[e2b-dev/awesome-ai-agents](https://github.com/e2b-dev/awesome-ai-a
   <sub>source</sub>
   <sub>`git clone https://github.com/OpenBMB/AgentVerse.git`</sub>
 - **[AutoGPT](https://github.com/Significant-Gravitas/Auto-GPT/?utm_source=awesome-ai-agents)** — AutoGPT is the vision of accessible AI for everyone, to use and to build on. Our mission is to provide the tools, so that you can focus on what matters.
-  <sub>Python · in-repo · pushed 2026-11-26</sub>
+  <sub>Python · in-repo · pushed 2026-11-27</sub>
   <sub>`git clone https://github.com/Significant-Gravitas/Auto-GPT.git && cd Auto-GPT/?utm_source=awesome-ai-agents`</sub>
 - **[BabyBeeAGI](https://github.com/yoheinakajima/babyagi/blob/main/classic/BabyBeeAGI.py)** — 
   <sub>Python · in-repo · pushed 2026-01-31</sub>
@@ -600,7 +600,7 @@ Curated by **[e2b-dev/awesome-ai-agents](https://github.com/e2b-dev/awesome-ai-a
 ## Data analysis
 
 - **[BambooAI](https://github.com/pgalko/BambooAI)** — AI-powered data analysis workbench built for transparency, reproducibility and user control. Inspect the code and evidence behind results, verify calculations through replay, and choose from a wide range of models, including local open-weight models.
-  <sub>★ 851 · Python · MIT · pip · pushed 2026-11-25 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 851 · Python · MIT · pip · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pip install bambooai`</sub>
 - **[AGENTS.inc](https://www.agents.inc/)** — 
   <sub>website</sub>
@@ -651,7 +651,7 @@ Curated by **[e2b-dev/awesome-ai-agents](https://github.com/e2b-dev/awesome-ai-a
   <sub>★ 57.7k · Python · Apache-2.0 · brew · pushed 2026-11-26 · Win? · WSL2? · macOS · Linux?</sub>
   <sub>`brew install private-gpt`</sub>
 - **[GPT Researcher](https://github.com/assafelovic/gpt-researcher)** — An autonomous agent that conducts deep research on any data using any LLM providers
-  <sub>★ 30.9k · Python · Apache-2.0 · npx · pushed 2026-11-23 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 31k · Python · Apache-2.0 · npx · pushed 2026-11-23 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx skills add assafelovic/gpt-researcher`</sub>
 - **[Local GPT](https://github.com/PromtEngineer/localGPT)** — Chat with your documents on your local device using GPT models. No data leaves your device and 100% private.
   <sub>★ 22.2k · Python · MIT · clone · pushed 2026-08-26 · Win? · WSL2 · macOS? · Linux · Docker</sub>
@@ -759,6 +759,6 @@ Curated by **[e2b-dev/awesome-ai-agents](https://github.com/e2b-dev/awesome-ai-a
 
 ---
 
-Snapshot 2026-11-26. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-11-27. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
 Filter the same data in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/). Spreadsheet edition: retired. The last copy, built 2026-10-22, stays available but is no longer updated. The website is the maintained edition. Its last workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/download/v2026.10.22/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/download/v2026.10.22/Awesome-Agentic-Atlas-LIGHT.xlsx).

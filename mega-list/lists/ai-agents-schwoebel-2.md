@@ -95,7 +95,7 @@ Page **2** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 3.3k · Python · Apache-2.0 · clone · pushed 2026-11-23 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/xlang-ai/OSWorld`</sub>
 - **[Awesome-Llm-Long-Context-Modeling](https://github.com/Xnhyacinth/Awesome-LLM-Long-Context-Modeling)** — Must-read papers and blogs on LLM based Long Context Modeling 🔥
-  <sub>★ 2.2k · MIT · source · pushed 2026-11-13 · Win?</sub>
+  <sub>★ 2.2k · MIT · source · pushed 2026-11-27 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/Xnhyacinth/Awesome-LLM-Long-Context-Modeling.git`</sub>
 - **[Theagentcompany](https://github.com/TheAgentCompany/TheAgentCompany)** — An agent benchmark with tasks in a simulated software company
   <sub>★ 821 · Python · MIT · script · pushed 2025-11-17 · Win? · WSL2 · macOS · Linux · Docker</sub>
@@ -104,7 +104,7 @@ Page **2** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 669 · Python · pip · pushed 2026-10-06 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install agentlab`</sub>
 - **[Appworld](https://github.com/StonyBrookNLP/appworld)** — Repository for "AppWorld - A Controllable World of Apps and People for Benchmarking Interactive Coding Agent", ACL'24 Best Resource Paper
-  <sub>★ 560 · Python · Apache-2.0 · pip · pushed 2026-11-15 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 561 · Python · Apache-2.0 · pip · pushed 2026-11-15 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install appworld`</sub>
 - **[Bigcodebench](https://github.com/bigcode-project/bigcodebench)** — BigCodeBench - Benchmarking Code Generation Towards AGI
   <sub>★ 517 · Python · Apache-2.0 · pip · pushed 2026-01-03 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -240,6 +240,6 @@ Page **2** of 2, because this list is longer than the 512 KB GitHub will render 
 
 ---
 
-Snapshot 2026-11-26. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-11-27. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
 Filter the same data in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/). Spreadsheet edition: retired. The last copy, built 2026-10-22, stays available but is no longer updated. The website is the maintained edition. Its last workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/download/v2026.10.22/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/download/v2026.10.22/Awesome-Agentic-Atlas-LIGHT.xlsx).

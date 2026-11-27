@@ -11,7 +11,7 @@ Curated by **[filipecalegario/awesome-vibe-coding](https://github.com/filipecale
 |   |   |   |
 |---|---|---|
 | <a href="https://github.com/anthropics/claude-code"><img src="https://raw.githubusercontent.com/anthropics/claude-code/main/demo.gif" width="260"></a> | <a href="https://github.com/openai/codex"><img src="https://raw.githubusercontent.com/openai/codex/main/.github/codex-cli-splash.png" width="260"></a> | <a href="https://github.com/google-gemini/gemini-cli"><img src="https://raw.githubusercontent.com/google-gemini/gemini-cli/main/docs/assets/gemini-screenshot.png" width="260"></a> |
-| **[anthropics/claude-code](https://github.com/anthropics/claude-code)**<br>★ 157.2k | **[OpenAI Codex CLI](https://github.com/openai/codex)**<br>★ 136.5k | **[Gemini CLI](https://github.com/google-gemini/gemini-cli)**<br>★ 109.2k |
+| **[anthropics/claude-code](https://github.com/anthropics/claude-code)**<br>★ 157.3k | **[OpenAI Codex CLI](https://github.com/openai/codex)**<br>★ 136.6k | **[Gemini CLI](https://github.com/google-gemini/gemini-cli)**<br>★ 109.2k |
 | <a href="https://github.com/OpenHands/OpenHands"><img src="https://assets.openhands.dev/screenshot/automation-preview.png" width="260"></a> | <a href="https://github.com/upstash/context7"><img src="https://raw.githubusercontent.com/upstash/context7/master/public/cover.png?raw=true" width="260"></a> | <a href="https://github.com/PatrickJS/awesome-cursorrules"><img src="https://raw.githubusercontent.com/PatrickJS/awesome-cursorrules/main/LOCKUP_VERTICAL_25D_LIGHT.png" width="260"></a> |
 | **[OpenHands](https://github.com/OpenHands/OpenHands)**<br>★ 94.4k | **[Context7](https://github.com/upstash/context7)**<br>★ 65.5k | **[awesome-cursorrules](https://github.com/PatrickJS/awesome-cursorrules)**<br>★ 41.2k |
 
@@ -29,22 +29,22 @@ Curated by **[filipecalegario/awesome-vibe-coding](https://github.com/filipecale
 ## Command Line Tools
 
 - **[anthropics/claude-code](https://github.com/anthropics/claude-code)** — Coding agent that understands your codebase, automates tasks, explains code, and manages Git, all via natural language
-  <sub>★ 157.2k · TypeScript · winget · pushed 2026-11-26 · Win · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 157.3k · TypeScript · winget · pushed 2026-11-27 · Win · WSL2? · macOS? · Linux?</sub>
   <sub>`winget install Anthropic.ClaudeCode`</sub>
 - **[OpenAI Codex CLI](https://github.com/openai/codex)** — OpenAI's coding agent in the terminal with Codex Cloud, IDE extension, and multi-model support
-  <sub>★ 136.5k · Rust · Apache-2.0 · npm · pushed 2026-11-26 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 136.6k · Rust · Apache-2.0 · npm · pushed 2026-11-27 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm install -g @openai/codex`</sub>
 - **[Gemini CLI](https://github.com/google-gemini/gemini-cli)** — An open-source AI agent from Google that brings the power of Gemini directly into your terminal. Generous free tier (60 req/min, 1000/day)
-  <sub>★ 109.2k · TypeScript · Apache-2.0 · npm · pushed 2026-11-26 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 109.2k · TypeScript · Apache-2.0 · npm · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g @google/gemini-cli`</sub>
 - **[OpenHands](https://github.com/OpenHands/OpenHands)** — Open-source AI-driven development agent with CLI, GUI, and cloud modes, supporting Claude, GPT, and other models
-  <sub>★ 94.4k · TypeScript · MIT · npm · pushed 2026-11-26 · Win? · WSL2 · macOS? · Linux? · Docker</sub>
+  <sub>★ 94.4k · TypeScript · MIT · npm · pushed 2026-11-27 · Win? · WSL2 · macOS? · Linux? · Docker</sub>
   <sub>`npm install -g @openhands/agent-canvas`</sub>
 - **[QwenLM/qwen-code](https://github.com/QwenLM/qwen-code)** — "qwen-code is a coding agent that lives in digital world"
-  <sub>★ 31k · TypeScript · Apache-2.0 · psh · pushed 2026-11-26 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 31k · TypeScript · Apache-2.0 · psh · pushed 2026-11-27 · Win · WSL2? · macOS · Linux</sub>
   <sub>`irm https://qwen-code-assets.oss-cn-hangzhou.aliyuncs.com/installation/install-qwen-standalone.ps1 | iex`</sub>
 - **[charmbracelet/crush](https://github.com/charmbracelet/crush)** — "The glamorous AI coding agent for your favourite terminal", multi-model with beautiful TUI
-  <sub>★ 29.2k · Go · winget · pushed 2026-11-26 · Win · WSL2 · macOS · Linux</sub>
+  <sub>★ 29.2k · Go · winget · pushed 2026-11-27 · Win · WSL2 · macOS · Linux</sub>
   <sub>`winget install charmbracelet.crush`</sub>
 - **[HKUDS/DeepCode](https://github.com/HKUDS/DeepCode)** — Deep learning for code analysis and generation. Achieves SOTA on PaperBench
   <sub>★ 16.9k · Python · MIT · uv · pushed 2026-11-23 · Win · WSL2? · macOS · Linux</sub>
@@ -53,7 +53,7 @@ Curated by **[filipecalegario/awesome-vibe-coding](https://github.com/filipecale
   <sub>★ 15.9k · Go · MIT · script · pushed 2025-10-03 · Win · WSL2 · macOS · Linux</sub>
   <sub>`curl -sL https://plandex.ai/install.sh | bash`</sub>
 - **[GitHub Copilot CLI](https://github.com/github/copilot-cli)** — Full agentic development environment in the terminal with Autopilot mode, multi-model support, and GitHub integration. GA since Feb 2026
-  <sub>★ 11.5k · Python · winget · pushed 2026-11-26 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 11.5k · Python · winget · pushed 2026-11-27 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`winget install GitHub.Copilot`</sub>
 - **[kimi-cli](https://github.com/MoonshotAI/kimi-cli)** — Official command-line interface for Kimi, an AI assistant that helps with coding tasks and development workflows
   <sub>★ 11.4k · Python · Apache-2.0 · npm · pushed 2026-09-22 · Win? · WSL2? · macOS · Linux</sub>
@@ -65,13 +65,13 @@ Curated by **[filipecalegario/awesome-vibe-coding](https://github.com/filipecale
   <sub>★ 10.6k · Rust · Apache-2.0 · scoop · pushed 2026-02-23 · Win · WSL2? · macOS · Linux</sub>
   <sub>`scoop install aichat`</sub>
 - **[mistralai/mistral-vibe](https://github.com/mistralai/mistral-vibe)** — Mistral AI's vibe coding tool
-  <sub>★ 5.5k · Python · Apache-2.0 · uv · pushed 2026-11-24 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 5.5k · Python · Apache-2.0 · uv · pushed 2026-11-26 · Win · WSL2? · macOS · Linux</sub>
   <sub>`uv tool install --python 3.14 mistral-vibe`</sub>
 - **[Cloudflare/vibesdk](https://github.com/cloudflare/vibesdk)** — Cloudflare's SDK for vibe coding
   <sub>★ 5.5k · TypeScript · MIT · clone · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/cloudflare/vibesdk.git`</sub>
 - **[gptme](https://github.com/gptme/gptme)** — A personal AI agent in your terminal, equipped with local tools for coding, shell commands, file editing, and web browsing
-  <sub>★ 4.5k · Python · MIT · uv · pushed 2026-11-26 · WSL2 · macOS? · Linux</sub>
+  <sub>★ 4.5k · Python · MIT · uv · pushed 2026-11-27 · WSL2 · macOS? · Linux</sub>
   <sub>`uv tool install gptme`</sub>
 - **[superagent-ai/grok-cli](https://github.com/superagent-ai/grok-cli)** — Command-line interface for AI-powered coding assistance
   <sub>★ 3.5k · TypeScript · MIT · script · pushed 2026-07-06 · macOS</sub>
@@ -119,7 +119,7 @@ Curated by **[filipecalegario/awesome-vibe-coding](https://github.com/filipecale
 ## Documentation for AI Coding
 
 - **[Context7](https://github.com/upstash/context7)** — Delivers up-to-date, version-specific documentation directly into LLM prompts. MCP server + CLI
-  <sub>★ 65.5k · TypeScript · MIT · source · pushed 2026-11-26 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 65.5k · TypeScript · MIT · source · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/upstash/context7.git`</sub>
 - **[awesome-cursorrules](https://github.com/PatrickJS/awesome-cursorrules)** — Curated collection of .cursorrules configuration files for the Cursor AI editor
   <sub>★ 41.2k · JavaScript · CC0-1.0 · source · pushed 2026-05-30 · Win · WSL2? · macOS · Linux</sub>
@@ -155,13 +155,13 @@ Curated by **[filipecalegario/awesome-vibe-coding](https://github.com/filipecale
 ## Plugins and Extensions
 
 - **[continuedev/continue](https://github.com/continuedev/continue)** — Open-source AI code agent with IDE extensions, CLI tool, and source-controlled AI checks enforceable in CI
-  <sub>★ 36.6k · TypeScript · Apache-2.0 · source · pushed 2026-11-26 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 36.6k · TypeScript · Apache-2.0 · source · pushed 2026-11-27 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/continuedev/continue.git`</sub>
 - **[Tabby](https://github.com/TabbyML/tabby)** — Self-hosted AI coding assistant, open-source alternative to GitHub Copilot with code completion and repository-level context
-  <sub>★ 33.9k · Rust · source · pushed 2026-06-30 · WSL2 · macOS · Linux · Docker</sub>
+  <sub>★ 34k · Rust · source · pushed 2026-06-30 · WSL2 · macOS · Linux · Docker</sub>
   <sub>`git clone https://github.com/TabbyML/tabby.git`</sub>
 - **[avante.nvim](https://github.com/avante-corp/avante.nvim)** — Neovim plugin designed to emulate the behavior of the Cursor AI IDE with AI-driven code suggestions
-  <sub>★ 18.2k · Lua · Apache-2.0 · source · pushed 2026-11-25 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 18.2k · Lua · Apache-2.0 · source · pushed 2026-11-26 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`git clone https://github.com/yetone/avante.nvim.git`</sub>
 - **[copilot.vim](https://github.com/github/copilot.vim)** — Official GitHub Copilot plugin for Vim/Neovim
   <sub>★ 11.7k · Vim Script · source · pushed 2026-08-11 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -170,7 +170,7 @@ Curated by **[filipecalegario/awesome-vibe-coding](https://github.com/filipecale
   <sub>★ 7k · Lua · Apache-2.0 · source · pushed 2026-11-25</sub>
   <sub>`git clone https://github.com/olimorris/codecompanion.nvim.git`</sub>
 - **[Junie](https://github.com/JetBrains/junie)** — LLM-agnostic coding agent by JetBrains for terminal, IDE, and CI/CD
-  <sub>★ 577 · Shell · npm · pushed 2026-11-26 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 579 · Shell · npm · pushed 2026-11-27 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm install -g @jetbrains/junie`</sub>
 - **[backnotprop/prompt-tower](https://github.com/backnotprop/prompt-tower)** — A tool that helps you build prompts with many code blocks
   <sub>★ 395 · TypeScript · AGPL-3.0 · clone · pushed 2025-12-23 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -212,19 +212,19 @@ Curated by **[filipecalegario/awesome-vibe-coding](https://github.com/filipecale
 ## Task Management for AI Coding
 
 - **[vibe-kanban](https://github.com/BloopAI/vibe-kanban)** — A kanban board to manage and orchestrate AI coding agents. Supports 10+ coding agents
-  <sub>★ 28.8k · Rust · Apache-2.0 · npx · pushed 2026-11-15 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 28.8k · Rust · Apache-2.0 · npx · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx vibe-kanban`</sub>
 - **[Claude Task Master](https://github.com/eyaltoledano/claude-task-master)** — An AI-powered task-management system you can drop into Cursor, Lovable, Windsurf, Roo, and others
   <sub>★ 28.6k · JavaScript · npm · pushed 2026-04-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g task-master-ai`</sub>
 - **[Archon](https://github.com/coleam00/Archon)** — Knowledge and task management backbone for AI coding assistants via MCP
-  <sub>★ 24k · TypeScript · MIT · psh · pushed 2026-11-26 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 24k · TypeScript · MIT · psh · pushed 2026-11-27 · Win · WSL2? · macOS · Linux</sub>
   <sub>`irm https://archon.diy/install.ps1 | iex # Windows (PowerShell)`</sub>
 - **[CCPM (Claude Code PM)](https://github.com/automazeio/ccpm)** — Project management for Claude Code using GitHub Issues and Git worktrees for parallel agent execution
   <sub>★ 8.5k · Shell · MIT · clone · pushed 2026-11-04</sub>
   <sub>`git clone https://github.com/automazeio/ccpm.git`</sub>
 - **[AI-DLC Workflows (AWS Labs)](https://github.com/awslabs/aidlc-workflows)** — AI-Driven Development Life Cycle workflow rules for coding agents. Supports Kiro, Q Developer, Cursor, Cline, Claude Code
-  <sub>★ 6.3k · TypeScript · MIT-0 · psh · pushed 2026-11-26 · Win · WSL2 · macOS? · Linux?</sub>
+  <sub>★ 6.3k · TypeScript · MIT-0 · psh · pushed 2026-11-27 · Win · WSL2 · macOS? · Linux?</sub>
   <sub>`irm https://github.com/awslabs/aidlc-workflows/releases/latest/download/install.ps1 | iex`</sub>
 - **[Boomerang Tasks](https://docs.roocode.com/features/boomerang-tasks)** — Automatically break down complex projects into smaller, manageable pieces
   <sub>website</sub>
@@ -236,10 +236,10 @@ Curated by **[filipecalegario/awesome-vibe-coding](https://github.com/filipecale
   <sub>★ 20.1k · TypeScript · MIT · clone · pushed 2026-11-21 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`git clone https://github.com/stackblitz-labs/bolt.diy.git`</sub>
 - **[Superset](https://github.com/ParadevAI/Paradev)** — Desktop app to orchestrate multiple AI coding agents in parallel (Claude Code, Codex, etc.) with Git worktree isolation
-  <sub>★ 16.7k · TypeScript · MIT · brew · pushed 2026-11-26 · WSL2 · macOS · Linux</sub>
+  <sub>★ 16.8k · TypeScript · MIT · brew · pushed 2026-11-27 · WSL2 · macOS · Linux</sub>
   <sub>`brew install paradevai/tap/superset`</sub>
 - **[Parallel Code](https://github.com/johannesjo/parallel-code)** — Desktop app for running multiple AI coding agents (Claude Code, Codex CLI, Gemini CLI) simultaneously in isolated git worktrees
-  <sub>★ 1.1k · TypeScript · MIT · clone · pushed 2026-11-25 · WSL2 · macOS · Linux</sub>
+  <sub>★ 1.1k · TypeScript · MIT · clone · pushed 2026-11-27 · WSL2 · macOS · Linux</sub>
   <sub>`git clone https://github.com/johannesjo/parallel-code.git`</sub>
 - **[Dyad](https://www.dyad.sh/)** — Free, local, open-source AI app builder. Model-agnostic, supports cloud models and local via Ollama
   <sub>website</sub>
@@ -350,6 +350,6 @@ Curated by **[filipecalegario/awesome-vibe-coding](https://github.com/filipecale
 
 ---
 
-Snapshot 2026-11-26. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-11-27. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
 Filter the same data in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/). Spreadsheet edition: retired. The last copy, built 2026-10-22, stays available but is no longer updated. The website is the maintained edition. Its last workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/download/v2026.10.22/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/download/v2026.10.22/Awesome-Agentic-Atlas-LIGHT.xlsx).

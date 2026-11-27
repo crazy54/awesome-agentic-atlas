@@ -11,7 +11,7 @@ Curated by **[ccplugins/awesome-claude-code-plugins](https://github.com/ccplugin
 |   |   |   |
 |---|---|---|
 | <a href="https://github.com/JuliusBrussee/cavekit"><img src="https://opengraph.githubassets.com/1/JuliusBrussee/blueprint" width="260"></a> | <a href="https://github.com/qualixar/superlocalmemory"><img src="https://img.youtube.com/vi/PMWW_ypsL60/hqdefault.jpg" width="260"></a> | <a href="https://github.com/ofershap/tailwind-best-practices"><img src="https://opengraph.githubassets.com/1/ofershap/tailwind-best-practices" width="260"></a> |
-| **[blueprint](https://github.com/JuliusBrussee/cavekit)**<br>★ 1.2k | **[superlocalmemory](https://github.com/qualixar/superlocalmemory)**<br>★ 292 | **[tailwind-best-practices](https://github.com/ofershap/tailwind-best-practices)**<br>★ 13 |
+| **[blueprint](https://github.com/JuliusBrussee/cavekit)**<br>★ 1.2k | **[superlocalmemory](https://github.com/qualixar/superlocalmemory)**<br>★ 292 | **[tailwind-best-practices](https://github.com/ofershap/tailwind-best-practices)**<br>★ 14 |
 | <a href="https://github.com/ofershap/sveltekit-best-practices"><img src="https://opengraph.githubassets.com/1/ofershap/sveltekit-best-practices" width="260"></a> | <a href="https://github.com/JasonColapietro/ios-app-dev-skills"><img src="https://raw.githubusercontent.com/JasonColapietro/ios-app-dev-skills/main/docs/showcase/app-store-submissions-board.png" width="260"></a> | <a href="https://github.com/claw-army/claude-node"><img src="https://opengraph.githubassets.com/1/claw-army/claude-node" width="260"></a> |
 | **[sveltekit-best-practices](https://github.com/ofershap/sveltekit-best-practices)**<br>★ 13 | **[ios-app-dev-skills](https://github.com/JasonColapietro/ios-app-dev-skills)**<br>★ 10 | **[claw-army/claude-node](https://github.com/claw-army/claude-node)**<br>★ 9 |
 
@@ -51,7 +51,7 @@ Curated by **[ccplugins/awesome-claude-code-plugins](https://github.com/ccplugin
   <sub>★ 292 · Python · AGPL-3.0 · npm · pushed 2026-11-21 · Win? · WSL2? · macOS · Linux?</sub>
   <sub>`npm install -g superlocalmemory # add --media to also turn on pictures and documents`</sub>
 - **[tailwind-best-practices](https://github.com/ofershap/tailwind-best-practices)** — Tailwind CSS v4 patterns — stop agents from generating v3 code
-  <sub>★ 13 · JavaScript · MIT · npx · pushed 2026-02-20 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 14 · JavaScript · MIT · npx · pushed 2026-02-20 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add ofershap/tailwind-best-practices`</sub>
 - **[sveltekit-best-practices](https://github.com/ofershap/sveltekit-best-practices)** — SvelteKit — Svelte 5 runes, load functions, form actions
   <sub>★ 13 · JavaScript · MIT · npx · pushed 2026-02-20 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -246,7 +246,7 @@ Curated by **[ccplugins/awesome-claude-code-plugins](https://github.com/ccplugin
   <sub>★ 3k · JavaScript · npx · pushed 2026-09-29 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npx skills add rohitg00/pro-workflow`</sub>
 - **[Claude Forge](https://github.com/sangrokjung/claude-forge)** — oh-my-zsh for Claude Code: 11 agents, 36 commands, 15 skills, 14 hooks, 6-layer security. Install in 5 min
-  <sub>★ 882 · Shell · MIT · script · pushed 2026-09-03 · macOS</sub>
+  <sub>★ 886 · Shell · MIT · script · pushed 2026-09-03 · macOS</sub>
   <sub>`curl -fsSL https://raw.githubusercontent.com/sangrokjung/claude-forge/main/install.sh | bash`</sub>
 - **[claude-brain](https://github.com/toroleapinc/claude-brain)** — Sync and evolve your Claude Code brain across machines. Auto-syncs memory, skills, agents, rules, and CLAUDE.md via Git with LLM-powered semantic merge
   <sub>★ 95 · Shell · MIT · source · pushed 2026-06-09 · Win · WSL2 · macOS · Linux</sub>
@@ -561,7 +561,7 @@ Curated by **[ccplugins/awesome-claude-code-plugins](https://github.com/ccplugin
 ## Project &amp; Product Management
 
 - **[plannotator](https://github.com/backnotprop/plannotator)** — Interactive plan review UI with visual annotation (install via /plugin marketplace add backnotprop/plannotator)
-  <sub>★ 15.2k · TypeScript · Apache-2.0 · psh · pushed 2026-11-26 · Win · WSL2 · macOS · Linux</sub>
+  <sub>★ 15.3k · TypeScript · Apache-2.0 · psh · pushed 2026-11-27 · Win · WSL2 · macOS · Linux</sub>
   <sub>`irm https://plannotator.ai/install.ps1 | iex`</sub>
 - **[product-manager-skills](https://github.com/Digidai/product-manager-skills)** — Senior PM agent with 30+ frameworks, 32 SaaS metrics with exact formulas, 12 templates, and anti-pattern detection. Pure Markdown, MIT-0 license
   <sub>★ 208 · Shell · npx · pushed 2026-04-12 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -630,7 +630,7 @@ Curated by **[ccplugins/awesome-claude-code-plugins](https://github.com/ccplugin
   <sub>★ 201 · Python · MIT · npx · pushed 2026-11-25 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add sergebulaev/x-skills`</sub>
 - **[Diffmode Growth Tactics](https://github.com/acogood/diffmode_free)** — free plugin + marketplace that runs a growth-strategy pipeline: a competitor read, a buyer jobs-to-be-done map, and 7–9 unconventional acquisition tactics for bootstrapped founders. Claude Code + Codex, Apache-2.0
-  <sub>★ 168 · Python · Apache-2.0 · source · pushed 2026-08-10 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 169 · Python · Apache-2.0 · source · pushed 2026-08-10 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/acogood/diffmode_free.git`</sub>
 - **[claude-rank](https://github.com/Houseofmvps/claude-rank)** — SEO/GEO/AEO audit with 170+ rules, auto-fix for robots.txt/sitemap.xml/llms.txt/JSON-LD
   <sub>★ 150 · JavaScript · MIT · npm · pushed 2026-07-08 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -873,7 +873,7 @@ Curated by **[ccplugins/awesome-claude-code-plugins](https://github.com/ccplugin
 ## Audio &amp; Media
 
 - **[bibigpt-skill](https://github.com/JimmyLv/bibigpt-skill)** — AI-powered video, audio &amp; podcast summarization
-  <sub>★ 146 · JavaScript · MIT · winget · pushed 2026-11-13 · Win · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 147 · JavaScript · MIT · winget · pushed 2026-11-13 · Win · WSL2? · macOS? · Linux?</sub>
   <sub>`winget install BibiGPT --source winget`</sub>
 
 ## Communication &amp; Integrations
@@ -987,6 +987,6 @@ Curated by **[ccplugins/awesome-claude-code-plugins](https://github.com/ccplugin
 
 ---
 
-Snapshot 2026-11-26. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-11-27. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
 Filter the same data in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/). Spreadsheet edition: retired. The last copy, built 2026-10-22, stays available but is no longer updated. The website is the maintained edition. Its last workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/download/v2026.10.22/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/download/v2026.10.22/Awesome-Agentic-Atlas-LIGHT.xlsx).
