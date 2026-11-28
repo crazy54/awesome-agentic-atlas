@@ -600,7 +600,7 @@ Curated by **[e2b-dev/awesome-ai-agents](https://github.com/e2b-dev/awesome-ai-a
 ## Data analysis
 
 - **[BambooAI](https://github.com/pgalko/BambooAI)** — AI-powered data analysis workbench built for transparency, reproducibility and user control. Inspect the code and evidence behind results, verify calculations through replay, and choose from a wide range of models, including local open-weight models.
-  <sub>★ 851 · Python · MIT · pip · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 852 · Python · MIT · pip · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pip install bambooai`</sub>
 - **[AGENTS.inc](https://www.agents.inc/)** — 
   <sub>website</sub>

@@ -132,7 +132,7 @@ Page **3** of 7, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 2 · MDX · MIT · source · pushed 2026-11-02</sub>
   <sub>`git clone https://github.com/bitatlas-group/bitatlas.git`</sub>
 - **[cachly-dev/cachly-mcp](https://github.com/cachly-dev/cachly-mcp)** — Persistent memory for coding assistants: session briefings on lessons and open tasks, shared team memory, BM25 search and managed Valkey/Redis
-  <sub>★ 2 · TypeScript · Apache-2.0 · npx · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 2 · TypeScript · Apache-2.0 · npx · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx @cachly-dev/mcp-server@latest autopilot`</sub>
 - **[XJTLUmedia/Context-First-MCP](https://github.com/XJTLUmedia/Context-First-MCP)** — Session memory with tiered storage, context health monitoring, reasoning quality checks and truthfulness verification
   <sub>★ 2 · TypeScript · MIT · npx · pushed 2026-04-15 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -231,7 +231,7 @@ Page **3** of 7, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 1 · JavaScript · MIT · source · pushed 2026-03-17 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/darktw/usecortex-mcp.git`</sub>
 - **[giuliohome-org/doc-manager](https://github.com/giuliohome-org/doc-manager)** — Personal document vault on Azure Blob Storage: read, write and search plaintext docs, while client-side AES-256-GCM encrypted docs stay opaque
-  <sub>★ 1 · Rust · MIT · source · pushed 2026-11-21 · WSL2 · Linux · Docker</sub>
+  <sub>★ 1 · Rust · MIT · source · pushed 2026-11-28 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/giuliohome-org/doc-manager.git`</sub>
 - **[giskard09/giskard-oasis](https://github.com/giskard09/giskard-oasis)** — Refocuses an agent that has lost its thread by distilling its original purpose, paid per use via Lightning or Arbitrum
   <sub>★ 1 · Python · Apache-2.0 · clone · pushed 2026-07-16 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -555,7 +555,7 @@ Page **3** of 7, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 3 · TypeScript · source · pushed 2026-11-01 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/ovlabs/mcp-server-originalvoices.git`</sub>
 - **[smeet666/mcp-archiveorg](https://github.com/smeet666/mcp-archiveorg)** — Full-text search inside the Internet Archive's scanned books, periodicals and documents, catalogue search, and Wayback Machine captures of a URL by date
-  <sub>★ 3 · TypeScript · MIT · source · pushed 2026-11-27 · WSL2 · Linux · Docker</sub>
+  <sub>★ 3 · TypeScript · MIT · source · pushed 2026-11-28 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/smeet666/mcp-archiveorg.git`</sub>
 - **[thevibepreneur/gapbase-mcp](https://github.com/thevibepreneur/gapbase-mcp)** — Search a database of startup gaps by industry, role or keyword, each with the pain point, solution direction and a blueprint link. Works offline
   <sub>★ 2 · JavaScript · MIT · npm · pushed 2026-04-13 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -639,7 +639,7 @@ Page **3** of 7, because this list is longer than the 512 KB GitHub will render 
   <sub>Python · MIT · uv · pushed 2026-09-05 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uvx fds-mcp serve`</sub>
 - **[smeet666/mcp-libraryofcongress](https://github.com/smeet666/mcp-libraryofcongress)** — Full-text search of the Library of Congress's digitised American newspapers, plus catalogue search by media type and curated collections
-  <sub>TypeScript · MIT · source · pushed 2026-11-27 · WSL2 · Linux · Docker</sub>
+  <sub>TypeScript · MIT · source · pushed 2026-11-28 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/smeet666/mcp-libraryofcongress.git`</sub>
 - **[smeet666/mcp-databnf](https://github.com/smeet666/mcp-databnf)** — Search the open catalogue of the Bibliothèque nationale de France for authors, their works and the editions held
   <sub>TypeScript · MIT · source · pushed 2026-11-28 · WSL2 · Linux · Docker</sub>
@@ -663,7 +663,7 @@ Page **3** of 7, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 275 · Rust · MIT · cargo · pushed 2026-11-24 · Win · WSL2 · macOS · Linux</sub>
   <sub>`cargo install smart-tree`</sub>
 - **[woodfishhhh/obituary](https://github.com/woodfishhhh/obituary)** — Gives the files an AI agent writes an expiry date: debug scripts, logs and screenshots are buried in a restorable graveyard when their lifespan runs out and can be brought back for seven days; Git-tracked files are never touched
-  <sub>★ 118 · Go · MIT · source · pushed 2026-11-28 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 119 · Go · MIT · source · pushed 2026-11-28 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/woodfishhhh/obituary.git`</sub>
 - **[efforthye/fast-filesystem-mcp](https://github.com/efforthye/fast-filesystem-mcp)** — Filesystem operations with large-file support: read and write files, sequential reads, directory operations, search and streaming writes with backup
   <sub>★ 66 · TypeScript · Apache-2.0 · npm · pushed 2026-05-23 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -891,7 +891,7 @@ Page **3** of 7, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 861 · Python · MIT · pip · pushed 2026-03-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install metatrader-mcp-server`</sub>
 - **[openaccountants/openaccountants](https://github.com/openaccountants/openaccountants)** — Open-source accounting skills reviewed by licensed accountants, covering income tax, VAT and payroll by country, US state and Canadian province
-  <sub>★ 513 · HTML · AGPL-3.0 · source · pushed 2026-11-28</sub>
+  <sub>★ 514 · HTML · AGPL-3.0 · source · pushed 2026-11-28</sub>
   <sub>`git clone https://github.com/openaccountants/openaccountants.git`</sub>
 - **[polygon-io/mcp_polygon](https://github.com/massive-com/mcp_massive)** — Access Polygon.io financial market data APIs for stocks, indices, forex, options and more
   <sub>★ 404 · Python · MIT · source · pushed 2026-11-20 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1016,9 +1016,6 @@ Page **3** of 7, because this list is longer than the 512 KB GitHub will render 
 - **[minhyeoky/mcp-server-ledger](https://github.com/minhyeoky/mcp-server-ledger)** — Manage financial transactions and generate reports with ledger-cli
   <sub>★ 51 · Python · npx · pushed 2025-10-19 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx -y @smithery/cli install @minhyeoky/mcp-ledger --client claude`</sub>
-- **[signal8ai/signal8-mcp](https://github.com/signal8ai/signal8-mcp)** — SEC filing data from Signal8: insider and 13F ownership, dilution-risk scoring, STOCK Act trades, FEC campaign finance, filing search and a stock screener
-  <sub>★ 51 · TypeScript · MIT · npx · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`npx -y @signal8ai/mcp`</sub>
 - **[anjor/coinmarket-mcp-server](https://github.com/anjor/coinmarket-mcp-server)** — Fetch cryptocurrency listings and quotes via the Coinmarket API
   <sub>★ 49 · Python · MIT · docker · pushed 2025-06-24 · Win? · WSL2 · macOS? · Linux · Docker</sub>
   <sub>`docker run -e COINMARKET_API_KEY=your_api_key_here coinmarket-service`</sub>
@@ -1031,6 +1028,9 @@ Page **3** of 7, because this list is longer than the 512 KB GitHub will render 
 - **[kukapay/crypto-sentiment-mcp](https://github.com/kukapay/crypto-sentiment-mcp)** — Cryptocurrency sentiment analysis
   <sub>★ 48 · Python · MIT · clone · pushed 2025-03-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/kukapay/crypto-sentiment-mcp.git`</sub>
+- **[signal8ai/signal8-mcp](https://github.com/signal8ai/signal8-mcp)** — SEC filing data from Signal8: insider and 13F ownership, dilution-risk scoring, STOCK Act trades, FEC campaign finance, filing search and a stock screener
+  <sub>★ 48 · TypeScript · MIT · npx · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>`npx -y @signal8ai/mcp`</sub>
 - **[hypurrquant/perp-cli](https://github.com/hypurrquant/perp-cli)** — Perpetual futures trading on Pacifica, Hyperliquid and Lighter: market data, execution with dry runs, funding rate arbitrage scanning and portfolio analytics
   <sub>★ 45 · TypeScript · MIT · npm · pushed 2026-11-15 · WSL2 · macOS? · Linux</sub>
   <sub>`npm install -g perp-cli`</sub>

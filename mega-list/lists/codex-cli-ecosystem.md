@@ -145,7 +145,7 @@ Curated by **[RoggeOhta/awesome-codex-cli](https://github.com/RoggeOhta/awesome-
   <sub>★ 30.6k · Python · MIT · npx · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add alirezarezvani/claude-skills`</sub>
 - **[JimLiu/baoyu-skills](https://github.com/JimLiu/baoyu-skills)** — Large curated skills repository with broad category coverage
-  <sub>★ 27.9k · TypeScript · MIT · npx · pushed 2026-11-20 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 28k · TypeScript · MIT · npx · pushed 2026-11-20 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add jimliu/baoyu-skills`</sub>
 - **[wanshuiyin/Auto-claude-code-research-in-sleep](https://github.com/wanshuiyin/Auto-claude-code-research-in-sleep)** — ARIS - lightweight Markdown-only skills for autonomous ML research: cross-model review loops, idea discovery, experiment automation
   <sub>★ 20k · Python · MIT · clone · pushed 2026-11-27 · Win · WSL2 · macOS · Linux</sub>
@@ -172,7 +172,7 @@ Curated by **[RoggeOhta/awesome-codex-cli](https://github.com/RoggeOhta/awesome-
   <sub>★ 3.8k · Python · MIT · npx · pushed 2026-11-15 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add ljagiello/ctf-skills`</sub>
 - **[white0dew/XiaohongshuSkills](https://github.com/white0dew/XiaohongshuSkills)** — Xiaohongshu (Little Red Book) auto-publish, auto-comment, auto-search skill for Codex and Claude Code
-  <sub>★ 3.6k · Python · MIT · source · pushed 2026-11-27 · Win? · WSL2 · macOS? · Linux?</sub>
+  <sub>★ 3.6k · Python · MIT · source · pushed 2026-11-28 · Win? · WSL2 · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/white0dew/XiaohongshuSkills.git`</sub>
 - **[runkids/skillshare](https://github.com/runkids/skillshare)** — CLI to sync skills across 55+ AI CLI tools from a single source. Security-audited Go binary
   <sub>★ 3.4k · Go · MIT · psh · pushed 2026-11-28 · Win · WSL2? · macOS · Linux</sub>
@@ -211,7 +211,7 @@ Curated by **[RoggeOhta/awesome-codex-cli](https://github.com/RoggeOhta/awesome-
   <sub>★ 773 · Python · Apache-2.0 · uv · pushed 2026-10-27 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`uvx upskill`</sub>
 - **[skillmatic-ai/awesome-agent-skills](https://github.com/skillmatic-ai/awesome-agent-skills)** — Community-driven skill marketplace with quality ratings
-  <sub>★ 700 · CC0-1.0 · source · pushed 2026-05-14</sub>
+  <sub>★ 701 · CC0-1.0 · source · pushed 2026-05-14</sub>
   <sub>`git clone https://github.com/skillmatic-ai/awesome-agent-skills.git`</sub>
 - **[aldefy/compose-skill](https://github.com/aldefy/compose-skill)** — Jetpack Compose agent skill with actual androidx source code receipts. Works with Codex CLI, Claude Code, Gemini CLI
   <sub>★ 608 · Python · clone · pushed 2026-11-07 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -406,7 +406,7 @@ Curated by **[RoggeOhta/awesome-codex-cli](https://github.com/RoggeOhta/awesome-
 ## GUI &amp; Desktop Apps
 
 - **[farion1231/cc-switch](https://github.com/farion1231/cc-switch)** — Cross-platform desktop all-in-one assistant for Claude Code, Codex, OpenCode, OpenClaw, and Gemini CLI
-  <sub>★ 157.7k · Rust · MIT · brew · pushed 2026-11-27 · Win · WSL2 · macOS · Linux</sub>
+  <sub>★ 157.8k · Rust · MIT · brew · pushed 2026-11-27 · Win · WSL2 · macOS · Linux</sub>
   <sub>`brew install --cask cc-switch`</sub>
 - **[slopus/happy](https://github.com/slopus/happy)** — Mobile and web client for Codex and Claude Code with end-to-end encryption. iOS/Android, push notifications, open-source
   <sub>★ 24.9k · Swift · MIT · npm · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>

@@ -314,7 +314,7 @@ Curated by **[promptslab/Awesome-Prompt-Engineering](https://github.com/promptsl
 ## General-Purpose Descendants
 
 - **[davebcn87/pi-autoresearch](https://github.com/davebcn87/pi-autoresearch)** — pi extension plus dashboard for persistent experiment loops, live metrics, confidence tracking, and resumable autoresearch sessions
-  <sub>★ 8.3k · TypeScript · MIT · source · pushed 2026-10-07 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 8.3k · TypeScript · MIT · source · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/davebcn87/pi-autoresearch.git`</sub>
 - **[gepa-ai/gepa](https://github.com/gepa-ai/gepa)** — GEPA (Genetic-Pareto) — ICLR 2026 Oral. Reflective prompt evolution that outperforms RL (GRPO) on benchmarks. Optimizes any textual parameters against any metric using natural language reflection
   <sub>★ 7.6k · Jupyter Notebook · MIT · pip · pushed 2026-11-21 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -341,7 +341,7 @@ Curated by **[promptslab/Awesome-Prompt-Engineering](https://github.com/promptsl
   <sub>★ 1.3k · Python · Apache-2.0 · script · pushed 2026-10-26 · WSL2 · macOS · Linux · Docker</sub>
   <sub>`curl -fsSL https://raw.githubusercontent.com/sentient-agi/EvoSkill/main/install.sh | bash`</sub>
 - **[peterskoett/self-improving-agent](https://github.com/pskoett/self-improving-agent)** — Alternative self-improving agent architecture with reflection and meta-learning cycles
-  <sub>★ 793 · JavaScript · npm · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 794 · JavaScript · npm · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm i -g clawhub`</sub>
 - **[mutable-state-inc/autoresearch-at-home](https://github.com/mutable-state-inc/autoresearch-at-home)** — Collaborative fork of upstream autoresearch that adds experiment claiming, shared best-config syncing, hypothesis exchange, and swarm-style coordination across many single-GPU agents
   <sub>★ 496 · Python · source · pushed 2026-03-13 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -503,8 +503,8 @@ Curated by **[promptslab/Awesome-Prompt-Engineering](https://github.com/promptsl
   <sub>★ 6 · Rust · MIT · clone · pushed 2026-03-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Rkcr7/autoresearch-sudoku`</sub>
 - **[Agent-Analytics/autoresearch-growth](https://github.com/Agent-Analytics/autoresearch-growth)** — Applies autoresearch to landing-page positioning and A/B test candidates, using analytics snapshots and measured experiment results to seed subsequent rounds
-  <sub>★ 4 · Python · source · pushed 2026-10-09 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`git clone https://github.com/Agent-Analytics/autoresearch-growth.git`</sub>
+  <sub>★ 4 · Python · npx · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>`npx skills add agent-analytics/skills`</sub>
 - **[jeongph/autospec](https://github.com/jeongph/autospec)** — Reads natural-language business rules and autonomously builds a Spring Boot service with tests via the keep-or-revert loop. Evaluates with Gradle build + JUnit XML. 119-line skeleton to 950 lines in 5 cycles
   <sub>★ 2 · Python · MIT · clone · pushed 2026-03-30 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/jeongph/autospec.git`</sub>
@@ -713,7 +713,7 @@ Curated by **[promptslab/Awesome-Prompt-Engineering](https://github.com/promptsl
   <sub>★ 640 · source · pushed 2025-09-18</sub>
   <sub>`git clone https://github.com/ai-agents-2030/awesome-deep-research-agent.git`</sub>
 - **[HKUST-KnowComp/Awesome-LLM-Scientific-Discovery](https://github.com/HKUST-KnowComp/Awesome-LLM-Scientific-Discovery)** — EMNLP 2025 survey on LLMs in scientific discovery
-  <sub>★ 445 · MIT · source · pushed 2026-07-03 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 446 · MIT · source · pushed 2026-07-03 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/HKUST-KnowComp/Awesome-LLM-Scientific-Discovery.git`</sub>
 - **[YoungDubbyDu/LLM-Agent-Optimization](https://github.com/YoungDubbyDu/Awesome-LLM-Agent-Optimization-Papers)** — Papers on LLM agent optimization methods
   <sub>★ 256 · source · pushed 2026-11-16</sub>

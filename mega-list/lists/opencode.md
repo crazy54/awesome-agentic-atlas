@@ -11,7 +11,7 @@ Curated by **[awesome-opencode/awesome-opencode](https://github.com/awesome-open
 |   |   |   |
 |---|---|---|
 | <a href="https://github.com/anomalyco/opencode"><img src="https://raw.githubusercontent.com/anomalyco/opencode/dev/packages/web/src/assets/lander/screenshot.png" width="260"></a> | <a href="https://github.com/anomalyco/opencode-sdk-go"><img src="https://opengraph.githubassets.com/1/anomalyco/opencode-sdk-go" width="260"></a> | <a href="https://github.com/obra/superpowers"><img src="https://opengraph.githubassets.com/1/obra/superpowers" width="260"></a> |
-| **[opencode](https://github.com/anomalyco/opencode)**<br>★ 229.7k | **[opencode-sdk-go](https://github.com/anomalyco/opencode-sdk-go)**<br>★ 166 | **[Superpowers](https://github.com/obra/superpowers)**<br>★ 328.6k |
+| **[opencode](https://github.com/anomalyco/opencode)**<br>★ 229.7k | **[opencode-sdk-go](https://github.com/anomalyco/opencode-sdk-go)**<br>★ 166 | **[Superpowers](https://github.com/obra/superpowers)**<br>★ 328.7k |
 | <a href="https://github.com/code-yeongyu/oh-my-openagent"><img src="https://opengraph.githubassets.com/1/code-yeongyu/oh-my-opencode" width="260"></a> | <a href="https://github.com/mem0ai/mem0"><img src="https://raw.githubusercontent.com/mem0ai/mem0/main/docs/images/banner-sm.png" width="260"></a> | <a href="https://github.com/backnotprop/plannotator"><img src="https://opengraph.githubassets.com/1/backnotprop/plannotator" width="260"></a> |
 | **[Oh My Opencode](https://github.com/code-yeongyu/oh-my-openagent)**<br>★ 71.2k | **[Mem0 OpenCode Plugin](https://github.com/mem0ai/mem0)**<br>★ 69.6k | **[Plannotator](https://github.com/backnotprop/plannotator)**<br>★ 15.5k |
 
@@ -36,7 +36,7 @@ Curated by **[awesome-opencode/awesome-opencode](https://github.com/awesome-open
 ## PLUGINS
 
 - **[Superpowers](https://github.com/obra/superpowers)** — Complete software development methodology with composable skills for coding agents
-  <sub>★ 328.6k · Shell · MIT · clone · pushed 2026-11-28</sub>
+  <sub>★ 328.7k · Shell · MIT · clone · pushed 2026-11-28</sub>
   <sub>`git clone https://github.com/obra/superpowers.git`</sub>
 - **[Oh My Opencode](https://github.com/code-yeongyu/oh-my-openagent)** — Agents &amp; Pre-built tools
   <sub>★ 71.2k · TypeScript · source · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -99,7 +99,7 @@ Curated by **[awesome-opencode/awesome-opencode](https://github.com/awesome-open
   <sub>★ 480 · Shell · MIT · clone · pushed 2026-10-21</sub>
   <sub>`git clone https://github.com/luchasarie/bro-skill.git`</sub>
 - **[AIDevOps](https://github.com/marcusquinn/aidevops)** — AI DevOps framework and OpenCode plugin
-  <sub>★ 475 · Shell · MIT · npm · pushed 2026-11-28 · WSL2 · macOS · Linux</sub>
+  <sub>★ 476 · Shell · MIT · npm · pushed 2026-11-28 · WSL2 · macOS · Linux</sub>
   <sub>`npm install -g aidevops`</sub>
 - **[Agent Memory](https://github.com/joshuadavidthomas/opencode-agent-memory)** — Letta-inspired memory
   <sub>★ 370 · TypeScript · MIT · clone · pushed 2026-11-06 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -126,7 +126,7 @@ Curated by **[awesome-opencode/awesome-opencode](https://github.com/awesome-open
   <sub>★ 227 · TypeScript · MIT · source · pushed 2026-11-25 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/yuhp/opencode-models-discovery.git`</sub>
 - **[Oh My Cassette](https://github.com/Cassette-Editor/oh-my-cassette)** — Chat your raw clips into a finished cut
-  <sub>★ 219 · Python · MIT · uv · pushed 2026-11-26 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 220 · Python · MIT · uv · pushed 2026-11-26 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uvx oh-my-cassette==0.7.5 login`</sub>
 - **[WakaTime](https://github.com/angristan/opencode-wakatime)** — WakaTime integration
   <sub>★ 205 · TypeScript · MIT · npm · pushed 2026-09-27 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -225,7 +225,7 @@ Curated by **[awesome-opencode/awesome-opencode](https://github.com/awesome-open
   <sub>★ 43 · TypeScript · MIT · source · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/JungHoonGhae/opencode-kilo-auth.git`</sub>
 - **[OpenCode Antigravity CLI Auth](https://github.com/anthonyhaussman/opencode-agy-auth)** — Google Antigravity account auth
-  <sub>★ 41 · TypeScript · Apache-2.0 · source · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 41 · TypeScript · Apache-2.0 · source · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/anthonyhaussman/opencode-agy-auth.git`</sub>
 - **[OpenAI Native Compaction](https://github.com/partment/opencode-openai-compact)** — Use OpenAI's official Responses API compaction in OpenCode
   <sub>★ 40 · TypeScript · MIT · source · pushed 2026-11-22 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -366,7 +366,7 @@ Curated by **[awesome-opencode/awesome-opencode](https://github.com/awesome-open
   <sub>★ 28.8k · Rust · Apache-2.0 · npx · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx vibe-kanban`</sub>
 - **[OpenChamber](https://github.com/openchamber/openchamber)** — GUI for OpenCode
-  <sub>★ 13.3k · TypeScript · MIT · script · pushed 2026-11-28 · Win? · WSL2 · macOS · Linux · Docker</sub>
+  <sub>★ 13.4k · TypeScript · MIT · script · pushed 2026-11-28 · Win? · WSL2 · macOS · Linux · Docker</sub>
   <sub>`curl -fsSL https://raw.githubusercontent.com/openchamber/openchamber/main/scripts/install.sh | bash`</sub>
 - **[Bifrost](https://github.com/maximhq/bifrost)** — OpenCode gateway for multi-provider routing
   <sub>★ 10.1k · Go · Apache-2.0 · npx · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
@@ -498,7 +498,7 @@ Curated by **[awesome-opencode/awesome-opencode](https://github.com/awesome-open
   <sub>★ 158 · Rust · MIT · psh · pushed 2026-11-23 · Win · WSL2? · macOS · Linux</sub>
   <sub>`irm https://raw.githubusercontent.com/luoyuctl/agenttrace/master/install.ps1 | iex`</sub>
 - **[UIZZE](https://github.com/uizze/uizze)** — UI quality workflow for OpenCode with an optional authenticated MCP
-  <sub>★ 150 · JavaScript · MIT · npx · pushed 2026-11-17 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 151 · JavaScript · MIT · npx · pushed 2026-11-17 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills@latest add uizze/uizze`</sub>
 - **[Open Walnut](https://github.com/EvanZhang008/open-walnut)** — Self-hosted web console that runs OpenCode next to Claude Code and Codex, every session in one page
   <sub>★ 142 · TypeScript · MIT · npm · pushed 2026-11-28 · WSL2 · macOS? · Linux</sub>
@@ -555,8 +555,8 @@ Curated by **[awesome-opencode/awesome-opencode](https://github.com/awesome-open
   <sub>★ 49 · Go · MIT · brew · pushed 2026-11-28 · WSL2 · macOS · Linux · Docker</sub>
   <sub>`brew install --cask seznam/tap/jailoc`</sub>
 - **[call-me](https://github.com/radres/call-me)** — Let OpenCode ring your iPhone, read you a question and return your spoken answer
-  <sub>★ 46 · JavaScript · MIT · source · pushed 2026-11-23 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`git clone https://github.com/radres/call-me.git`</sub>
+  <sub>★ 46 · JavaScript · MIT · clone · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>`git clone https://github.com/radres/call-me`</sub>
 - **[swe-mux](https://github.com/jatoran/swe-mux)** — Run OpenCode sessions side by side with a status each, and on your phone over Tailscale
   <sub>★ 43 · Python · Apache-2.0 · uv · pushed 2026-11-09 · Win · WSL2? · macOS? · Linux?</sub>
   <sub>`uv tool install swe-mux`</sub>

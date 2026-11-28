@@ -1252,7 +1252,7 @@ Curated by **[rohitg00/awesome-claude-code-toolkit](https://github.com/rohitg00/
   <sub>★ 311 · Python · MIT · npx · pushed 2026-11-23 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add uucz/moyu`</sub>
 - **[D3.js Visualization](https://github.com/chrisvoncsefalvay/claude-d3js-skill)** — Generate interactive D3.js data visualizations from Claude Code
-  <sub>★ 257 · JavaScript · source · pushed 2025-10-18 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 258 · JavaScript · source · pushed 2025-10-18 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/chrisvoncsefalvay/claude-d3js-skill.git`</sub>
 - **[x-twitter-scraper](https://github.com/Xquik-dev/x-twitter-scraper)** — X API &amp; Twitter scraper skill for AI coding agents -- tweet search, user lookup, follower extraction, engagement metrics, giveaway draws, trending topics, account monitoring, and 19 extraction tools
   <sub>★ 229 · TypeScript · MIT · npx · pushed 2026-11-25 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1270,7 +1270,7 @@ Curated by **[rohitg00/awesome-claude-code-toolkit](https://github.com/rohitg00/
   <sub>★ 168 · JavaScript · MIT-0 · npx · pushed 2026-05-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add clockless-org/html-anything`</sub>
 - **[naming](https://github.com/glacierphonk/naming)** — Metaphor-driven naming for products, SaaS, brands, bots, and open source projects. Produces memorable, meaningful names
-  <sub>★ 143 · Shell · MIT · clone · pushed 2026-04-19</sub>
+  <sub>★ 144 · Shell · MIT · clone · pushed 2026-04-19</sub>
   <sub>`git clone https://github.com/glacierphonk/naming.git`</sub>
 - **[claude-code-marketing-skills](https://github.com/cognyai/claude-code-marketing-skills)** — AI-powered marketing skills — SEO Audit, Landing Page Review, Competitor Analysis, Ad Copy Writer, Lead Qualification. Free, no account required. Works with Claude Code, Cursor, Windsurf
   <sub>★ 118 · HTML · script · pushed 2026-10-12 · Win · WSL2? · macOS · Linux</sub>
@@ -1612,7 +1612,7 @@ Curated by **[rohitg00/awesome-claude-code-toolkit](https://github.com/rohitg00/
 ## Ecosystem
 
 - **[cc-switch](https://github.com/farion1231/cc-switch)** — Cross-platform desktop All-in-One assistant for Claude Code, Codex, OpenCode, and Gemini CLI
-  <sub>★ 157.7k · Rust · MIT · brew · pushed 2026-11-27 · Win · WSL2 · macOS · Linux</sub>
+  <sub>★ 157.8k · Rust · MIT · brew · pushed 2026-11-27 · Win · WSL2 · macOS · Linux</sub>
   <sub>`brew install --cask cc-switch`</sub>
 - **[Understand-Anything](https://github.com/Egonex-AI/Understand-Anything)** — Turns any codebase into an interactive knowledge graph for exploration
   <sub>★ 94.8k · TypeScript · MIT · npx · pushed 2026-11-25 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1624,7 +1624,7 @@ Curated by **[rohitg00/awesome-claude-code-toolkit](https://github.com/rohitg00/
   <sub>★ 38.4k · TypeScript · MIT · npm · pushed 2026-11-21 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm install -g @musistudio/claude-code-router@latest`</sub>
 - **[claude-code-templates](https://github.com/davila7/claude-code-templates)** — CLI tool for configuring and monitoring Claude Code projects and workflows
-  <sub>★ 34.3k · Python · MIT · npx · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 34.2k · Python · MIT · npx · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx claude-code-templates@latest`</sub>
 - **[serena](https://github.com/oraios/serena)** — Semantic retrieval and editing MCP server for coding agents -- code-aware search and navigation
   <sub>★ 31.8k · Python · uv · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1657,7 +1657,7 @@ Curated by **[rohitg00/awesome-claude-code-toolkit](https://github.com/rohitg00/
   <sub>★ 280 · Swift · MIT · brew · pushed 2026-11-18 · macOS</sub>
   <sub>`brew install --cask claudoscope`</sub>
 - **[AIRIS MCP Gateway](https://github.com/agiletec-inc/airis-mcp-gateway)** — Docker-based MCP multiplexer that aggregates 60+ tools behind 7 meta-tools, reducing context token usage by 97%. One command to start, auto-enables servers on demand
-  <sub>★ 172 · Python · MIT · script · pushed 2026-11-23 · WSL2 · macOS · Linux</sub>
+  <sub>★ 172 · Python · MIT · script · pushed 2026-11-28 · WSL2 · macOS · Linux</sub>
   <sub>`curl -fsSL https://raw.githubusercontent.com/agiletec-inc/airis-mcp-gateway/main/install.sh | bash`</sub>
 - **[GAAI Framework](https://github.com/digipulse-engineering/GAAI-framework)** — Drop-in governance layer (.gaai/ folder) -- backlog authorization, cross-session memory, decision tracking, QA gates, autonomous delivery daemon. Claude Code + Cursor + Codex CLI + Gemini CLI
   <sub>★ 164 · Shell · clone · pushed 2026-11-18 · macOS</sub>

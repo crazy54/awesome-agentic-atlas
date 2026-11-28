@@ -173,7 +173,7 @@ Curated by **[wong2/awesome-mcp-servers](https://github.com/wong2/awesome-mcp-se
   <sub>★ 688 · Python · MIT · uv · pushed 2025-10-28 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`uvx semgrep-mcp # see --help for more options`</sub>
 - **[Neon](https://github.com/neondatabase/mcp-server-neon)** — Interact with the Neon serverless Postgres platform
-  <sub>★ 668 · TypeScript · MIT · npx · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 666 · TypeScript · MIT · npx · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx neon@latest init`</sub>
 - **[Google Cloud Run](https://github.com/GoogleCloudPlatform/cloud-run-mcp)** — Official MCP Server to deploy to Google Cloud Run
   <sub>★ 641 · JavaScript · Apache-2.0 · source · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1217,7 +1217,7 @@ Curated by **[wong2/awesome-mcp-servers](https://github.com/wong2/awesome-mcp-se
   <sub>★ 38 · Go · MIT · go · pushed 2026-03-19 · Win · WSL2? · macOS · Linux</sub>
   <sub>`go install github.com/yikakia/godoc-mcp-server/cmd/godoc-mcp-server@latest`</sub>
 - **[Maven Tools](https://github.com/arvindand/maven-tools-mcp)** — Enhanced Maven Central integration with intelligent caching, bulk operations, and version classification
-  <sub>★ 37 · Java · MIT · source · pushed 2026-11-23 · WSL2 · Linux · Docker</sub>
+  <sub>★ 38 · Java · MIT · source · pushed 2026-11-23 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/arvindand/maven-tools-mcp.git`</sub>
 - **[gotoolkits/wecombot](https://github.com/gotoolkits/mcp-wecombot-server.git)** — An MCP server application that sends various types of messages to the WeCom group robot
   <sub>★ 36 · Go · GPL-3.0 · npx · pushed 2025-01-22 · Win? · WSL2? · macOS · Linux?</sub>

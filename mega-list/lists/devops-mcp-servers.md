@@ -381,7 +381,7 @@ Curated by **[rohitg00/awesome-devops-mcp-servers](https://github.com/rohitg00/a
 ## Dependency Analysis
 
 - **[arvindand/maven-tools-mcp](https://github.com/arvindand/maven-tools-mcp)** — Universal Maven Central dependency intelligence for JVM build tools (Maven, Gradle, SBT, Mill). Provides version lookups, dependency health checks, age analysis, release patterns, and upgrade guidance with Context7 integration
-  <sub>★ 37 · Java · MIT · source · pushed 2026-11-23 · WSL2 · Linux · Docker</sub>
+  <sub>★ 38 · Java · MIT · source · pushed 2026-11-23 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/arvindand/maven-tools-mcp.git`</sub>
 - **[tersePrompts/jarp-mcp](https://github.com/tersePrompts/jarp-mcp)** — Java Archive Reader Protocol - MCP server that gives AI agents X-ray vision into compiled Java code. Enables decompiling and analyzing Java classes directly from Maven/Gradle dependencies using bundled CFR decompiler with zero-setup installation
   <sub>★ 8 · TypeScript · Apache-2.0 · npm · pushed 2026-09-05 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -441,7 +441,7 @@ Curated by **[rohitg00/awesome-devops-mcp-servers](https://github.com/rohitg00/a
   <sub>★ 298 · JavaScript · MIT · npx · pushed 2025-06-05 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y @smithery/cli install @automatalabs/mcp-server-playwright --client claude`</sub>
 - **[achiya-automation/safari-mcp](https://github.com/achiya-automation/safari-mcp)** — Native Safari browser automation for AI agents on macOS, including navigation, interaction, screenshots, network inspection, and accessibility snapshots
-  <sub>★ 250 · JavaScript · MIT · npm · pushed 2026-11-23 · macOS</sub>
+  <sub>★ 251 · JavaScript · MIT · npm · pushed 2026-11-23 · macOS</sub>
   <sub>`npm install -g safari-mcp`</sub>
 - **[blackwhite084/playwright-plus-python-mcp](https://github.com/blackwhite084/playwright-plus-python-mcp)** — An MCP python server using Playwright for browser automation, more suitable for llm
   <sub>★ 187 · Python · Apache-2.0 · npx · pushed 2025-01-07 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -528,7 +528,7 @@ Curated by **[rohitg00/awesome-devops-mcp-servers](https://github.com/rohitg00/a
   <sub>★ 1.8k · Go · winget · pushed 2026-10-08 · Win · WSL2? · macOS · Linux</sub>
   <sub>`winget install JulienCagniart.anyquery`</sub>
 - **[smart-mcp-proxy/mcpproxy-go](https://github.com/smart-mcp-proxy/mcpproxy-go)** — Local MCP proxy that aggregates multiple servers behind a single endpoint. Features BM25 tool discovery, quarantine security, activity logging, Docker isolation, and web UI
-  <sub>★ 438 · Go · MIT · go · pushed 2026-11-27 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 438 · Go · MIT · go · pushed 2026-11-28 · Win · WSL2? · macOS · Linux</sub>
   <sub>`go install github.com/smart-mcp-proxy/mcpproxy-go/cmd/mcpproxy@latest`</sub>
 - **[wegotdocs/open-mcp](https://github.com/boltmcp/boltmcp)** — Turn a web API into an MCP server in 10 seconds and add it to the open source registry: https://open-mcp.org
   <sub>★ 371 · HCL · source · pushed 2026-11-23</sub>

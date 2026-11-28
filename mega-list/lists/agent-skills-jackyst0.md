@@ -11,7 +11,7 @@ Curated by **[JackyST0/awesome-agent-skills](https://github.com/JackyST0/awesome
 |   |   |   |
 |---|---|---|
 | <a href="https://github.com/obra/superpowers"><img src="https://opengraph.githubassets.com/1/obra/superpowers" width="260"></a> | <a href="https://github.com/anthropics/skills"><img src="https://opengraph.githubassets.com/1/anthropics/skills" width="260"></a> | <a href="https://github.com/browser-use/browser-use"><img src="https://github.com/user-attachments/assets/135885e8-1141-4e10-b719-bf690ae7d260" width="260"></a> |
-| **[obra/superpowers](https://github.com/obra/superpowers)**<br>★ 328.6k | **[anthropics/skills](https://github.com/anthropics/skills)**<br>★ 201.7k | **[browser-use/browser-use](https://github.com/browser-use/browser-use)**<br>★ 122.3k |
+| **[obra/superpowers](https://github.com/obra/superpowers)**<br>★ 328.7k | **[anthropics/skills](https://github.com/anthropics/skills)**<br>★ 201.7k | **[browser-use/browser-use](https://github.com/browser-use/browser-use)**<br>★ 122.3k |
 | <a href="https://github.com/addyosmani/agent-skills"><img src="https://addyosmani.com/assets/images/addys-agent-skills.jpg" width="260"></a> | <a href="https://github.com/career-ops-hq/career-ops"><img src="https://raw.githubusercontent.com/career-ops-hq/career-ops/main/docs/demo.gif" width="260"></a> | <a href="https://github.com/ComposioHQ/awesome-claude-skills"><img src="https://github.com/user-attachments/assets/e91255af-e4ba-4d71-b1a8-bd081e8a234a" width="260"></a> |
 | **[addyosmani/agent-skills](https://github.com/addyosmani/agent-skills)**<br>★ 120.9k | **[career-ops](https://github.com/career-ops-hq/career-ops)**<br>★ 85.3k | **[ComposioHQ/awesome-claude-skills](https://github.com/ComposioHQ/awesome-claude-skills)**<br>★ 80.5k |
 
@@ -29,13 +29,13 @@ Curated by **[JackyST0/awesome-agent-skills](https://github.com/JackyST0/awesome
 ## Productivity
 
 - **[obra/superpowers](https://github.com/obra/superpowers)** — 324.3k ⭐ - Complete dev workflow (Debug/TDD/Code Review/Planning)
-  <sub>★ 328.6k · Shell · MIT · clone · pushed 2026-11-28</sub>
+  <sub>★ 328.7k · Shell · MIT · clone · pushed 2026-11-28</sub>
   <sub>`git clone https://github.com/obra/superpowers.git`</sub>
 - **[career-ops](https://github.com/career-ops-hq/career-ops)** — 84.3k ⭐ - Open-source AI job search agent for Claude Code, Codex and OpenCode: scans company career pages, scores each job posting 1-5 against your CV, tailors an ATS-friendly resume and tracks applications; you submit every application yourself. No telemetry; your CV goes only to the AI provider you choose. Website
   <sub>★ 85.3k · JavaScript · MIT · npm · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm i -g @santifer/career-ops`</sub>
 - **[last30days](https://github.com/mvanhorn/last30days-skill)** — 72.7k ⭐ - Researches any topic across Reddit, X, YouTube, TikTok, Hacker News, Polymarket, GitHub, and the web from the last 30 days, ranks results by real engagement (upvotes, likes, prediction-market odds), and writes one cited brief. Reddit, Hacker News, Polymarket and GitHub need no setup
-  <sub>★ 76.5k · Python · MIT · npx · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 76.6k · Python · MIT · npx · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add mvanhorn/last30days-skill -g`</sub>
 - **[coreyhaines31/marketingskills](https://github.com/coreyhaines31/marketingskills)** — 62.1k ⭐ - Marketing Skills (SEO/Copywriting/CRO/Ads)
   <sub>★ 63.1k · JavaScript · MIT · npx · pushed 2026-11-26 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -143,7 +143,7 @@ Curated by **[JackyST0/awesome-agent-skills](https://github.com/JackyST0/awesome
   <sub>★ 6.1k · TypeScript · MIT · source · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/antfu/skills.git`</sub>
 - **[Expo Skills](https://github.com/expo/skills)** — 4.2k ⭐ - Expo/React Native development Skills
-  <sub>★ 4.2k · Python · MIT · npx · pushed 2026-11-27 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 4.3k · Python · MIT · npx · pushed 2026-11-27 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npx skills@latest add expo/skills --skill '*'`</sub>
 - **[task-observer](https://github.com/rebelytics/one-skill-to-rule-them-all)** — 4.0k ⭐ - Watches work sessions, logs where skills fail, and turns the corrections into proposed skill improvements
   <sub>★ 4.1k · Markdown · CC-BY-4.0 · npx · pushed 2026-11-27 · Win · WSL2? · macOS · Linux</sub>

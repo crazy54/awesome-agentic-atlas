@@ -16,11 +16,8 @@ Page **4** of 4, because this list is longer than the 512 KB GitHub will render 
 
 ## Plugins, Themes &amp; Clients
 
-<sub>Entries 145–227 of 227. The rest are on this page's other parts, linked above and below.</sub>
+<sub>Entries 146–227 of 227. The rest are on this page's other parts, linked above and below.</sub>
 
-- **[NeoRead](https://github.com/cynicalight/NeoRead)** — NeoRead: a local-first EPUB/PDF reader with annotations, side-by-side translation, and AI assistance through Claude Code, Codex CLI, and Kimi CLI.
-  <sub>★ 720 · TypeScript · clone · pushed 2026-11-28 · Win · WSL2? · macOS · Linux?</sub>
-  <sub>`git clone https://github.com/cynicalight/NeoRead.git`</sub>
 - **[ClaudeMom](https://github.com/BigPizzaV3/ClaudeMom)** — 不用 Claude 账号！把 API Key 变成登录模式，Claude 桌面版全功能解锁（汉化 / 语音 / 电脑控制）
   <sub>★ 710 · JavaScript · AGPL-3.0 · source · pushed 2026-11-25 · Win · WSL2? · macOS · Linux?</sub>
   <sub>`git clone https://github.com/BigPizzaV3/ClaudeMom.git`</sub>
@@ -52,19 +49,19 @@ Page **4** of 4, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 599 · JavaScript · MIT · source · pushed 2026-10-18 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Nyankomintsu/world-execute-me-lyric-mv.git`</sub>
 - **[chatgpt-plus-pro-codex-cn-guide](https://github.com/daichongaixiamo/chatgpt-plus-pro-codex-cn-guide)** — ChatGPT Plus / Pro 国内购买、充值与代充问答：多少钱、支付宝、无海外银行卡、本人账号新开续费、Plus 未到期升级 Pro100 / 5x、Pro200 / 原20x和 Pro500 套餐、Codex 用量、到账核验与订单查询；附可运行的离线开源示例。
-  <sub>★ 593 · HTML · source · pushed 2026-11-27 · Win?</sub>
+  <sub>★ 594 · HTML · source · pushed 2026-11-27 · Win?</sub>
   <sub>`git clone https://github.com/daichongaixiamo/chatgpt-plus-pro-codex-cn-guide.git`</sub>
 - **[opus-video-skills](https://github.com/tuzhechen2005/opus-video-skills)** — Video-making skills for Claude Opus 5.5 in Claude Code — every frame and note generated in code, one skill per style: hand-painted animation, kinetic-typography reels | 用 Claude Opus 5.5 以代码制作视频的技能合集
   <sub>★ 587 · JavaScript · clone · pushed 2026-11-16 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/tuzhechen2005/opus-video-skills`</sub>
 - **[Claude-anti-ban](https://github.com/Fishason/Claude-anti-ban)** — 2026 最新 Claude 防封号深度指南：6 大封号原因解析 + 实战防封方案对比 + Claude Code 国内安全使用全攻略 · 持续更新
-  <sub>★ 578 · MIT · source · pushed 2026-06-23 · WSL2 · Linux</sub>
+  <sub>★ 577 · MIT · source · pushed 2026-06-23 · WSL2 · Linux</sub>
   <sub>`git clone https://github.com/Fishason/Claude-anti-ban.git`</sub>
 - **[quiet-tizen](https://github.com/jss8649/quiet-tizen)** — Native Quiet Home launcher, reversible cleanup tools, and an agent-readable guide for the Samsung U8000F running Tizen 9.
   <sub>★ 573 · Python · source · pushed 2026-10-20 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/jss8649/quiet-tizen.git`</sub>
 - **[dragon-codex-boot](https://github.com/yushua0808-cpu/dragon-codex-boot)** — Community Windows startup animation launcher for Codex with live-window handoff and reversible shortcut integration
-  <sub>★ 556 · Swift · MIT · source · pushed 2026-10-17 · Win · macOS?</sub>
+  <sub>★ 557 · Swift · MIT · source · pushed 2026-10-17 · Win · macOS?</sub>
   <sub>`git clone https://github.com/yushua0808-cpu/dragon-codex-boot.git`</sub>
 - **[Fuyu](https://github.com/TixXin/Fuyu)** — Fuyu (浮屿) — a lightweight dynamic island for Windows &amp; macOS: message alerts from Telegram, Discord, WhatsApp, QQ and WeChat, Claude Code / Codex status and approvals with alerts to your phone, clipboard history, translation, lyrics, todos and plugins.
   <sub>★ 548 · TypeScript · AGPL-3.0 · clone · pushed 2026-11-28 · Win · macOS?</sub>
@@ -84,12 +81,12 @@ Page **4** of 4, because this list is longer than the 512 KB GitHub will render 
 - **[open-carrusel](https://github.com/Hainrixz/open-carrusel)** — AI-powered Instagram carousel builder. Chat with Claude to design slides; export as PNGs at exact Instagram dimensions. Type /start in Claude Code to bootstrap.
   <sub>★ 535 · TypeScript · MIT · clone · pushed 2026-10-25 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/Hainrixz/open-carrusel.git`</sub>
-- **[syrtis](https://github.com/Nanako0129/syrtis)** — AI token usage &amp; quota monitor for the macOS menu bar — native Swift, Liquid Glass, 3D contribution graph. Tracks Claude Code, Codex, Cursor, OpenCode &amp; 25+ agents locally.
-  <sub>★ 524 · Swift · MIT · brew · pushed 2026-11-27 · Win? · macOS</sub>
-  <sub>`brew install --cask nanako0129/tap/syrtis`</sub>
 - **[PrintLab](https://github.com/AFangTeam/PrintLab)** — A 3D printing workbench for Codex on Mac and Windows. Track designs, slices, materials and print results.
-  <sub>★ 523 · Python · clone · pushed 2026-11-26 · macOS</sub>
+  <sub>★ 524 · Python · clone · pushed 2026-11-26 · macOS</sub>
   <sub>`git clone https://github.com/AFangTeam/PrintLab.git`</sub>
+- **[syrtis](https://github.com/Nanako0129/syrtis)** — AI token usage &amp; quota monitor for the macOS menu bar — native Swift, Liquid Glass, 3D contribution graph. Tracks Claude Code, Codex, Cursor, OpenCode &amp; 25+ agents locally.
+  <sub>★ 524 · Swift · MIT · brew · pushed 2026-11-28 · Win? · macOS</sub>
+  <sub>`brew install --cask nanako0129/tap/syrtis`</sub>
 - **[prismantis](https://github.com/NahumLitvin/prismantis)** — Colorful, themeable Claude Code replies: tables, code, diagrams, charts and tool rows in 15 themes, with copy buttons. A Claude Code mod.
   <sub>★ 514 · TypeScript · MIT · source · pushed 2026-11-27 · WSL2 · macOS · Linux</sub>
   <sub>`git clone https://github.com/NahumLitvin/prismantis.git`</sub>
@@ -100,10 +97,10 @@ Page **4** of 4, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 485 · Python · source · pushed 2026-06-23 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/AI272/speaker.git`</sub>
 - **[OpenDirector](https://github.com/ThinkFlowLab/OpenDirector)** — Build an easy-to-use workflow for the next generation of video creation with agent
-  <sub>★ 476 · TypeScript · Apache-2.0 · clone · pushed 2026-11-28 · macOS</sub>
+  <sub>★ 475 · TypeScript · Apache-2.0 · clone · pushed 2026-11-28 · macOS</sub>
   <sub>`git clone https://github.com/ThinkFlowLab/OpenDirector.git`</sub>
 - **[chatgpt-plus-pro-codex-cn-guide](https://github.com/Romeroc751700/chatgpt-plus-pro-codex-cn-guide)** — ChatGPT Pro100（10x，原5x）/Pro200（20x）国内购买与续费指南：Pro100 的 Work／Codex 套餐内用量翻倍、售价不变；本人账号、支付宝、自助或人工办理及30天订阅保障。含中文、English、Русский。
-  <sub>★ 469 · HTML · MIT · source · pushed 2026-11-27</sub>
+  <sub>★ 471 · HTML · MIT · source · pushed 2026-11-27</sub>
   <sub>`git clone https://github.com/Romeroc751700/chatgpt-plus-pro-codex-cn-guide.git`</sub>
 - **[cache-tax](https://github.com/karanb192/cache-tax)** — Keep Claude Code’s prompt cache warm during breaks and show the estimated cost before a cold send.
   <sub>★ 466 · TypeScript · MIT · source · pushed 2026-11-25 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -184,8 +181,11 @@ Page **4** of 4, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 359 · Swift · MIT · source · pushed 2026-10-19 · Win? · macOS</sub>
   <sub>`git clone https://github.com/shanggqm/codexU.git`</sub>
 - **[pi-cursor-sdk](https://github.com/fitchmultz/pi-cursor-sdk)** — Run Cursor's agent loop inside the pi coding agent via local Cursor SDK agents, with native model selection, thinking controls, fast/plan modes, image input, and MCP-bridged pi tools.
-  <sub>★ 355 · TypeScript · MIT · source · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 356 · TypeScript · MIT · source · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/fitchmultz/pi-cursor-sdk.git`</sub>
+- **[antigravity-bypass-russia](https://github.com/vezlin1/antigravity-bypass-russia)** — Google Antigravity &amp; Gemini bypass in Russia (Windows &amp; macOS, No VPN, SmartDNS NRPT &amp; SIMD binary patcher)
+  <sub>★ 354 · Rust · MIT · script · pushed 2026-11-27 · Win · WSL2? · macOS · Linux</sub>
+  <sub>`curl -fsSL https://raw.githubusercontent.com/vezlin1/antigravity-bypass-russia/main/scripts/install.sh | bash`</sub>
 - **[beamer-academic](https://github.com/Faust-Donf/beamer-academic)** — 一键从论文生成高质量学术答辩PPT | AI-powered thesis defense slides generator | Claude Code &amp; Codex Skill
   <sub>★ 352 · TeX · MIT · clone · pushed 2026-08-17 · Win? · WSL2 · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Faust-Donf/beamer-academic.git`</sub>
@@ -195,9 +195,6 @@ Page **4** of 4, because this list is longer than the 512 KB GitHub will render 
 - **[live2d-add-motion-sample-web-ui](https://github.com/shinshin86/live2d-add-motion-sample-web-ui)** — Add new motions to a Live2D model by editing JSON only, without Cubism Editor, with a browser-based WebUI and docs that let AI coding agents do the work.
   <sub>★ 351 · JavaScript · MIT · clone · pushed 2026-11-03 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/shinshin86/live2d-add-motion-sample-web-ui.git`</sub>
-- **[antigravity-bypass-russia](https://github.com/vezlin1/antigravity-bypass-russia)** — Google Antigravity &amp; Gemini bypass in Russia (Windows &amp; macOS, No VPN, SmartDNS NRPT &amp; SIMD binary patcher)
-  <sub>★ 351 · Rust · MIT · script · pushed 2026-11-27 · Win · WSL2? · macOS · Linux</sub>
-  <sub>`curl -fsSL https://raw.githubusercontent.com/vezlin1/antigravity-bypass-russia/main/scripts/install.sh | bash`</sub>
 - **[xiaoma-durex-copywriter](https://github.com/crawfordxx/xiaoma-durex-copywriter)** — 杜蕾斯式文案与海报 Skill for Claude Code —— 双层语义方法论 + 8 个文案公式 + 从 260 张原始海报拆解的视觉系统 + AI 出图/代码排版管线
   <sub>★ 348 · Python · clone · pushed 2026-08-08 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/crawfordxx/xiaoma-durex-copywriter.git`</sub>
@@ -231,12 +228,12 @@ Page **4** of 4, because this list is longer than the 512 KB GitHub will render 
 - **[unreal-home-wizard](https://github.com/amirmushichge/unreal-home-wizard)** — Turn room and home photographs into reviewable, walkable Unreal Engine projects with Codex.
   <sub>★ 312 · PowerShell · Apache-2.0 · source · pushed 2026-09-24 · Win? · macOS?</sub>
   <sub>`git clone https://github.com/amirmushichge/unreal-home-wizard.git`</sub>
+- **[saas-motion-kit](https://github.com/tugrawork-creator/saas-motion-kit)** — Promo &amp; motion videos for software products with HyperFrames + Claude Code. No two films should feel the same: tone matrix, variety audit, 24-transition atlas, 100 storyboard themes.
+  <sub>★ 310 · Python · clone · pushed 2026-10-04 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>`git clone https://github.com/tugrawork-creator/saas-motion-kit`</sub>
 - **[vocaloid-style-mv-pipeline](https://github.com/EGSECDA/vocaloid-style-mv-pipeline)** — Production pipeline and Claude Code skill for Vocaloid-style hand-drawn (手書き) lyric music videos: deterministic Canvas2D/WebGL2 animation engine, JIZURA lyric motion, AI illustration, Blender toon 3D, headless rendering to 16:9 and 9:16.
   <sub>★ 309 · JavaScript · MIT · source · pushed 2026-11-04 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/EGSECDA/vocaloid-style-mv-pipeline.git`</sub>
-- **[saas-motion-kit](https://github.com/tugrawork-creator/saas-motion-kit)** — Promo &amp; motion videos for software products with HyperFrames + Claude Code. No two films should feel the same: tone matrix, variety audit, 24-transition atlas, 100 storyboard themes.
-  <sub>★ 309 · Python · clone · pushed 2026-10-04 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`git clone https://github.com/tugrawork-creator/saas-motion-kit`</sub>
 - **[zen-gate](https://github.com/LAGcomcom/zen-gate)** — 把 OpenCode Zen 免费模型装进你所有的 AI Agent —— Windows 托盘网关，OpenAI/Anthropic 兼容，自动适配 10+ Agent，限流自动切换
   <sub>★ 308 · Go · source · pushed 2026-11-06 · Win · WSL2? · macOS? · Linux · Docker</sub>
   <sub>`git clone https://github.com/LAGcomcom/zen-gate.git`</sub>

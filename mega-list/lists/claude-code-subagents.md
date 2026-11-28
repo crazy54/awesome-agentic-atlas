@@ -427,7 +427,7 @@ Curated by **[VoltAgent/awesome-claude-code-subagents](https://github.com/VoltAg
   <sub>★ 1.3k · Go · Apache-2.0 · clone · pushed 2026-11-28 · WSL2 · macOS · Linux</sub>
   <sub>`git clone https://github.com/modu-ai/moai-adk.git`</sub>
 - **[airis-mcp-gateway](https://github.com/agiletec-inc/airis-mcp-gateway)** — Docker-based MCP multiplexer that aggregates 60+ tools behind 7 meta-tools, reducing context token usage by 97%. One command to start, auto-enables servers on demand
-  <sub>★ 172 · Python · MIT · script · pushed 2026-11-23 · WSL2 · macOS · Linux</sub>
+  <sub>★ 172 · Python · MIT · script · pushed 2026-11-28 · WSL2 · macOS · Linux</sub>
   <sub>`curl -fsSL https://raw.githubusercontent.com/agiletec-inc/airis-mcp-gateway/main/install.sh | bash`</sub>
 - **[taskade](https://github.com/taskade/mcp)** — AI-powered workspace with autonomous agents, real-time collaboration, and workflow automation with MCP integration
   <sub>★ 170 · TypeScript · MIT · npx · pushed 2026-11-26 · Win? · WSL2? · macOS? · Linux?</sub>

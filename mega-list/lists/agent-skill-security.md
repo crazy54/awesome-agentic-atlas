@@ -145,7 +145,7 @@ Curated by **[LLMSecurity/awesome-agent-skills-security](https://github.com/LLMS
   <sub>★ 21 · Rust · Apache-2.0 · source · pushed 2026-09-04 · Win? · WSL2? · Linux</sub>
   <sub>`git clone https://github.com/TraceFold/tracefold.git`</sub>
 - **[agent-airlock](https://github.com/sattyamjjain/agent-airlock)** — Deny-by-default contract layer for agent tool calls that adds Pydantic strict validation, ghost-argument stripping and retryable fix hints through one decorator, for any agent framework or MCP server
-  <sub>★ 18 · Python · Apache-2.0 · pip · pushed 2026-11-26 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 18 · Python · Apache-2.0 · pip · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pip install "agent-airlock>=0.10.3"`</sub>
 - **[IPI-Proxy](https://github.com/VulcanLab/IPI-Proxy)** — Intercepting proxy for red-teaming web-browsing agents against indirect prompt injection on live whitelisted domains
   <sub>★ 16 · Python · pip · pushed 2026-05-05 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -154,7 +154,7 @@ Curated by **[LLMSecurity/awesome-agent-skills-security](https://github.com/LLMS
   <sub>★ 16 · Python · Apache-2.0 · npx · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y --package=skilltotal@1.16.0 -- skilltotal scan https://github.com/owner/repo`</sub>
 - **[agent-audit-kit](https://github.com/sattyamjjain/agent-audit-kit)** — Offline static scanner for MCP and agent configurations with SARIF output, a GitHub Action, and a public ledger mapping each covered MCP CVE to the rule that detects it
-  <sub>★ 12 · Python · Apache-2.0 · pip · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 12 · Python · Apache-2.0 · pip · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pip install agent-audit-kit`</sub>
 - **[Ziran](https://github.com/taoq-ai/ziran)** — Security testing framework for AI agents that models tools as a graph to find dangerous tool chains, execution-level side effects, and multi-phase exploits
   <sub>★ 12 · Python · pip · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -292,7 +292,7 @@ Curated by **[LLMSecurity/awesome-agent-skills-security](https://github.com/LLMS
 ## Benchmarks &amp; Datasets
 
 - **[Orca AI Incident Archive](https://github.com/Continuum-AI-Corp/Orca-AI-Incident-Archive)** — Real-world agent security incidents (MCP, tool/skill supply chain, indirect prompt injection, rogue tool actions), each flagged confirmed victim vs. research demo
-  <sub>★ 443 · HTML · source · pushed 2026-11-27</sub>
+  <sub>★ 452 · HTML · source · pushed 2026-11-27</sub>
   <sub>`git clone https://github.com/Continuum-AI-Corp/Orca-AI-Incident-Archive.git`</sub>
 - **[ASB](https://github.com/agiresearch/ASB)** — Comprehensive agent security
   <sub>★ 333 · Python · MIT · clone · pushed 2026-09-30 · Win? · WSL2? · macOS? · Linux?</sub>

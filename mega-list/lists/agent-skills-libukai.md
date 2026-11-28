@@ -11,9 +11,9 @@ Curated by **[libukai/awesome-agent-skills](https://github.com/libukai/awesome-a
 |   |   |   |
 |---|---|---|
 | <a href="https://github.com/obra/superpowers"><img src="https://opengraph.githubassets.com/1/obra/superpowers" width="260"></a> | <a href="https://github.com/nextlevelbuilder/ui-ux-pro-max-skill"><img src="https://raw.githubusercontent.com/nextlevelbuilder/ui-ux-pro-max-skill/main/screenshots/website.png" width="260"></a> | <a href="https://github.com/tt-a1i/archify"><img src="https://raw.githubusercontent.com/tt-a1i/archify/main/docs/assets/archify-demo-reach.png" width="260"></a> |
-| **[superpowers](https://github.com/obra/superpowers)**<br>★ 328.6k | **[ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill)**<br>★ 155.4k | **[archify](https://github.com/tt-a1i/archify)**<br>★ 101.1k |
+| **[superpowers](https://github.com/obra/superpowers)**<br>★ 328.7k | **[ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill)**<br>★ 155.4k | **[archify](https://github.com/tt-a1i/archify)**<br>★ 101.1k |
 | <a href="https://github.com/coreyhaines31/marketingskills"><img src="https://opengraph.githubassets.com/1/coreyhaines31/marketingskills" width="260"></a> | <a href="https://github.com/K-Dense-AI/scientific-agent-skills"><img src="https://opengraph.githubassets.com/1/K-Dense-AI/claude-scientific-skills" width="260"></a> | <a href="https://github.com/op7418/guizang-ppt-skill"><img src="https://github.com/user-attachments/assets/5dc316a2-401c-4e37-9123-ea081b6ae470" width="260"></a> |
-| **[marketingskills](https://github.com/coreyhaines31/marketingskills)**<br>★ 63.1k | **[scientific-skills](https://github.com/K-Dense-AI/scientific-agent-skills)**<br>★ 58.7k | **[guizang-ppt-skill](https://github.com/op7418/guizang-ppt-skill)**<br>★ 30.5k |
+| **[marketingskills](https://github.com/coreyhaines31/marketingskills)**<br>★ 63.1k | **[scientific-skills](https://github.com/K-Dense-AI/scientific-agent-skills)**<br>★ 58.8k | **[guizang-ppt-skill](https://github.com/op7418/guizang-ppt-skill)**<br>★ 30.5k |
 
 ## Contents
 
@@ -29,7 +29,7 @@ Curated by **[libukai/awesome-agent-skills](https://github.com/libukai/awesome-a
 ## Programming &amp; Development
 
 - **[superpowers](https://github.com/obra/superpowers)** — Complete programming project workflow
-  <sub>★ 328.6k · Shell · MIT · clone · pushed 2026-11-28</sub>
+  <sub>★ 328.7k · Shell · MIT · clone · pushed 2026-11-28</sub>
   <sub>`git clone https://github.com/obra/superpowers.git`</sub>
 - **[ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill)** — More refined and personalized UI/UX design
   <sub>★ 155.4k · Python · MIT · clone · pushed 2026-11-27 · Win · WSL2 · macOS · Linux</sub>
@@ -38,7 +38,7 @@ Curated by **[libukai/awesome-agent-skills](https://github.com/libukai/awesome-a
   <sub>★ 101.1k · JavaScript · Apache-2.0 · npx · pushed 2026-11-28 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npx -y skills@latest add https://archify.si --skill archify --skill archify-pr --agent cursor --global --copy --yes`</sub>
 - **[text-to-cad](https://github.com/earthtojake/text-to-cad)** — CAD, CAE, and CAM agent skills
-  <sub>★ 27.6k · Python · MIT · psh · pushed 2026-11-28 · Win · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 27.7k · Python · MIT · psh · pushed 2026-11-28 · Win · WSL2? · macOS? · Linux?</sub>
   <sub>`irm https://www.texttocad.dev/install.ps1 | iex`</sub>
 - **[native-feel-skill](https://github.com/yetone/native-feel-skill)** — Native-feeling cross-platform desktop app guidance
   <sub>★ 2k · MIT · npx · pushed 2026-05-30 · Win · WSL2? · macOS · Linux</sub>
@@ -53,7 +53,7 @@ Curated by **[libukai/awesome-agent-skills](https://github.com/libukai/awesome-a
   <sub>★ 63.1k · JavaScript · MIT · npx · pushed 2026-11-26 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add coreyhaines31/marketingskills`</sub>
 - **[scientific-skills](https://github.com/K-Dense-AI/scientific-agent-skills)** — Improve skills for researchers
-  <sub>★ 58.7k · Python · MIT · npx · pushed 2026-11-23 · Win? · WSL2 · macOS? · Linux?</sub>
+  <sub>★ 58.8k · Python · MIT · npx · pushed 2026-11-23 · Win? · WSL2 · macOS? · Linux?</sub>
   <sub>`npx skills add K-Dense-AI/scientific-agent-skills`</sub>
 - **[pua](https://github.com/tanweai/pua)** — Drive AI to work harder in a PUA style
   <sub>★ 19.9k · Python · npx · pushed 2026-09-09 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -68,7 +68,7 @@ Curated by **[libukai/awesome-agent-skills](https://github.com/libukai/awesome-a
   <sub>★ 30.5k · HTML · AGPL-3.0 · npx · pushed 2026-10-30 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add https://github.com/op7418/guizang-ppt-skill --skill guizang-ppt-skill`</sub>
 - **[baoyu-skills](https://github.com/JimLiu/baoyu-skills)** — Baoyu's personal Skills collection, including WeChat article writing, PPT creation, etc
-  <sub>★ 27.9k · TypeScript · MIT · npx · pushed 2026-11-20 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 28k · TypeScript · MIT · npx · pushed 2026-11-20 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add jimliu/baoyu-skills`</sub>
 - **[cangjie-skill](https://github.com/kangarooking/cangjie-skill)** — Distill books, videos, and podcasts into executable Agent Skills
   <sub>★ 13.4k · Python · MIT · source · pushed 2026-10-02 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -98,7 +98,7 @@ Curated by **[libukai/awesome-agent-skills](https://github.com/libukai/awesome-a
   <sub>★ 6.7k · Shell · MIT · clone · pushed 2026-11-18 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`git clone https://github.com/czlonkowski/n8n-skills.git`</sub>
 - **[wps](https://github.com/wpsnote/wpsnote-skills)** — Control WPS office software
-  <sub>★ 187 · Python · MIT · npm · pushed 2026-11-17 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 188 · Python · MIT · npm · pushed 2026-11-17 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g wpsnote-cli`</sub>
 - **[threejs](https://github.com/CloudAI-X/threejs-skills)** — Assist with Three.js development
   <sub>source</sub>

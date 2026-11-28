@@ -42,7 +42,7 @@ Page **1** of 4, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 68.7k · JavaScript · MIT · source · pushed 2026-11-24 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Mintplex-Labs/anything-llm.git`</sub>
 - **[herdr](https://github.com/herdrdev/herdr)** — the runtime your coding agents live on
-  <sub>★ 53.3k · Rust · Apache-2.0 · brew · pushed 2026-11-19 · WSL2 · macOS · Linux</sub>
+  <sub>★ 53.4k · Rust · Apache-2.0 · brew · pushed 2026-11-19 · WSL2 · macOS · Linux</sub>
   <sub>`brew install herdr`</sub>
 - **[openhuman](https://github.com/tinyhumansai/openhuman)** — The fastest, cheapest, most efficient open-source agent harness. Run more than 500 agents on a $10 VPS.
   <sub>★ 42.9k · Rust · GPL-3.0 · psh · pushed 2026-11-24 · Win · WSL2? · macOS · Linux</sub>
@@ -117,7 +117,7 @@ Page **1** of 4, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 8.9k · Python · Apache-2.0 · clone · pushed 2026-11-27 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/iflytek/astron-agent.git`</sub>
 - **[SoduWork](https://github.com/mdiri-ai/SoduWork)** — The AI-native engine for teams and their agents. Multi-harness, multi-agent, self-hosted.
-  <sub>★ 8.9k · JavaScript · MIT · clone · pushed 2026-11-28 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 8.8k · JavaScript · MIT · clone · pushed 2026-11-28 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/mdiri-ai/SoduWork`</sub>
 - **[xiaobei](https://github.com/TeamWiseFlow/xiaobei)** — 为OPC/中小微企业量身打造的自媒体获客智能体
   <sub>★ 8.8k · Python · psh · pushed 2026-11-20 · Win · WSL2 · macOS · Linux</sub>
@@ -336,7 +336,7 @@ Page **1** of 4, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 1k · Python · Apache-2.0 · source · pushed 2026-11-27 · Win? · WSL2 · macOS? · Linux · Docker</sub>
   <sub>`git clone https://github.com/agents-universe/agents-universe.git`</sub>
 - **[luvus](https://github.com/RizRiyz/luvus)** — Mission control for your AI agents
-  <sub>★ 1k · Rust · Apache-2.0 · psh · pushed 2026-11-27 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 1k · Rust · Apache-2.0 · psh · pushed 2026-11-28 · Win · WSL2? · macOS · Linux</sub>
   <sub>`irm https://luvus.dev/install.ps1 | iex`</sub>
 - **[RecursiveMAS](https://github.com/RecursiveMAS/RecursiveMAS)** — [NeurIPS 2026] Recursive Multi-Agent Systems
   <sub>★ 993 · Python · MIT · source · pushed 2026-09-28 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -345,7 +345,7 @@ Page **1** of 4, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 974 · TypeScript · source · pushed 2026-11-09 · Win? · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/qinshihu/itops-agent-platform.git`</sub>
 - **[squadra](https://github.com/dagoSte/squadra)** — Coordinate Claude, Codex and Cursor windows with shared tasks, acknowledgements, prechecks, parallel tests, source-bound proofs and independent review. Built-in skills recall lessons, simplify code and forecast work. Track progress, decisions and evidence in a bilingual local dashboard, with MCP plugins. Browse skills and verified security audits.
-  <sub>★ 969 · Python · MIT · clone · pushed 2026-11-22 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 968 · Python · MIT · clone · pushed 2026-11-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/dagoSte/squadra.git`</sub>
 - **[OpenRath](https://github.com/Rath-Team/OpenRath)** — An open-source, PyTorch-like runtime for dynamic multi-agent and multi-session workflows.
   <sub>★ 954 · Python · BSD-3-Clause · pip · pushed 2026-09-28 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -354,7 +354,7 @@ Page **1** of 4, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 942 · JavaScript · MIT · source · pushed 2026-11-19 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/keli-wen/agy-staff.git`</sub>
 - **[WorldSeed](https://github.com/AIScientists-Dev/WorldSeed)** — More is Different. A multi-agent world engine where AI agents live, talk, compete, ally.
-  <sub>★ 827 · Python · MIT · clone · pushed 2026-05-08 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 825 · Python · MIT · clone · pushed 2026-05-08 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/AIScientists-Dev/WorldSeed`</sub>
 - **[codex-on-crack](https://github.com/ethanplusai/codex-on-crack)** — Coordinate your models from Codex. Plan, delegate, use host tools, and review work across workspaces. Formerly Astra Flash Orchestrator.
   <sub>★ 816 · JavaScript · MIT · source · pushed 2026-10-03 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -375,7 +375,7 @@ Page **1** of 4, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 729 · Java · AGPL-3.0 · script · pushed 2026-10-06 · WSL2 · macOS · Linux</sub>
   <sub>`curl -fsSL https://databuff.ai/databuff/ai-apm-install.sh | bash`</sub>
 - **[kwant](https://github.com/alexsergivan/kwant)** — Your own team of AI bots in one self-hosted binary: spaces, every account you have, handoffs, approvals and routines. Open-source, self-hosted alternative to Grok Bot, Claude Duet and OpenAI dots. Rust + React.
-  <sub>★ 727 · Rust · AGPL-3.0 · script · pushed 2026-11-28 · Win? · WSL2 · macOS · Linux · Docker</sub>
+  <sub>★ 726 · Rust · AGPL-3.0 · script · pushed 2026-11-28 · Win? · WSL2 · macOS · Linux · Docker</sub>
   <sub>`curl -fsSL https://kwant.si/install.sh | sh`</sub>
 - **[pilotfish](https://github.com/Nanako0129/pilotfish)** — Multi-model orchestration layer for Claude Code — the frontier model plans, cheaper models execute, verification guards quality. One-prompt install.
   <sub>★ 718 · Python · MIT · source · pushed 2026-11-24 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -387,7 +387,7 @@ Page **1** of 4, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 695 · TypeScript · clone · pushed 2026-11-28 · Win · macOS</sub>
   <sub>`git clone https://github.com/EvovexAI/EvoFlow.git`</sub>
 - **[PiBot](https://github.com/w01fb0ss/PiBot)** — Open-source, local-first AI agent team for your desktop: multi-agent group chats, computer use, browser, MCP, routines and approvals. macOS, Windows, Linux + Android. Built on pi.
-  <sub>★ 689 · TypeScript · Apache-2.0 · clone · pushed 2026-11-28 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 692 · TypeScript · Apache-2.0 · clone · pushed 2026-11-28 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/w01fb0ss/PiBot.git`</sub>
 - **[agent-me](https://github.com/jzjzzzzzzz/agent-me)** — Distill your knowledge, memories, and decisions into an open-source, inspectable AI Agent Twin.
   <sub>★ 632 · Python · MIT · clone · pushed 2026-11-23 · WSL2 · Linux · Docker</sub>
@@ -395,9 +395,6 @@ Page **1** of 4, because this list is longer than the 512 KB GitHub will render 
 - **[hunter-community](https://github.com/agentpit-io/hunter-community)** — HunterCode · Community Edition · 腾讯 WorkBuddy 金融版的开源本地替代方案 · open-source, local alternative to Tencent WorkBuddy Finance Edition · 多智能体投研终端 A股/港股/美股 · 推理在你机器上跑 · 仓位不出你硬盘 · BYOK · Apache 2.0 · docker compose 自托管
   <sub>★ 623 · Python · Apache-2.0 · clone · pushed 2026-11-28 · Win? · WSL2 · macOS? · Linux · Docker</sub>
   <sub>`git clone https://github.com/agentpit-io/hunter-community`</sub>
-- **[hyperfide-oss](https://github.com/Sidiora-Labs/hyperfide-oss)** — The ai agent workflow tool that scales from small, simple projects to large, complex codebases. Community Maintained Version (OSS)
-  <sub>★ 620 · TypeScript · Apache-2.0 · source · pushed 2026-11-16 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`git clone https://github.com/Sidiora-Labs/hyperfide-oss.git`</sub>
 - **[wayland](https://github.com/FerroxLabs/wayland)** — Wayland - The AI Agent That Perceives. Reasons. Acts. Evolves.
   <sub>★ 619 · TypeScript · AGPL-3.0 · npm · pushed 2026-11-13 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm install -g getwayland`</sub>
@@ -413,11 +410,14 @@ Page **1** of 4, because this list is longer than the 512 KB GitHub will render 
 - **[SourceWeft](https://github.com/SourceWeft/SourceWeft)** — Open-source, self-hostable alternative to ChatGPT and NotebookLM — agents, skills, MCP, and cited knowledge in one AI workstation. Your models, your infrastructure. Includes public MCP server and agent skills directories.
   <sub>★ 589 · TypeScript · source · pushed 2026-11-27 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/SourceWeft/SourceWeft.git`</sub>
+- **[hyperfide-oss](https://github.com/Sidiora-Labs/hyperfide-oss)** — The ai agent workflow tool that scales from small, simple projects to large, complex codebases. Community Maintained Version (OSS)
+  <sub>★ 585 · TypeScript · Apache-2.0 · source · pushed 2026-11-16 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>`git clone https://github.com/Sidiora-Labs/hyperfide-oss.git`</sub>
 - **[Gamma-World](https://github.com/nv-tlabs/Gamma-World)** — Implementation of Gamma-World: Generative Multi-Agent World Modeling Beyond Two Players
   <sub>★ 579 · Python · Apache-2.0 · source · pushed 2026-06-17 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/nv-tlabs/Gamma-World.git`</sub>
 - **[facadecode](https://github.com/y5ez3g/facadecode)** — The multi-agent orchestrator for VS Code. Run Claude Code, Codex, and other agent CLIs that start, message, and operate each other across windows and machines.
-  <sub>★ 576 · TypeScript · MIT · source · pushed 2026-11-28 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 577 · TypeScript · MIT · source · pushed 2026-11-28 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/y5ez3g/facadecode.git`</sub>
 - **[Claude-of-Tanks](https://github.com/Kevin-Liu-01/Claude-of-Tanks)** — A World of Tanks-style armored combat simulator built directly with Three.js and Vite: 311 vehicles, 33 destructible battlefields, and 15 modes, with plate-level armor, ballistics, modules, spotting, and physics. Play in your browser on desktop or mobile. Built end-to-end by a multi-agent Claude/Codex pipeline.
   <sub>★ 558 · TypeScript · MIT · source · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -429,19 +429,19 @@ Page **1** of 4, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 516 · Python · Apache-2.0 · source · pushed 2026-08-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/frenzymath/Danus.git`</sub>
 - **[Deuz-SDK](https://github.com/Deuz-AI/Deuz-SDK)** — TypeScript AI SDK and agent framework with zero dependencies. Build production AI agents and multi-agent swarms: durable execution, long-term memory, hybrid RAG, MCP client/server, A2A, human-in-the-loop approvals, CodeAct sandboxes, realtime voice. One streaming API, 29 providers: Claude, GPT, Gemini, Grok, DeepSeek, Ollama. Node, Bun, Deno, edge.
-  <sub>★ 505 · TypeScript · MIT · npx · pushed 2026-11-24 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 504 · TypeScript · MIT · npx · pushed 2026-11-24 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx @deuz-sdk/cli meter --budget-usd 5 -- claude`</sub>
 - **[RabiRoute](https://github.com/vb2250158/RabiRoute)** — Self-hosted gateway that bridges QQ, WeChat/WeCom and Feishu chat to your existing Codex or agent task — remote control from your phone, schedules and role context. | 自托管 AI 消息网关：把 QQ、微信、飞书接到你已有的 Codex / Agent 任务，支持手机远程、定时任务和角色上下文。
-  <sub>★ 494 · TypeScript · MIT · clone · pushed 2026-11-27 · Win · WSL2? · Linux?</sub>
+  <sub>★ 494 · TypeScript · MIT · clone · pushed 2026-11-28 · Win · WSL2? · Linux?</sub>
   <sub>`git clone https://github.com/vb2250158/RabiRoute.git`</sub>
 - **[intent](https://github.com/intent-hq/intent)** — Open-source workspace for coding agents: specialists plan, then Claude Code, Codex &amp; Cursor build in parallel, on your machines or in the cloud.
   <sub>★ 475 · JavaScript · Apache-2.0 · source · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/intent-hq/intent.git`</sub>
 - **[tucano](https://github.com/eduwxyz/tucano)** — Your team of AI agents, on your Mac, Windows or Linux. Agents that talk in channels, write code, review each other and use your tools, on the Claude Code, Codex, OpenCode or Pi you already have. Anything that touches the real world waits for your yes.
-  <sub>★ 474 · TypeScript · Apache-2.0 · psh · pushed 2026-11-28 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 473 · TypeScript · Apache-2.0 · psh · pushed 2026-11-28 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`irm https://github.com/eduwxyz/tucano/releases/latest/download/install.ps1 | iex`</sub>
 - **[life-distributable](https://github.com/mattabate/life-distributable)** — Manage many agents without getting distracted. Self-hosted, secure, and apps that edit themselves.
-  <sub>★ 472 · Go · MIT · source · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 472 · Go · MIT · source · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/mattabate/life-distributable.git`</sub>
 - **[code-context-engine](https://github.com/elara-labs/code-context-engine)** — Save 94% on AI coding tokens. Index your codebase, agents search instead of reading files. Works with Claude Code, Codex, Copilot, Cursor, Gemini CLI. Local MCP server, free, open source.
   <sub>★ 471 · Python · MIT · uv · pushed 2026-08-23 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
@@ -485,24 +485,24 @@ Page **1** of 4, because this list is longer than the 512 KB GitHub will render 
 - **[pi-harness](https://github.com/wangmiaozero/pi-harness)** — The operational superset of Pi Coding Agent — everything Pi, plus observability, governance, recovery, evaluation and multi-agent orchestration. Pi Coding Agent 的运维超集——完整继承 Pi 的核心能力，并进一步扩展可观测性、治理、故障恢复、评估和多 Agent 编排。
   <sub>★ 361 · TypeScript · AGPL-3.0 · clone · pushed 2026-11-28 · Win · WSL2? · macOS · Linux?</sub>
   <sub>`git clone https://github.com/wangmiaozero/pi-harness.git`</sub>
-- **[crew44](https://github.com/getcrew44/crew44)** — Orchestrate a crew of specialist AI agents in one local-first workspace. Each role on its best model, with memory and skills that compound. Free, MIT.
-  <sub>★ 358 · Go · MIT · source · pushed 2026-06-11 · Win · WSL2? · macOS · Linux</sub>
-  <sub>`git clone https://github.com/getcrew44/crew44.git`</sub>
 - **[agent-design-patterns](https://github.com/huangjia2019/agent-design-patterns)** — A 7×6 framework for agent architecture. 28 patterns, each placed at a coordinate, runnable Python code with verified engineering slices from Claude Code, Aider, OpenHands, DeerFlow. Companion to Designing AI Agents (Manning) by Jia Huang.
   <sub>★ 357 · HTML · MIT · clone · pushed 2026-11-18</sub>
   <sub>`git clone https://github.com/huangjia2019/agent-design-patterns.git`</sub>
 - **[claude-flightdeck](https://github.com/scasella/claude-flightdeck)** — A Claude Code mod that puts a live agent dashboard in your terminal: context and cost, advisor timeline, every permission check, subagent cards and swimlanes.
-  <sub>★ 356 · TypeScript · MIT · clone · pushed 2026-11-19 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 357 · TypeScript · MIT · clone · pushed 2026-11-19 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/scasella/claude-flightdeck`</sub>
+- **[crew44](https://github.com/getcrew44/crew44)** — Orchestrate a crew of specialist AI agents in one local-first workspace. Each role on its best model, with memory and skills that compound. Free, MIT.
+  <sub>★ 350 · Go · MIT · source · pushed 2026-06-11 · Win · WSL2? · macOS · Linux</sub>
+  <sub>`git clone https://github.com/getcrew44/crew44.git`</sub>
 - **[agentglass](https://github.com/SirAllap/agentglass)** — 🛰 Every AI coding agent on your machine, on one screen — live cost, tokens and tool calls across every provider, and a hold on anything dangerous until you say go. From your desk or your phone.
   <sub>★ 350 · TypeScript · MIT · clone · pushed 2026-11-27 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/SirAllap/agentglass`</sub>
+- **[opencompany](https://github.com/tinyhumansai/opencompany)** — Run a hive mind of agents to focus on a specific goal
+  <sub>★ 348 · Rust · GPL-3.0 · source · pushed 2026-10-09 · Win? · WSL2 · macOS</sub>
+  <sub>`git clone https://github.com/tinyhumansai/opencompany.git`</sub>
 - **[ChaosIntelligence](https://github.com/Cattmonkey/ChaosIntelligence)** — 把智能体当函数，把想法写成程序。Agent-native functional language with a CLI, Web IDE, goal-driven bots and live UI. Source-available; no AI training.
   <sub>★ 347 · Python · source · pushed 2026-10-24 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Cattmonkey/ChaosIntelligence.git`</sub>
-- **[opencompany](https://github.com/tinyhumansai/opencompany)** — Run a hive mind of agents to focus on a specific goal
-  <sub>★ 347 · Rust · GPL-3.0 · source · pushed 2026-10-09 · Win? · WSL2 · macOS</sub>
-  <sub>`git clone https://github.com/tinyhumansai/opencompany.git`</sub>
 - **[pi-fabric](https://github.com/fabric-runtime/pi-fabric)** — A programmable tool and agent runtime for Pi
   <sub>★ 343 · TypeScript · MIT · source · pushed 2026-11-27 · macOS</sub>
   <sub>`git clone https://github.com/fabric-runtime/pi-fabric.git`</sub>
@@ -663,7 +663,7 @@ Page **1** of 4, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 405 · TypeScript · MIT · npm · pushed 2026-10-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g swytchcode`</sub>
 - **[dots-agent](https://github.com/duyongan/dots-agent)** — 一个会主动发现任务的智能体
-  <sub>★ 389 · Python · MIT · pip · pushed 2026-11-08 · Win · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 390 · Python · MIT · pip · pushed 2026-11-08 · Win · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install dots-agent`</sub>
 - **[Cortico](https://github.com/Pal-AI-Lab/Cortico)** — Event-stream AI Agent framework for building your persona bot 🍊
   <sub>★ 385 · TypeScript · MIT · source · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -687,7 +687,7 @@ Page **1** of 4, because this list is longer than the 512 KB GitHub will render 
 ## Coding Agents
 
 - **[open-design](https://github.com/nexu-io/open-design)** — The 1st Collaborative AI Design Agent Workspace. Local-first and open source. Create motion, prototypes, websites, apps, dashboards, presentations, images, and videos with your team and AI agents. Share work, exchange feedback, and iterate together in one workspace.
-  <sub>★ 109.9k · TypeScript · Apache-2.0 · script · pushed 2026-11-28 · Win · WSL2 · macOS · Linux · Docker</sub>
+  <sub>★ 110k · TypeScript · Apache-2.0 · script · pushed 2026-11-28 · Win · WSL2 · macOS · Linux · Docker</sub>
   <sub>`curl -fsSL https://open-design.ai/install.sh | sh -s <agent>`</sub>
 - **[Understand-Anything](https://github.com/Egonex-AI/Understand-Anything)** — Graphs that teach > graphs that impress. Turn any code into an interactive knowledge graph you can explore, search, and ask questions about. Works with Claude Code, Codex, Cursor, Copilot, Gemini CLI, and more.
   <sub>★ 94.8k · TypeScript · MIT · npx · pushed 2026-11-25 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -708,7 +708,7 @@ Page **1** of 4, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 36.1k · Go · MIT · npm · pushed 2026-11-12 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm i -g reasonix # any OS`</sub>
 - **[dsh-Go](https://github.com/ccch1mneyyy/dsh-Go)** — dsh-go — DeepSeek Harness 装进口袋：手机本机运行，也能遥控你的电脑。
-  <sub>★ 33.6k · Dart · AGPL-3.0 · clone · pushed 2026-11-28 · WSL2? · Linux?</sub>
+  <sub>★ 33.7k · Dart · AGPL-3.0 · clone · pushed 2026-11-28 · WSL2? · Linux?</sub>
   <sub>`git clone https://github.com/ccch1mneyyy/dsh-go.git`</sub>
 - **[frontend-slides](https://github.com/zarazhangrui/frontend-slides)** — Create beautiful slides on the web using a coding agent's frontend skills
   <sub>★ 33k · JavaScript · MIT · clone · pushed 2026-06-23 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -839,15 +839,15 @@ Page **1** of 4, because this list is longer than the 512 KB GitHub will render 
 - **[harnessrouter](https://github.com/HarnessRouter/harnessrouter)** — HarnessRouter Community Edition: the self-hosted, Apache-2.0 edition of the unified interface for agent harnesses. Run Codex, Claude Code, Hermes, PI, DSH, and more through one API, with sessions, streaming, files, cancellation, and failure handling. Implements the Unified Harness Protocol (UHP), an open standard. Your keys, your infrastructure.
   <sub>★ 4.6k · Python · Apache-2.0 · docker · pushed 2026-11-28 · WSL2 · Linux · Docker</sub>
   <sub>`docker run -d --name harnessrouter \`</sub>
-- **[folkbench](https://github.com/Folkbench/folkbench)** — AI API 中转站推荐与评测：中转站排行榜、中转站检测、Claude / GPT / Gemini 中转站对比 · AI API relay rankings · Folkbench Switch for Claude Code, Codex &amp; Gemini CLI
-  <sub>★ 4.2k · TypeScript · source · pushed 2026-11-27 · Win · macOS</sub>
-  <sub>`git clone https://github.com/Folkbench/folkbench.git`</sub>
 - **[Rapid-MLX](https://github.com/raullenchai/Rapid-MLX)** — Rapid-MLX is an open-source (Apache 2.0) OpenAI- and Anthropic-compatible LLM inference server for Apple Silicon, built on MLX, focused on reliable tool calling for coding agents. Up to 4× faster than Apple's MLX (mlx-lm) on the same weights.
   <sub>★ 4.2k · Python · Apache-2.0 · uv · pushed 2026-11-28 · macOS</sub>
   <sub>`uv tool install rapid-mlx@latest`</sub>
 - **[skills](https://github.com/NVIDIA/skills)** — Agent Skills and plugins for NVIDIA products — install into Claude Code, Codex, and other coding agents to run Physical AI, robotics, simulation, CUDA, and RAG workflows end to end.
   <sub>★ 4.2k · Python · Apache-2.0 · npx · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx skills add nvidia/skills --skill cuopt-numerical-optimization-api --yes`</sub>
+- **[folkbench](https://github.com/Folkbench/folkbench)** — AI API 中转站推荐与评测：中转站排行榜、中转站检测、Claude / GPT / Gemini 中转站对比 · AI API relay rankings · Folkbench Switch for Claude Code, Codex &amp; Gemini CLI
+  <sub>★ 4.1k · TypeScript · source · pushed 2026-11-27 · Win · macOS</sub>
+  <sub>`git clone https://github.com/Folkbench/folkbench.git`</sub>
 - **[stop-that-shit](https://github.com/lennney/stop-that-shit)** — Stop That Shit（别再造史了）｜面向 Codex/GPT 场景的多平台 Hook + Skill Guard：拦截 AI coding agent 无需求的哈希、校验和与任务范围膨胀。 A multi-platform Hook + Skill Guard for AI coding agents in Codex/GPT workflows: stop unrequested hashes, checksums, and task-scope creep.
   <sub>★ 4.1k · JavaScript · MIT · source · pushed 2026-11-26 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/lennney/stop-that-shit.git`</sub>
@@ -932,27 +932,27 @@ Page **1** of 4, because this list is longer than the 512 KB GitHub will render 
 - **[delegate-skills](https://github.com/amElnagdy/delegate-skills)** — Delegate a coding task to a separate coding agent CLI, review the diff, land the commit yourself — one per implementer.
   <sub>★ 2.7k · JavaScript · MIT · npx · pushed 2026-11-14 · Win? · WSL2 · macOS? · Linux?</sub>
   <sub>`npx skills add amElnagdy/delegate-skills`</sub>
+- **[opengame](https://github.com/nexu-io/opengame)** — The Super Game Agent — the Unity &amp; Unreal for AI agents, with 100+ viral games to remix. Turn 20+ coding agents (Claude Code, Codex, DeepSeek, etc.) into a full-stack AI game studio. Build and publish 3D &amp; mini-games to WeChat, Douyin, TikTok, Telegram, itch.io, and more.
+  <sub>★ 2.7k · TypeScript · Apache-2.0 · npx · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>`npx skills add https://github.com/nexu-io/opengame/tree/skills --skill opengame`</sub>
 - **[lanhu-mcp](https://github.com/dsphper/lanhu-mcp)** — ⚡ 需求分析效率提升 200%！全球首个为 AI 编程时代设计的团队协作 MCP 服务器，自动分析需求自动编写前后端代码，下载切图
   <sub>★ 2.6k · Python · MIT · clone · pushed 2026-11-17 · Win? · WSL2 · macOS? · Linux · Docker</sub>
   <sub>`git clone https://github.com/dsphper/lanhu-mcp.git`</sub>
 - **[vibe-coding-toolkit](https://github.com/soumatheusgomes/vibe-coding-toolkit)** — A curated, battle-tested AI-coding toolkit: Claude Code plugins, subagent orchestration, quality gates, and ready-to-copy prompts, extracted from real production use.
   <sub>★ 2.6k · JavaScript · MIT · source · pushed 2026-11-08 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/soumatheusgomes/vibe-coding-toolkit.git`</sub>
-- **[opengame](https://github.com/nexu-io/opengame)** — The Super Game Agent — the Unity &amp; Unreal for AI agents, with 100+ viral games to remix. Turn 20+ coding agents (Claude Code, Codex, DeepSeek, etc.) into a full-stack AI game studio. Build and publish 3D &amp; mini-games to WeChat, Douyin, TikTok, Telegram, itch.io, and more.
-  <sub>★ 2.6k · TypeScript · Apache-2.0 · npx · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`npx skills add https://github.com/nexu-io/opengame/tree/skills --skill opengame`</sub>
 - **[nanocoder](https://github.com/Nano-Collective/nanocoder)** — An open coding agent for your terminal, built by a community collective rather than a company. Bring your own model, keep your code on your machine, and owe nothing to anyone.
   <sub>★ 2.6k · TypeScript · npm · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g @nanocollective/nanocoder`</sub>
 - **[ripwire](https://github.com/redhat-et/ripwire)** — The ripgrep of AI context: a zero-dependency C++23 CLI + MCP server for coding agents. Cut agent token costs by finding code without reading the repo, then keep large codebases off the complexity wall: blast radius, tests to run, quality deltas as you write. Every guess labelled, every loss published. Paddle out with a map.
   <sub>★ 2.6k · C++ · Apache-2.0 · clone · pushed 2026-11-28 · WSL2 · macOS · Linux</sub>
   <sub>`git clone https://github.com/redhat-et/ripwire.git`</sub>
-- **[ORG2](https://github.com/org2AI/ORG2)** — System of record for how agents build software: Built-in rust harness &amp; 20+ CLIs.
-  <sub>★ 2.5k · TypeScript · AGPL-3.0 · source · pushed 2026-11-03 · macOS</sub>
-  <sub>`git clone https://github.com/org2AI/ORG2.git`</sub>
 - **[Codync](https://github.com/leepokai/Codync)** — Open source Grok Bot alternative, Bring your own agent and subscription: message Claude Code, Codex, Gemini CLI, Cursor, Copilot and 40+ AI agents as bots on your own computer, from iPhone, Mac, Windows, Linux or terminal. Agent-agnostic and free. Also a Muse and Dots alternative. Built in Rust.
   <sub>★ 2.5k · Rust · Apache-2.0 · brew · pushed 2026-11-28 · Win? · WSL2? · macOS · Linux?</sub>
   <sub>`brew install --cask leepokai/codync/codync`</sub>
+- **[ORG2](https://github.com/org2AI/ORG2)** — System of record for how agents build software: Built-in rust harness &amp; 20+ CLIs.
+  <sub>★ 2.5k · TypeScript · AGPL-3.0 · source · pushed 2026-11-03 · macOS</sub>
+  <sub>`git clone https://github.com/org2AI/ORG2.git`</sub>
 - **[fulling](https://github.com/FullAgent/fulling)** — Fulling is an AI-powered Full-stack Engineer Agent. Built with Next.js, Claude, shadcn/ui, and PostgreSQL. Use kubernetes as infra.
   <sub>★ 2.4k · TypeScript · MIT · source · pushed 2026-08-17 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/FullAgent/fulling.git`</sub>
@@ -1022,12 +1022,12 @@ Page **1** of 4, because this list is longer than the 512 KB GitHub will render 
 - **[Aegis](https://github.com/GanyuanRan/Aegis)** — Make AI coding agents architecture-aware: baseline-first, evidence-verified, drift-checked, and safe across long tasks.
   <sub>★ 1.5k · Python · MIT · source · pushed 2026-11-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/GanyuanRan/Aegis.git`</sub>
-- **[paritok-4b-v1](https://github.com/Paritok-official/paritok-4b-v1)** — Non-destructive compression gateway for AI coding agents. Cuts token bills 25% on turn 1 to past 85% in long or saturated sessions, and fits ~3× more turns in the same context window. Powered by our open-source code-native 4B model. Drop-in for Claude Code, Cursor, Codex, OpenHands, and any BASE_URL agent.
-  <sub>★ 1.4k · Python · Apache-2.0 · pip · pushed 2026-11-17 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`pip install "paritok[proxy]" # the gateway + CLI`</sub>
 - **[ai-coding-welfare](https://github.com/panxunying/ai-coding-welfare)** — AI Coding 福利站导航：免费白嫖 Claude Code / Codex 的中转站与公益站合集，含额度、模型、价格自动更新与一键配置脚本
   <sub>★ 1.4k · JavaScript · MIT · source · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/panxunying/ai-coding-welfare.git`</sub>
+- **[paritok-4b-v1](https://github.com/Paritok-official/paritok-4b-v1)** — Non-destructive compression gateway for AI coding agents. Cuts token bills 25% on turn 1 to past 85% in long or saturated sessions, and fits ~3× more turns in the same context window. Powered by our open-source code-native 4B model. Drop-in for Claude Code, Cursor, Codex, OpenHands, and any BASE_URL agent.
+  <sub>★ 1.4k · Python · Apache-2.0 · pip · pushed 2026-11-17 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>`pip install "paritok[proxy]" # the gateway + CLI`</sub>
 - **[openpets](https://github.com/OpenPetsHQ/openpets)** — Local first, desktop companion platform with animated pets, plugin SDK and coding-agent integrations.
   <sub>★ 1.4k · TypeScript · MIT · npx · pushed 2026-11-23 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npx @open-pets/cli plugin new "My Plugin" --template tamagotchi`</sub>
@@ -1053,7 +1053,7 @@ Page **1** of 4, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 1.2k · JavaScript · MIT · script · pushed 2026-06-21 · Win? · WSL2 · macOS · Linux</sub>
   <sub>`curl -fsSL https://raw.githubusercontent.com/withkynam/vibecode-pro-max-kit/main/install.sh | bash`</sub>
 - **[dsh-browser](https://github.com/omdsh-dev/dsh-browser)** — Chrome sidebar extension that lets DeepSeek Harness operate your browser directly, no vision capabilities required. 一款 Chrome 侧边栏扩展程序，可让 DeepSeek Harness 直接操控您的浏览器，无需视觉能力。
-  <sub>★ 1.1k · TypeScript · MIT · script · pushed 2026-11-22 · Win? · WSL2 · macOS · Linux</sub>
+  <sub>★ 1.2k · TypeScript · MIT · script · pushed 2026-11-22 · Win? · WSL2 · macOS · Linux</sub>
   <sub>`curl -fsSL https://raw.githubusercontent.com/Lum1104/dsh-browser/refs/heads/main/scripts/install.sh | bash`</sub>
 - **[deeptide](https://github.com/paean-ai/deeptide)** — Built by DeepSeek, for DeepSeek — a Swift-native macOS coding agent
   <sub>★ 1.1k · Rust · MIT · npm · pushed 2026-08-22 · macOS</sub>
@@ -1109,17 +1109,17 @@ Page **1** of 4, because this list is longer than the 512 KB GitHub will render 
 - **[deepseek-harness-desktop](https://github.com/ningbainb/deepseek-harness-desktop)** — Open-source Windows desktop client and GUI for DeepSeek Harness — zero-setup installer with Codex, plugins, skills, SSH, mobile remote access, and 11 skins.
   <sub>★ 964 · JavaScript · BSD-3-Clause · source · pushed 2026-11-26 · Win · WSL2 · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/ningbainb/deepseek-harness-desktop.git`</sub>
-- **[git-ai](https://github.com/feder-cr/git-ai)** — Git designed for AI agents. Open-source, in the spirit of Anthropic's Scion and OpenAI's Pando. Not affiliated with either.
-  <sub>★ 954 · Go · clone · pushed 2026-11-22 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`git clone https://github.com/feder-cr/git-ai.git`</sub>
 - **[agent-hud-open](https://github.com/jazzenchen/agent-hud-open)** — A HUD for Claude Code, Codex and 25 more coding agents. Know your quotas, tokens and sessions at a glance, answer requests and jump back in one click. On Mac, Windows and Linux, your phone and your watch.
-  <sub>★ 952 · Rust · Apache-2.0 · npx · pushed 2026-11-28 · Win · WSL2? · macOS · Linux?</sub>
+  <sub>★ 959 · Rust · Apache-2.0 · npx · pushed 2026-11-28 · Win · WSL2? · macOS · Linux?</sub>
   <sub>`npx @agenthud/install`</sub>
+- **[git-ai](https://github.com/feder-cr/git-ai)** — Git designed for AI agents. Open-source, in the spirit of Anthropic's Scion and OpenAI's Pando. Not affiliated with either.
+  <sub>★ 953 · Go · clone · pushed 2026-11-22 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>`git clone https://github.com/feder-cr/git-ai.git`</sub>
 - **[codealmanac](https://github.com/AlmanacCode/codealmanac)** — A codebase wiki for AI coding agents. Captures what the code can't say: decisions, flows, invariants, gotchas.
   <sub>★ 949 · TypeScript · Apache-2.0 · uv · pushed 2026-11-16 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uv tool install codealmanac@latest`</sub>
 - **[Heeler](https://github.com/ZingerLittleBee/Heeler)** — Native iPhone &amp; iPad console for Claude Code, Codex, and other coding agents on your own machines. Connect over SSH to Herdr TUI、Core, Rex or Tmux.
-  <sub>★ 946 · Swift · Apache-2.0 · npx · pushed 2026-11-28 · WSL2 · macOS? · Linux</sub>
+  <sub>★ 947 · Swift · Apache-2.0 · npx · pushed 2026-11-28 · WSL2 · macOS? · Linux</sub>
   <sub>`npx -y heeler-pair@latest`</sub>
 - **[Spark-X2.6](https://github.com/XHToken/Spark-X2.6)** — Spark-x2.6 open model series. Pushing the Limits of Agentic Capabilities in On-Device Models
   <sub>★ 945 · Apache-2.0 · clone · pushed 2026-11-25 · WSL2 · macOS? · Linux · Docker</sub>
@@ -1146,13 +1146,13 @@ Page **1** of 4, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 899 · JavaScript · MIT · npm · pushed 2026-11-01 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g spec-superflow`</sub>
 - **[Pi-Bolt](https://github.com/opensec-git/Pi-Bolt)** — ⚡ Pi, the coding agent, compiled ahead of time to one native executable. 10× faster to start, 7× less CPU and 4.5× less memory than Pi on Node. Linux, macOS, Windows, ARM64 and Android (Termux).
-  <sub>★ 874 · TypeScript · MIT · scoop · pushed 2026-11-28 · Win · WSL2? · macOS? · Linux</sub>
+  <sub>★ 875 · TypeScript · MIT · scoop · pushed 2026-11-28 · Win · WSL2? · macOS? · Linux</sub>
   <sub>`scoop bucket add opensec-git https://github.com/opensec-git/scoop-bucket scoop install opensec-git/pi-bolt`</sub>
 - **[sno-station-skills](https://github.com/sno-ai/sno-station-skills)** — Sno: Smart agents. Senior habits. Better every day. Open-source skills that make Claude Code, Codex, Cursor and Hermes Agent work like a team that has shipped before: review by a different agent, a handover before a usage limit stops the work, "done" proven by a real run, and a nightly loop that learns from your own sessions.
   <sub>★ 874 · Shell · Apache-2.0 · script · pushed 2026-11-27 · WSL2 · macOS · Linux</sub>
   <sub>`curl -fsSL https://sno.ai/install | sh`</sub>
 - **[wu](https://github.com/dstrml/wu)** — The fast, native code editor and agent workspace.
-  <sub>★ 854 · Rust · script · pushed 2026-11-27 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 855 · Rust · script · pushed 2026-11-27 · Win · WSL2? · macOS · Linux</sub>
   <sub>`curl -fsSL https://wu.dstrml.org/install.sh | sh`</sub>
 - **[dsh-mobile](https://github.com/Clarklevis1995/dsh-mobile)** — DeepSeek Harness Mobile 是一个面向 DeepSeek Harness 的原生移动端客户端。它通过 dsh-plugin-mobile-gateway 与 Harness 建立 WebSocket 连接，将工作区、会话、实时回复和 Agent 执行轨迹带到 iPhone，同时延续 DeepSeek WebUI 克制、清晰的视觉语言
   <sub>★ 852 · Kotlin · MIT · source · pushed 2026-11-25 · Win · WSL2? · macOS · Linux</sub>
@@ -1164,10 +1164,10 @@ Page **1** of 4, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 833 · TypeScript · MIT · source · pushed 2026-11-27 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/chipfighter/context-attachment-manager.git`</sub>
 - **[Locals](https://github.com/Generated-Computers/Locals)** — Run many AI agents at once on your Mac, up to 3x faster.
-  <sub>★ 830 · Python · Apache-2.0 · uv · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 829 · Python · Apache-2.0 · uv · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uv tool install --python 3.12 locals`</sub>
 - **[devvm](https://github.com/devvmhq/devvm)** — One VM for every project. An isolated sandbox with your project’s toolchain, ready for you or a coding agent to start coding
-  <sub>★ 823 · Go · MIT · brew · pushed 2026-11-25 · WSL2? · macOS · Linux</sub>
+  <sub>★ 824 · Go · MIT · brew · pushed 2026-11-25 · WSL2? · macOS · Linux</sub>
   <sub>`brew install devvmhq/tap/devvm`</sub>
 - **[kaggle-tpu-lab](https://github.com/ARahim3/kaggle-tpu-lab)** — Frontier-class open models on a free Kaggle TPU v5e-8: GLM-5.3-Flash 320B MoE (~165 tok/s, our own JAX engine) and Qwen3.8-27B bf16 (~130 tok/s), 262k context, prefix caching. Works with Claude Code, Codex, opencode and pi.
   <sub>★ 815 · Python · MIT · clone · pushed 2026-10-06 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1194,17 +1194,17 @@ Page **1** of 4, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 748 · JavaScript · MIT · clone · pushed 2026-11-11 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/MiniMax-AI/mcode-stack.git`</sub>
 - **[dinotty](https://github.com/xichan96/dinotty)** — Multi-device terminal server for AI coding agents. Server-side VTE, session persistence, file browser, web preview, plugin system. Self-hosted.
-  <sub>★ 742 · TypeScript · MIT · source · pushed 2026-11-27 · WSL2 · macOS · Linux</sub>
+  <sub>★ 741 · TypeScript · MIT · source · pushed 2026-11-27 · WSL2 · macOS · Linux</sub>
   <sub>`git clone https://github.com/xichan96/dinotty.git`</sub>
 - **[open-artifact](https://github.com/JimLiu/open-artifact)** — Open, agent- and model-agnostic artifacts, all saved locally as plain files — edit, comment on, and export slides, UI designs, design systems, whiteboards, sheets, dashboards, docs, and motion.
-  <sub>★ 718 · TypeScript · Apache-2.0 · source · pushed 2026-11-28 · WSL2 · macOS? · Linux · Docker</sub>
+  <sub>★ 720 · TypeScript · Apache-2.0 · source · pushed 2026-11-28 · WSL2 · macOS? · Linux · Docker</sub>
   <sub>`git clone https://github.com/JimLiu/open-artifact.git`</sub>
+- **[OpenVLHarness](https://github.com/uclanlp/OpenVLHarness)** — Official Code for OpenVLHarness: Real-World Visual Agentic Tool‑Use with Multimodal Memory
+  <sub>★ 707 · Python · MIT · clone · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>`git clone https://github.com/uclanlp/OpenVLHarness.git`</sub>
 - **[termio](https://github.com/termio-sh/termio)** — A terminal-first agentic development environment for agentic coding. Build for CLI/TUI agent. Runtime for Coding Agent, Tmux alternative
   <sub>★ 705 · Swift · MIT · npx · pushed 2026-11-23 · WSL2 · macOS? · Linux</sub>
   <sub>`npx skills add termio-sh/termio --skill termio`</sub>
-- **[OpenVLHarness](https://github.com/uclanlp/OpenVLHarness)** — Official Code for OpenVLHarness: Real-World Visual Agentic Tool‑Use with Multimodal Memory
-  <sub>★ 705 · Python · MIT · clone · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`git clone https://github.com/uclanlp/OpenVLHarness.git`</sub>
 - **[claude-directory](https://github.com/pulkitxm/claude-directory)** — AI-assisted design experiments with documented asset provenance, scoped licensing, and reviewed developer starting points.
   <sub>★ 696 · CSS · source · pushed 2026-11-21</sub>
   <sub>`git clone https://github.com/pulkitxm/claude-directory.git`</sub>
@@ -1223,14 +1223,14 @@ Page **1** of 4, because this list is longer than the 512 KB GitHub will render 
 - **[tura](https://github.com/Tura-AI/tura)** — Build agent that uses 80% less token and delivers better results.
   <sub>★ 671 · Rust · AGPL-3.0 · npm · pushed 2026-10-07 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm install -g tura-ai`</sub>
+- **[autolith](https://github.com/lambda-symbolics/autolith)** — Autolith is a self-modifiable general purpose Lisp AI agent
+  <sub>★ 659 · Common Lisp · ISC · source · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux</sub>
+  <sub>`git clone https://github.com/lambda-symbolics/autolith.git`</sub>
 - **[kooky](https://github.com/iAmCorey/kooky)** — A minimal modern terminal for AI coding experience — Sidebar workspaces; horizontal / vertical split panes; one-click agent launch; per-agent activity readout; live workspace state with one-click Node and branch switching.
   <sub>★ 657 · Swift · MIT · source · pushed 2026-11-28 · macOS</sub>
   <sub>`git clone https://github.com/iAmCorey/kooky.git`</sub>
-- **[autolith](https://github.com/lambda-symbolics/autolith)** — Autolith is a self-modifiable general purpose Lisp AI agent
-  <sub>★ 657 · Common Lisp · ISC · source · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux</sub>
-  <sub>`git clone https://github.com/lambda-symbolics/autolith.git`</sub>
 - **[tastecode](https://github.com/Leonxlnx/tastecode)** — One desktop app for your coding agents, made for creative work. Early beta, Windows and macOS.
-  <sub>★ 655 · TypeScript · Apache-2.0 · source · pushed 2026-11-26 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 656 · TypeScript · Apache-2.0 · source · pushed 2026-11-26 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/Leonxlnx/tastecode.git`</sub>
 - **[vibe-check](https://github.com/TexasBedouin/vibe-check)** — By a 12-year product manager who builds 0-to-1: takes a beginner from a vague idea to a buildable plan, then guides the build (GitHub basics, clean-code habits, a verify-and-iterate loop, a checkup for the mess). For Claude Code, Codex, and Antigravity. grill-me is for engineers, vibe-check is for everyone else.
   <sub>★ 644 · HTML · MIT · npx · pushed 2026-11-13 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1239,7 +1239,7 @@ Page **1** of 4, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 640 · TypeScript · MIT · npx · pushed 2026-11-18 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills@latest add https://design.how`</sub>
 - **[abacusai-bot](https://github.com/abacusai/abacusai-bot)** — 100% free, open-source personal agents for your messaging apps, tools, and services
-  <sub>★ 637 · TypeScript · MIT · source · pushed 2026-11-27 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 635 · TypeScript · MIT · source · pushed 2026-11-27 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/abacusai/abacusai-bot.git`</sub>
 - **[mu](https://github.com/qybaihe/mu)** — mu (μ): most of what a coding agent decides isn't code. mu hands 40 kinds of yes/no calls to a small model: fewer wasted tokens, fewer approvals on autopilot, fewer runs that stop halfway. Built on pi.
   <sub>★ 622 · TypeScript · MIT · npm · pushed 2026-11-24 · Win · WSL2? · macOS · Linux</sub>
@@ -1281,16 +1281,16 @@ Page **1** of 4, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 553 · Python · AGPL-3.0 · npm · pushed 2026-11-27 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`npm i -g @vicoa/cli # Node.js 18+`</sub>
 - **[machinist](https://github.com/owainlewis/machinist)** — Open source software factory infrastructure for advanced AI coding workflows
-  <sub>★ 551 · Go · MIT · script · pushed 2026-11-28 · WSL2 · macOS · Linux</sub>
+  <sub>★ 552 · Go · MIT · script · pushed 2026-11-28 · WSL2 · macOS · Linux</sub>
   <sub>`curl -fsSL https://machinist.sh/install.sh | sh`</sub>
 - **[happyhands](https://github.com/ShuaiMXu/happyhands)** — Open-source, AI-assisted UI design review for coding agents. Inspect screenshots, scope code changes and compare results in a local workbench. Alpha.
-  <sub>★ 538 · JavaScript · MIT · npx · pushed 2026-11-25 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 539 · JavaScript · MIT · npx · pushed 2026-11-25 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx --yes --package=https://github.com/ShuaiMXu/happyhands/releases/download/v1.1.0/happyhands-lite-1.1.0.tgz happyhands install`</sub>
 - **[lody-ios](https://github.com/LodyAI/lody-ios)** — Independent iOS client for Lody — native chat, sessions, and coding-agent collaboration on iPhone
   <sub>★ 535 · Swift · source · pushed 2026-11-28 · Win? · macOS</sub>
   <sub>`git clone https://github.com/LodyAI/lody-ios.git`</sub>
 - **[nightshift](https://github.com/orwa-mahmoud/nightshift)** — Brainstorm, compare approaches, and agree on a plan and what evidence to collect. Run it as an autonomous shift with automatic recovery. Get reviewable results with a receipt for each item showing what changed, which checks ran, and what needs your attention. Available for Claude Code, Codex, and Cursor.
-  <sub>★ 535 · Shell · MIT · source · pushed 2026-11-28 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 534 · Shell · MIT · source · pushed 2026-11-28 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/orwa-mahmoud/nightshift.git`</sub>
 - **[opencode-goal-plugin](https://github.com/prevalentWare/opencode-goal-plugin)** — OpenCode goal plugin for Codex-style goal mode, /goal slash commands, persistent objectives, and AI coding agent focus.
   <sub>★ 534 · TypeScript · MIT · source · pushed 2026-11-26 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1307,21 +1307,18 @@ Page **1** of 4, because this list is longer than the 512 KB GitHub will render 
 - **[groma.md](https://github.com/MrLesk/groma.md)** — groma.md - Your architecture as OKF Markdown in Git, and one C4 map you can walk. Scanned from source, curated by you and your agents.
   <sub>★ 517 · TypeScript · MIT · npm · pushed 2026-11-25 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm i -g groma.md backlog.md`</sub>
+- **[OrcaPromptVault](https://github.com/Continuum-AI-Corp/OrcaPromptVault)** — The open archive of how AI agents actually work. A versioned, verifiable archive of system prompts, developer instructions, tool schemas and agent harnesses powering today's AI products. Captured with OrcaReplay.
+  <sub>★ 515 · AGPL-3.0 · clone · pushed 2026-10-01</sub>
+  <sub>`git clone https://github.com/Continuum-AI-Corp/OrcaReplay`</sub>
 - **[open-vetta](https://github.com/openvetta/open-vetta)** — Open-source, local-first AI agent for real work.
   <sub>★ 515 · TypeScript · Apache-2.0 · npx · pushed 2026-11-27 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npx @vetta-org/plugin-cli init --id my-plugin --name "My Plugin"`</sub>
-- **[OrcaPromptVault](https://github.com/Continuum-AI-Corp/OrcaPromptVault)** — The open archive of how AI agents actually work. A versioned, verifiable archive of system prompts, developer instructions, tool schemas and agent harnesses powering today's AI products. Captured with OrcaReplay.
-  <sub>★ 514 · AGPL-3.0 · clone · pushed 2026-10-01</sub>
-  <sub>`git clone https://github.com/Continuum-AI-Corp/OrcaReplay`</sub>
 - **[dreamcoder](https://github.com/GoDiao/dreamcoder)** — A locally run, multi-provider AI coding workspace · 本地运行、支持多家模型服务商的 AI 编程工作台
   <sub>★ 513 · TypeScript · clone · pushed 2026-11-27 · Win · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/GoDiao/dreamcoder.git`</sub>
 - **[pigo](https://github.com/smallnest/pigo)** — pi agent in Golang
   <sub>★ 505 · Go · MIT · go · pushed 2026-11-18 · Win · WSL2? · macOS · Linux</sub>
   <sub>`go install ./cmd/pigo`</sub>
-- **[Bello](https://github.com/Makson179/Bello)** — 3x more usage on your coding agent, same quality. Have an multi-agent setup in mind? Bello already supports it. Mix models, run agents in parallel, have them check each other’s work, and reduce unnecessary model calls and noisy tool output. Turn on only what you need.
-  <sub>★ 503 · Python · MIT · pipx · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`pipx install bello`</sub>
 - **[diri](https://github.com/cristicretu/diri)** — The best way to work with coding agents. Run fifty in parallel, let them spawn each other, review everything in one place.
   <sub>★ 502 · Rust · AGPL-3.0 · brew · pushed 2026-11-24 · WSL2 · macOS · Linux</sub>
   <sub>`brew install --cask diri`</sub>
@@ -1341,7 +1338,7 @@ Page **1** of 4, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 466 · Python · Apache-2.0 · source · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/didi/helixharness.git`</sub>
 - **[fish-pocket](https://github.com/imsai-sh/fish-pocket)** — DSH iOS 移动版：在 iPhone 和 iPad 上本机运行 DeepSeek Harness，界面完全原生，不连电脑和服务器。Run DSH (DeepSeek Harness) natively on iPhone and iPad: no computer, no server.
-  <sub>★ 464 · Swift · clone · pushed 2026-11-27 · macOS</sub>
+  <sub>★ 465 · Swift · clone · pushed 2026-11-27 · macOS</sub>
   <sub>`git clone https://github.com/imsai-sh/fish-pocket.git`</sub>
 - **[session-kit](https://github.com/dob323/session-kit)** — Close the terminal windows, not the AI coding sessions. One number takes you back in. Every Claude Code and Codex session in one menu: named, numbered, colour-coded. Open, close, and jump to whichever needs you.
   <sub>★ 463 · Python · MIT · source · pushed 2026-08-20 · WSL2 · macOS? · Linux</sub>
@@ -1349,11 +1346,14 @@ Page **1** of 4, because this list is longer than the 512 KB GitHub will render 
 - **[Dodaios](https://github.com/Dodaios/Dodaios)** — One workspace for everything you do with AI: Claude Code, Codex and seven more coding agents side by side, one assistant that runs them, voice, and docs. Open source, on your computer, on your own plans and keys. Formerly Personal Jarvis.
   <sub>★ 463 · Python · Apache-2.0 · psh · pushed 2026-11-28 · Win · WSL2? · macOS? · Linux?</sub>
   <sub>`irm https://raw.githubusercontent.com/Dodaios/Dodaios/main/install/install.ps1 | iex`</sub>
+- **[Bello](https://github.com/Makson179/Bello)** — 3x more usage on your coding agent, same quality. Have an multi-agent setup in mind? Bello already supports it. Mix models, run agents in parallel, have them check each other’s work, and reduce unnecessary model calls and noisy tool output. Turn on only what you need.
+  <sub>★ 451 · Python · MIT · pipx · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>`pipx install bello`</sub>
 - **[pi-desktop](https://github.com/FaqFirebase/pi-desktop)** — Pi Desktop: a free, open source desktop GUI for the Pi coding agent and oh-my-pi. Chat, edit files, run a terminal, and review diffs in one window. Linux, macOS, and Windows.
   <sub>★ 447 · TypeScript · Apache-2.0 · clone · pushed 2026-11-27 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/FaqFirebase/pi-desktop.git`</sub>
 - **[humanize](https://github.com/humanfia/humanize)** — The agent flow system for token maxxing.
-  <sub>★ 446 · Python · Apache-2.0 · source · pushed 2026-11-25 · Win? · WSL2 · macOS</sub>
+  <sub>★ 445 · Python · Apache-2.0 · source · pushed 2026-11-25 · Win? · WSL2 · macOS</sub>
   <sub>`git clone https://github.com/humanfia/humanize.git`</sub>
 - **[Linghun](https://github.com/linghungegeg/Linghun)** — AGI-oriented, hallucination-resistant AI coding runtime grounded in evidence, tools, memory, agents, and verification.
   <sub>★ 445 · TypeScript · Apache-2.0 · npm · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1398,23 +1398,23 @@ Page **1** of 4, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 394 · Go · MIT · psh · pushed 2026-11-17 · Win · WSL2? · macOS · Linux</sub>
   <sub>`irm https://raw.githubusercontent.com/itmisx/deepx-code/main/scripts/install.ps1 | iex`</sub>
 - **[Orkas-VideoStudio](https://github.com/Orkas-AI/Orkas-VideoStudio)** — AI video editor for coding agents: Claude Code, Codex or Cursor edits your footage, makes motion graphics, adds narration and captions, and renders a checked MP4. Open-source alternative to Claude Motion, CapCut and Higgsfield. Also built into the Orkas desktop app.
-  <sub>★ 390 · TypeScript · MIT · npx · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 392 · TypeScript · MIT · npx · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add orkas-ai/orkas-videostudio`</sub>
 - **[pi-atelier](https://github.com/michaelmjhhhh/pi-atelier)** — An elegant, information-rich status, menu, and side bar for Pi Agent.
   <sub>★ 389 · TypeScript · MIT · clone · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/michaelmjhhhh/pi-atelier.git`</sub>
 - **[and-code](https://github.com/yuga-hashimoto/and-code)** — Native Android GUI for running AI coding agents locally on-device. No terminal or PC required.
-  <sub>★ 385 · Kotlin · MIT · source · pushed 2026-11-27 · WSL2? · Linux?</sub>
+  <sub>★ 387 · Kotlin · MIT · source · pushed 2026-11-27 · WSL2? · Linux?</sub>
   <sub>`git clone https://github.com/yuga-hashimoto/and-code.git`</sub>
-- **[useagent](https://github.com/useagenthq/useagent)** — The open-source Devin alternative. Run Claude Code, Codex or OpenCode in isolated cloud workspaces you can self-host.
-  <sub>★ 381 · TypeScript · AGPL-3.0 · docker · pushed 2026-11-24 · WSL2 · Linux · Docker</sub>
-  <sub>`docker run -d --name useagent-pg -p 127.0.0.1:5432:5432 \`</sub>
 - **[project-butler](https://github.com/JamesShi96/project-butler)** — Project memory system for AI coding assistants (Claude Code, Cursor, Codex): session logs, project wiki, rules, TODOs, and handoff.
   <sub>★ 378 · Shell · MIT · clone · pushed 2026-07-29</sub>
   <sub>`git clone https://github.com/JamesShi96/project-butler.git`</sub>
 - **[agentplay](https://github.com/Entelligence-AI/agentplay)** — Replay your coding agent sessions as a map and a timeline
   <sub>★ 376 · Python · Apache-2.0 · uv · pushed 2026-11-11 · Win? · WSL2 · macOS? · Linux?</sub>
   <sub>`uvx agentplay@latest`</sub>
+- **[useagent](https://github.com/useagenthq/useagent)** — The open-source Devin alternative. Run Claude Code, Codex or OpenCode in isolated cloud workspaces you can self-host.
+  <sub>★ 374 · TypeScript · AGPL-3.0 · docker · pushed 2026-11-24 · WSL2 · Linux · Docker</sub>
+  <sub>`docker run -d --name useagent-pg -p 127.0.0.1:5432:5432 \`</sub>
 - **[real-company-interview-ai-coding-projects](https://github.com/CHENG-LIANG1/real-company-interview-ai-coding-projects)** — 三个匿名化真实 AI Coding 面试项目题与一套通用解题方法
   <sub>★ 371 · source · pushed 2026-08-26</sub>
   <sub>`git clone https://github.com/CHENG-LIANG1/real-company-interview-ai-coding-projects.git`</sub>
@@ -1437,20 +1437,20 @@ Page **1** of 4, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 366 · MIT · source · pushed 2026-07-13</sub>
   <sub>`git clone https://github.com/zapier/gtm-cheat-codes.git`</sub>
 - **[vibepanel](https://github.com/jiangmuran/vibepanel)** — A web console for running many parallel coding-agent sessions. tmux keeps the processes alive; the browser owns organisation, naming, state and ordering.
-  <sub>★ 362 · Go · script · pushed 2026-11-27 · WSL2 · macOS · Linux</sub>
+  <sub>★ 363 · Go · script · pushed 2026-11-28 · WSL2 · macOS · Linux</sub>
   <sub>`curl -fsSL https://raw.githubusercontent.com/jiangmuran/vibepanel/main/install.sh | sh`</sub>
 - **[pai-code](https://github.com/Utopai-Research/pai-code)** — Local AI filmmaking studio — skills, canvas, timeline — driven from your coding agent.
   <sub>★ 362 · JavaScript · source · pushed 2026-09-29 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Utopai-Research/pai-code.git`</sub>
+- **[pi-desktop](https://github.com/DLYZZT/pi-desktop)** — A local-first, cross-platform Electron desktop workspace for Pi Coding Agent, with sessions, project files, browser tools, skills, plugins, and messaging integrations.
+  <sub>★ 361 · TypeScript · Apache-2.0 · clone · pushed 2026-11-28 · Win · WSL2? · macOS · Linux</sub>
+  <sub>`git clone https://github.com/DLYZZT/pi-desktop.git`</sub>
 - **[nexpath](https://github.com/hi0001234d/nexpath)** — Local-first AI coding workflow for vibe coders, indie hackers, technical founders and product managers — catch missing tests and safety checks across Claude Code, Cursor, Windsurf, Replit, Lovable and Bolt.new.
   <sub>★ 361 · TypeScript · Apache-2.0 · npm · pushed 2026-11-27 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm install -g nexpath-cli`</sub>
 - **[mancode](https://github.com/whitelonng/mancode)** — AI coding agent harness. Five modes: practice to playoffs. Stop your AI from over-engineering. Code like a man. Elbow out bloat. Score clean. ... AI 代理调度框架。五种模式：训练到季后赛。 别让你的 AI 过度设计一切。像个man一样，肘开冗余，干净得分。
   <sub>★ 361 · TypeScript · AGPL-3.0 · npm · pushed 2026-10-25 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g mancode`</sub>
-- **[pi-desktop](https://github.com/DLYZZT/pi-desktop)** — A local-first, cross-platform Electron desktop workspace for Pi Coding Agent, with sessions, project files, browser tools, skills, plugins, and messaging integrations.
-  <sub>★ 360 · TypeScript · Apache-2.0 · clone · pushed 2026-11-28 · Win · WSL2? · macOS · Linux</sub>
-  <sub>`git clone https://github.com/DLYZZT/pi-desktop.git`</sub>
 - **[greeg](https://github.com/thiagodmont/greeg)** — Code search for coding agents: speaks ripgrep's flags, answers from an index, definitions first, fits a token budget.
   <sub>★ 358 · Rust · MIT · cargo · pushed 2026-11-25 · Win? · WSL2? · macOS · Linux</sub>
   <sub>`cargo install --git https://github.com/thiagodmont/greeg greeg`</sub>
@@ -1460,9 +1460,6 @@ Page **1** of 4, because this list is longer than the 512 KB GitHub will render 
 - **[OpenAgentCore](https://github.com/MiniMax-AI/OpenAgentCore)** — The OpenAI Agents API, open source and self-hosted. Run Codex, Claude Code or MiniMax Code on your own machines with your own models, through the official OpenAI SDK.
   <sub>★ 354 · Go · MIT · psh · pushed 2026-11-19 · Win · WSL2? · macOS · Linux</sub>
   <sub>`irm https://github.com/MiniMax-AI/OpenAgentCore/releases/latest/download/install.ps1 | iex`</sub>
-- **[klaatcode](https://github.com/KlaatAI/klaatcode)** — Open-source AI coding agent for the terminal. Claude Code-grade accuracy with smart model routing — uses the right AI model for each task, cutting costs 10x. Supports Claude, GPT, Gemini, DeepSeek &amp; more.
-  <sub>★ 352 · TypeScript · npm · pushed 2026-09-16 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`npm install -g klaatcode`</sub>
 - **[mathodology](https://github.com/sweetcornna/mathodology)** — 专为数学建模竞赛设计的数模 Agent Skills：MCM/ICM 美赛、CUMCM 国赛、华数杯、M3、HiMCM 等，面向 Claude Code 与 Codex 的获奖级建模工作流。Math modeling contest skills for Claude Code &amp; Codex.
   <sub>★ 351 · TypeScript · MIT · npx · pushed 2026-11-23 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npx -y skills@latest add sweetcornna/mathodology --copy --yes --skill '*' --agent codex`</sub>
@@ -1470,11 +1467,14 @@ Page **1** of 4, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 350 · Markdown · MIT · clone · pushed 2026-10-28 · Win? · macOS?</sub>
   <sub>`git clone https://github.com/xiaomoBoy/pi-bluebook.git`</sub>
 - **[HarborRL](https://github.com/datamllab/HarborRL)** — An end-to-end framework for Agentic Reinforcement Learning.
-  <sub>★ 347 · Python · MIT · source · pushed 2026-11-24 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 348 · Python · MIT · source · pushed 2026-11-24 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/datamllab/HarborRL.git`</sub>
 - **[UltraGameStudio](https://github.com/wellingfeng/UltraGameStudio)** — UltraGameStudio - AI coding agent for game development: engine workflows, gameplay code, and asset generation.
   <sub>★ 347 · TypeScript · MIT · source · pushed 2026-11-22 · Win · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/wellingfeng/UltraGameStudio.git`</sub>
+- **[klaatcode](https://github.com/KlaatAI/klaatcode)** — Open-source AI coding agent for the terminal. Claude Code-grade accuracy with smart model routing — uses the right AI model for each task, cutting costs 10x. Supports Claude, GPT, Gemini, DeepSeek &amp; more.
+  <sub>★ 344 · TypeScript · npm · pushed 2026-09-16 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>`npm install -g klaatcode`</sub>
 - **[devbox](https://github.com/rudderlabs/devbox)** — Open source autonomous engineering harness in your cloud. One sandbox per task, no real secrets inside.
   <sub>★ 344 · TypeScript · MIT · clone · pushed 2026-11-27 · WSL2 · macOS? · Linux · Docker</sub>
   <sub>`git clone https://github.com/rudderlabs/devbox.git`</sub>
@@ -1487,21 +1487,18 @@ Page **1** of 4, because this list is longer than the 512 KB GitHub will render 
 - **[Pi-Remote](https://github.com/Xpropel/Pi-Remote)** — Remote control for your pi coding agent. Pi-Remote mirrors live pi terminal sessions to any browser, so you can watch runs, answer prompts, and send commands from your phone — end-to-end encrypted over a self-hosted relay.
   <sub>★ 338 · TypeScript · MIT · source · pushed 2026-11-22 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`git clone https://github.com/Xpropel/Pi-Remote.git`</sub>
-- **[ai-app-builder](https://github.com/lebrowndnasty-hash/ai-app-builder)** — AI App Builder: Prompt to Full-Stack Next.js Apps with Hosting, Database, Auth, and Multitenancy
-  <sub>★ 336 · HTML · source · pushed 2026-11-28 · Win?</sub>
-  <sub>`git clone https://github.com/lebrowndnasty-hash/ai-app-builder.git`</sub>
 - **[agent-crop](https://github.com/oriliz/agent-crop)** — 给 AI 编程助手一根马鞭：本地记录时间去向，把复盘写回 agent 指令/技能/工具；改没改好，用数据说话。 | A whip for coding agents: local timing, red-line nudges, and an evidence-backed, auditable self-improvement loop. DSH / Claude Code / Codex.
   <sub>★ 335 · Python · MIT · npm · pushed 2026-11-20 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm i -g agent-crop-dsh # 可选：让 crop 进 PATH`</sub>
+- **[codexqa](https://github.com/openqa-cn/codexqa)** — codexqa: 11 local-first Agent Skills for Cursor, Claude Code, Codex &amp; OpenClaw — change impact analysis, AI code review, defect scan, testcase generation, browser replay &amp; RCA.
+  <sub>★ 333 · Python · Apache-2.0 · npx · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>`npx skills add openqa-cn/codexqa --skill codexqa-skill-router`</sub>
 - **[vibex](https://github.com/vibex-ai/vibex)** — Your agents. Your workspace. Your control—from prompt to commit, desktop to mobile. Works with Codex, Claude Code, OpenCode, Pi, Grok, DeepSeek Harness, Antigravity, and many more through ACP.
   <sub>★ 332 · Rust · AGPL-3.0 · clone · pushed 2026-11-27 · Win · WSL2 · macOS · Linux · Docker</sub>
   <sub>`git clone https://github.com/vibex-ai/vibex.git`</sub>
 - **[embodied-first-exam](https://github.com/mll-lab-nu/embodied-first-exam)** — An agentic robotics benchmark for coding agents: 1,156 robot tasks in 35 suites on 47 robots, each answered with a program and verified in a separate sandbox. Runs on Harbor.
   <sub>★ 331 · Python · MIT · uv · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`uv tool install embodied-first-exam --with-executables-from harbor`</sub>
-- **[codexqa](https://github.com/openqa-cn/codexqa)** — codexqa: 11 local-first Agent Skills for Cursor, Claude Code, Codex &amp; OpenClaw — change impact analysis, AI code review, defect scan, testcase generation, browser replay &amp; RCA.
-  <sub>★ 331 · Python · Apache-2.0 · npx · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`npx skills add openqa-cn/codexqa --skill codexqa-skill-router`</sub>
 - **[tessera](https://github.com/horang-labs/tessera)** — Tessera — a workspace for organizing AI coding sessions across projects, collections, tabs, panes, and Git worktrees
   <sub>★ 321 · TypeScript · AGPL-3.0 · npm · pushed 2026-11-27 · Win · WSL2 · macOS · Linux · Docker</sub>
   <sub>`npm install -g @horang-labs/tessera`</sub>
@@ -1515,7 +1512,7 @@ Page **1** of 4, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 311 · Python · MIT · pip · pushed 2026-06-04 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install molecode # from PyPI — pulls in rdkit + networkx`</sub>
 - **[pi-rust](https://github.com/bigfish1913/pi-rust)** — Rust-native, library-first coding-agent runtime and terminal CLI inspired by Pi, with composable LLM providers, tools, sessions, and plugin ABI
-  <sub>★ 310 · Rust · MIT · scoop · pushed 2026-11-28 · macOS</sub>
+  <sub>★ 311 · Rust · MIT · scoop · pushed 2026-11-28 · macOS</sub>
   <sub>`scoop bucket add bigfish1913 https://github.com/bigfish1913/scoop-bucket scoop install rpi # Windows`</sub>
 - **[harness-terminal](https://github.com/robzilla1738/harness-terminal)** — Native macOS terminal with GPU rendering, durable sessions, coding-agent workflows, and SSH connectivity. Session host, daemon, and CLI support Linux; optional MCP and AI summaries.
   <sub>★ 309 · Swift · MIT · clone · pushed 2026-10-14 · macOS</sub>
@@ -1530,27 +1527,29 @@ Page **1** of 4, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 306 · TypeScript · MIT · source · pushed 2026-08-19 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Vistyy/nopus.git`</sub>
 - **[herdr-auto-title](https://github.com/kryptamine/herdr-auto-title)** — Automatically name Herdr tabs and panes from your current work: Git branch, running process, and Claude Code, Codex, Pi, Grok, Hermes and Antigravity sessions. No LLM, no external service.
-  <sub>★ 304 · Go · MIT · source · pushed 2026-11-27 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 304 · Go · MIT · source · pushed 2026-11-28 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/kryptamine/herdr-auto-title.git`</sub>
 - **[apexo-code](https://github.com/cluster1900/apexo-code)** — Apexo: An open-source, general-purpose coding agent for terminal (TUI), web, and desktop with autonomous goals, workflows, persistent memory, command sandboxing, and first-class support for Gemini, Grok, and OpenAI-compatible models.
   <sub>★ 292 · TypeScript · MIT · npm · pushed 2026-11-20 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm install -g apexo-code`</sub>
 - **[acryl](https://github.com/acryldev/acryl)** — ACRYL (Agent Context Relay Yielding Lifecycles) is a platform for agentic apps: build them with any coding agent inside, run them as desktop, web, cli-tui or deploy to cloud, share them as Blends. Every feature is a swappable plugin. Each app is a Blend of swappable plugins with coding agents built in.
-  <sub>★ 283 · TypeScript · MIT · psh · pushed 2026-11-26 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 284 · TypeScript · MIT · psh · pushed 2026-11-26 · Win · WSL2? · macOS · Linux</sub>
   <sub>`irm https://acryl.dev/install.ps1 | iex`</sub>
 - **[brain0](https://github.com/Brain0-ai/brain0)** — The black box for AI-written code. Passive decision graph linking every commit to the agent prompts behind it: drift detection, DLP audit of what agents read, evidence-driven risk, MCP memory for coding agents, signed provenance attestations. One command, offline by default.
   <sub>★ 278 · Rust · Apache-2.0 · npx · pushed 2026-11-10 · Win? · WSL2? · macOS · Linux</sub>
   <sub>`npx brain0 up`</sub>
 - **[desktop-pet](https://github.com/IvenKooLab/desktop-pet)** — Comi（可米）——一只陪你工作、偶尔摸鱼的 3D 绒质小桌宠，支持 macOS 与 Windows：在桌面小跳漫游、挥手、打场记板。可选接入 DSH / ZCode / Claude Code / Cursor / OpenCode / Codex 的本地状态桥接。零依赖，纯本地运行。
-  <sub>★ 263 · Python · MIT · source · pushed 2026-11-11 · Win · WSL2? · macOS · Linux?</sub>
+  <sub>★ 264 · Python · MIT · source · pushed 2026-11-11 · Win · WSL2? · macOS · Linux?</sub>
   <sub>`git clone https://github.com/IvenKooLab/desktop-pet.git`</sub>
+- **[ai-app-builder](https://github.com/lebrowndnasty-hash/ai-app-builder)** — 
+  <sub>unavailable</sub>
 
 ## Agent Skills
 
-<sub>Entries 1–286 of 555. The rest are on this page's other parts, linked above and below.</sub>
+<sub>Entries 1–287 of 555. The rest are on this page's other parts, linked above and below.</sub>
 
 - **[rea](https://github.com/morluto/rea)** — Reverse engineer anything with agents, from app behavior down to native binaries.
-  <sub>★ 481.5k · TypeScript · MIT · npm · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 481.6k · TypeScript · MIT · npm · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install --global rea-agents`</sub>
 - **[skills](https://github.com/anthropics/skills)** — Public repository for Agent Skills
   <sub>★ 201.7k · Python · source · pushed 2026-11-16 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1562,7 +1561,7 @@ Page **1** of 4, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 162k · Python · source · pushed 2026-11-28 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/langgenius/dify.git`</sub>
 - **[cc-switch](https://github.com/farion1231/cc-switch)** — A cross-platform desktop All-in-One assistant for Claude Code, Codex, OpenCode,DeepSeek Harness and more. Only official website: ccswitch.io
-  <sub>★ 157.7k · Rust · MIT · brew · pushed 2026-11-27 · Win · WSL2 · macOS · Linux</sub>
+  <sub>★ 157.8k · Rust · MIT · brew · pushed 2026-11-27 · Win · WSL2 · macOS · Linux</sub>
   <sub>`brew install --cask cc-switch`</sub>
 - **[graphify](https://github.com/Graphify-Labs/graphify)** — Turn any codebase, with its docs, SQL schemas, configs, and PDFs, into a queryable knowledge graph. A /graphify skill for Claude Code, Cursor, Codex, and Gemini CLI: local deterministic AST parsing, every edge explained, no vector store.
   <sub>★ 154.4k · Python · Apache-2.0 · uv · pushed 2026-11-28 · Win · WSL2? · macOS · Linux</sub>
@@ -1577,22 +1576,22 @@ Page **1** of 4, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 120.3k · TypeScript · Apache-2.0 · npm · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g claude-mem`</sub>
 - **[impeccable](https://github.com/pbakaus/impeccable)** — The design vocabulary for your coding agent. Steer with polish and bolder, review with critique and audit, catch AI slop before it ships.
-  <sub>★ 118.2k · Rust · Apache-2.0 · npx · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 118.3k · Rust · Apache-2.0 · npx · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx impeccable install`</sub>
 - **[archify](https://github.com/tt-a1i/archify)** — Turn any idea, plan, or codebase into an interactive diagram or one-page answer: 10 diagram types, Architecture Diagnosis, Story video and PR walkthroughs. An Agent Skill for Claude Code, Codex, Cursor and more.
   <sub>★ 101.1k · JavaScript · Apache-2.0 · npx · pushed 2026-11-28 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npx -y skills@latest add https://archify.si --skill archify --skill archify-pr --agent cursor --global --copy --yes`</sub>
 - **[hyperframes](https://github.com/heygen-com/hyperframes)** — Open-source AI video editor: edit your own footage, or create and remake any video with Claude Code, Codex or the free Studio app. Write HTML, render MP4. By HeyGen.
-  <sub>★ 91.7k · TypeScript · Apache-2.0 · npx · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 91.8k · TypeScript · Apache-2.0 · npx · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add heygen-com/hyperframes # pick "Core Skills" in the picker`</sub>
 - **[career-ops](https://github.com/career-ops-hq/career-ops)** — Open-source AI job search agent and job finder: scan job boards, score each job 1-5 against your CV before you apply, tailor an ATS-friendly resume and cover letter, get interview prep and an application tracker. It helps you fill in each application; you press Submit. Runs locally in Codex, OpenCode and other AI CLIs, or as a Claude Code plugin.
   <sub>★ 85.3k · JavaScript · MIT · npm · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm i -g @santifer/career-ops`</sub>
 - **[last30days-skill](https://github.com/mvanhorn/last30days-skill)** — AI agent skill that researches any topic across Reddit, X, YouTube, HN, Polymarket, and the web - then synthesizes a grounded summary
-  <sub>★ 76.5k · Python · MIT · npx · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 76.6k · Python · MIT · npx · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add mvanhorn/last30days-skill -g`</sub>
 - **[diagram-design](https://github.com/cathrynlavery/diagram-design)** — Editorial diagram design for Claude Code, Codex, GitHub Copilot, Cursor, Factory Droid, Qoder, and Pi. 52 diagram types. Self-contained HTML + SVG. No shadows. No Mermaid slop.
-  <sub>★ 74.6k · HTML · MIT · npx · pushed 2026-11-26 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 74.7k · HTML · MIT · npx · pushed 2026-11-26 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npx skills add cathrynlavery/diagram-design`</sub>
 - **[humanizer](https://github.com/blader/humanizer)** — Agent skill that removes signs of AI-generated writing from text
   <sub>★ 74.5k · Python · MIT · npx · pushed 2026-11-19 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1610,7 +1609,7 @@ Page **1** of 4, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 60.7k · Markdown · MIT · npx · pushed 2026-11-15 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills@latest add emilkowalski/skills`</sub>
 - **[scientific-agent-skills](https://github.com/K-Dense-AI/scientific-agent-skills)** — Turn any AI agent into an AI Scientist. The #1 Agent Skills library for science, used by 250,000+ scientists worldwide. 177 ready-to-use validated skills plus 100+ scientific databases covering biology, chemistry, medicine, and drug discovery. Compatible with Cursor, Claude Code, Codex, Pi, Antigravity, and the open Agent Skills standard.
-  <sub>★ 58.7k · Python · MIT · npx · pushed 2026-11-23 · Win? · WSL2 · macOS? · Linux?</sub>
+  <sub>★ 58.8k · Python · MIT · npx · pushed 2026-11-23 · Win? · WSL2 · macOS? · Linux?</sub>
   <sub>`npx skills add K-Dense-AI/scientific-agent-skills`</sub>
 - **[open-code-review](https://github.com/alibaba/open-code-review)** — Secure, fast, efficient, battle-tested at Alibaba's scale. Hybrid architecture code review tool: deterministic pipelines + LLM Agent, precise line-level comments, built-in multi-language ruleset (NPE, thread-safety, XSS, SQL injection), OpenAI &amp; Anthropic compatible.
   <sub>★ 57k · Go · Apache-2.0 · npm · pushed 2026-11-26 · Win · WSL2? · macOS · Linux</sub>
@@ -1637,7 +1636,7 @@ Page **1** of 4, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 34.6k · TypeScript · Apache-2.0 · brew · pushed 2026-11-05 · Win · WSL2? · macOS · Linux</sub>
   <sub>`brew install aionui`</sub>
 - **[claude-code-templates](https://github.com/davila7/claude-code-templates)** — Open-source registry and CLI for Claude Code components: agents, commands, skills, hooks, MCPs, settings and mods
-  <sub>★ 34.3k · Python · MIT · npx · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 34.2k · Python · MIT · npx · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx claude-code-templates@latest`</sub>
 - **[OfficeCLI](https://github.com/iOfficeAI/OfficeCLI)** — OfficeCLI is the first and best Office suite purpose-built for AI agents to read, edit, and automate Word, Excel, and PowerPoint files. Free, open-source, single binary, no Office installation required.
   <sub>★ 33.6k · C# · Apache-2.0 · scoop · pushed 2026-11-20 · Win · WSL2? · macOS · Linux</sub>
@@ -1739,7 +1738,7 @@ Page **1** of 4, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 11.2k · Python · Apache-2.0 · clone · pushed 2026-11-17 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/aden-hive/hive.git`</sub>
 - **[drawio-skill](https://github.com/Agents365-ai/drawio-skill)** — Agent skill that turns natural language, code, Terraform/K8s, SQL, OpenAPI, AsyncAPI, Protobuf and GraphQL sources into editable, tested draw.io architecture diagrams: incremental sync, multi-view projection, drift diff, CI architecture tests, whiteboard derasterize, interactive HTML/PPTX/Mermaid exports.
-  <sub>★ 11k · Python · MIT · npx · pushed 2026-11-26 · Win? · WSL2 · macOS? · Linux? · Docker</sub>
+  <sub>★ 11k · Python · MIT · npx · pushed 2026-11-28 · Win? · WSL2 · macOS? · Linux? · Docker</sub>
   <sub>`npx skills add Agents365-ai/drawio-skill -g`</sub>
 - **[replica-skill](https://github.com/Jakeschincariol/replica-skill)** — Eleven free Claude skills that clone any app: reverse-engineer it, rebuild it, test it for bugs, then fix what its users hate. Free, MIT.
   <sub>★ 10.9k · Python · MIT · clone · pushed 2026-10-03 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1757,7 +1756,7 @@ Page **1** of 4, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 10k · Python · clone · pushed 2026-11-28 · Win? · WSL2 · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/anbeime/skill.git`</sub>
 - **[day-trader-skill](https://github.com/Jakeschincariol/day-trader-skill)** — 11 Claude skills for day trading: scan thousands of charts, track breaking news, time every entry and exit, and replay every outcome before you risk a dollar.
-  <sub>★ 9.9k · Python · MIT · clone · pushed 2026-10-20 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 10k · Python · MIT · clone · pushed 2026-10-20 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Jakeschincariol/day-trader-skill.git`</sub>
 - **[pixelfx](https://github.com/patch-gg/pixelfx)** — 244 pixel art effects, every one a small piece of code. Plus a Claude Code skill to make your own.
   <sub>★ 9.7k · JavaScript · MIT · npm · pushed 2026-11-13 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1786,12 +1785,12 @@ Page **1** of 4, because this list is longer than the 512 KB GitHub will render 
 - **[codex-ppt-skill](https://github.com/ningzimu/codex-ppt-skill)** — GPT-Image-2 PPT Generator Skill for Creating Image-Based PowerPoint Presentations in Codex and Other Skill-Compatible Agents
   <sub>★ 8.2k · Python · MIT · npx · pushed 2026-11-16 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y skills@latest add ningzimu/codex-ppt-skill \`</sub>
-- **[Product-Manager-Skills](https://github.com/deanpeters/Product-Manager-Skills)** — Product Management skills framework built on battle-tested methods for Claude Code, Cowork, Codex, and AI agents.
-  <sub>★ 8.2k · Python · source · pushed 2026-11-13 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`git clone https://github.com/deanpeters/Product-Manager-Skills.git`</sub>
 - **[social-media-research-skills](https://github.com/ScrapeCreators/social-media-research-skills)** — AI agent skills for social media research. Outlier posts, comment mining, competitor teardowns, ad libraries &amp; trends across TikTok, Instagram, YouTube, Reddit, X, LinkedIn &amp; more. Powered by ScrapeCreators. Works with Claude Code, Cursor, Codex, Gemini CLI.
   <sub>★ 8.2k · Python · MIT · npx · pushed 2026-08-26 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add ScrapeCreators/social-media-research-skills`</sub>
+- **[Product-Manager-Skills](https://github.com/deanpeters/Product-Manager-Skills)** — Product Management skills framework built on battle-tested methods for Claude Code, Cowork, Codex, and AI agents.
+  <sub>★ 8.2k · Python · source · pushed 2026-11-13 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>`git clone https://github.com/deanpeters/Product-Manager-Skills.git`</sub>
 - **[logo-design-skill](https://github.com/kaankiziltug/logo-design-skill)** — A comprehensive logo-design skill for Claude, Gemini CLI, Codex and other AI agents: principles, process, SVG craft, testing tools and a 1,400+ logo reference library.
   <sub>★ 8k · HTML · MIT · clone · pushed 2026-11-13 · macOS?</sub>
   <sub>`git clone https://github.com/kaankiziltug/logo-design-skill.git`</sub>
@@ -1918,9 +1917,9 @@ Page **1** of 4, because this list is longer than the 512 KB GitHub will render 
 - **[human-writing](https://github.com/KKKKhazix/human-writing)** — 让 AI 写的中文读起来像一个具体的人在说话。通用创作与改稿 Skill，开箱即用。
   <sub>★ 4.8k · Python · MIT · source · pushed 2026-11-15 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/KKKKhazix/human-writing.git`</sub>
-- **[jkandf](https://github.com/asdfasdfasdfdsa/bnjd)** — Curated list of Agent Skills centered on people, relationships, commemorative scenes, and methodological perspectives
+- **[bnjd](https://github.com/asdfasdfasdfdsa/bnjd)** — Curated list of Agent Skills centered on people, relationships, commemorative scenes, and methodological perspectives
   <sub>★ 4.8k · JavaScript · CC0-1.0 · source · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`git clone https://github.com/ksfilasnf/jkandf.git`</sub>
+  <sub>`git clone https://github.com/asdfasdfasdfdsa/bnjd.git`</sub>
 - **[claude-code-guide](https://github.com/zebbern/claude-code-guide)** — Claude Code Guide - Setup, Commands, workflows, agents, skills &amp; tips-n-tricks from beginner to power user!
   <sub>★ 4.7k · Python · MIT · source · pushed 2026-11-26 · WSL2 · macOS? · Linux · Docker</sub>
   <sub>`git clone https://github.com/zebbern/claude-code-guide.git`</sub>
@@ -1957,26 +1956,26 @@ Page **1** of 4, because this list is longer than the 512 KB GitHub will render 
 - **[AgenticResourceRegistry](https://github.com/AgenticResourceRegistry/AgenticResourceRegistry)** — Share and discover coding agent resources across your team. Self-hosted, Apache 2.0, works with Claude Code, Kiro, Cursor, Codex, Pi and more.
   <sub>★ 4.2k · Python · Apache-2.0 · psh · pushed 2026-11-15 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`irm https://raw.githubusercontent.com/AgenticResourceRegistry/AgenticResourceRegistry/main/install.ps1 | iex`</sub>
-- **[knowhere](https://github.com/Ontos-AI/knowhere)** — Knowhere extracts, parses, and outputs structured chunks ready for AI Agents and RAG.
-  <sub>★ 4.2k · Python · Apache-2.0 · source · pushed 2026-11-27 · WSL2 · Linux · Docker</sub>
-  <sub>`git clone https://github.com/Ontos-AI/knowhere.git`</sub>
 - **[skills](https://github.com/scenario-labs/skills)** — Get production-ready images, video, audio, and 3D from any AI agent: skills that pick the right model, price before spending, and keep characters and brands consistent through the Scenario MCP, plus expert teams that drive Blender, Maya, ZBrush, Unreal, and Unity.
   <sub>★ 4.2k · Python · MIT · npx · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add scenario-labs/skills`</sub>
-- **[linkedin-agent-skill](https://github.com/Jakeschincariol/linkedin-agent-skill)** — Eleven free Claude skills that run a LinkedIn account: posts off 21 hook formulas, comments, replies, profile score, weekly plan, and a humanizer that strips the AI fingerprint and scores the draft before it goes out.
-  <sub>★ 4.1k · Python · MIT · clone · pushed 2026-09-17 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`git clone https://github.com/Jakeschincariol/linkedin-agent-skill.git`</sub>
+- **[knowhere](https://github.com/Ontos-AI/knowhere)** — Knowhere extracts, parses, and outputs structured chunks ready for AI Agents and RAG.
+  <sub>★ 4.2k · Python · Apache-2.0 · source · pushed 2026-11-27 · WSL2 · Linux · Docker</sub>
+  <sub>`git clone https://github.com/Ontos-AI/knowhere.git`</sub>
 - **[oil-ui](https://github.com/oil-oil/oil-ui)** — UI design skill for Claude Code, Codex and other AI agents: explore distinct directions, compare them side by side, refine against real screenshots. 给 AI Agent 用的 UI 设计 Skill。
   <sub>★ 4.1k · Python · MIT · npx · pushed 2026-11-25 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add oil-oil/oil-ui`</sub>
 - **[one-skill-to-rule-them-all](https://github.com/rebelytics/one-skill-to-rule-them-all)** — The meta-skill that improves your skills, including itself. Turns the corrections, judgement calls and repeated workflows of your sessions (autonomous or human-led) into small skill updates and new skill candidates, each with its evidence and reason. Nothing touches a skill until you approve it. Augmented Expertise in practice. CC BY 4.0.
   <sub>★ 4.1k · Markdown · CC-BY-4.0 · npx · pushed 2026-11-27 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npx skills@1.8.1 add rebelytics/one-skill-to-rule-them-all --skill task-observer`</sub>
+- **[linkedin-agent-skill](https://github.com/Jakeschincariol/linkedin-agent-skill)** — Eleven free Claude skills that run a LinkedIn account: posts off 21 hook formulas, comments, replies, profile score, weekly plan, and a humanizer that strips the AI fingerprint and scores the draft before it goes out.
+  <sub>★ 4.1k · Python · MIT · clone · pushed 2026-09-17 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>`git clone https://github.com/Jakeschincariol/linkedin-agent-skill.git`</sub>
 - **[cc-skills-golang](https://github.com/samber/cc-skills-golang)** — 🧑‍🎨 A collection of Golang agentic skills that works
   <sub>★ 4k · Go · MIT · npx · pushed 2026-11-08 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add https://github.com/samber/cc-skills-golang --all`</sub>
 - **[fast-agent](https://github.com/evalstate/fast-agent)** — Code, Build and Evaluate agents - excellent Model and Skills/MCP/ACP/A2A Support
-  <sub>★ 4k · Python · Apache-2.0 · uv · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 4k · Python · Apache-2.0 · uv · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uvx fast-agent-mcp@latest -x`</sub>
 - **[sepia](https://github.com/Nanako0129/sepia)** — De-AI writing skill for any Agent Skills-compatible agent (77+ via the Skills CLI), with native plugins for Claude Code, Codex, Grok Build, and Antigravity. Narrative-architecture repair for fiction, venue-matched rules for professional prose. Based on StoryScope (arXiv:2604.03136).
   <sub>★ 4k · Python · MIT · npx · pushed 2026-11-25 · Win · WSL2? · macOS · Linux</sub>
@@ -1990,12 +1989,12 @@ Page **1** of 4, because this list is longer than the 512 KB GitHub will render 
 - **[Vibe-Skills](https://github.com/foryourhealth111-pixel/Vibe-Skills)** — Intelligent Skill routing and workflow orchestration for AI agents — +21.12 pp reward, −29.6% tokens on SkillsBench with DeepSeekV4Flash-VE.
   <sub>★ 3.9k · Python · Apache-2.0 · source · pushed 2026-11-09 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/foryourhealth111-pixel/Vibe-Skills.git`</sub>
-- **[md2wechat-skill](https://github.com/geekjourneyx/md2wechat-skill)** — 面向 AI Agent 的微信公众号创作与发布 CLI：Markdown 排版、AI 配图、预览与草稿创建；支持由浏览器 Agent 保存知乎、CSDN、头条未发布草稿。
-  <sub>★ 3.8k · Go · npm · pushed 2026-11-27 · Win · WSL2? · macOS · Linux</sub>
-  <sub>`npm install -g @geekjourneyx/md2wechat@3.9.0`</sub>
 - **[obsidian-wiki](https://github.com/Ar9av/obsidian-wiki)** — Framework for AI agents to build and maintain a digital brain through Obsidian wiki | Memory System for Agents
   <sub>★ 3.8k · Python · MIT · uv · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uv tool install obsidian-wiki`</sub>
+- **[md2wechat-skill](https://github.com/geekjourneyx/md2wechat-skill)** — 面向 AI Agent 的微信公众号创作与发布 CLI：Markdown 排版、AI 配图、预览与草稿创建；支持由浏览器 Agent 保存知乎、CSDN、头条未发布草稿。
+  <sub>★ 3.8k · Go · npm · pushed 2026-11-27 · Win · WSL2? · macOS · Linux</sub>
+  <sub>`npm install -g @geekjourneyx/md2wechat@3.9.0`</sub>
 - **[ctf-skills](https://github.com/ljagiello/ctf-skills)** — Agent skills for solving CTF challenges - web exploitation, binary pwn, crypto, reverse engineering, forensics, OSINT, and more
   <sub>★ 3.8k · Python · MIT · npx · pushed 2026-11-15 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add ljagiello/ctf-skills`</sub>
@@ -2051,7 +2050,7 @@ Page **1** of 4, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 3.4k · MIT · npx · pushed 2026-09-10 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add ciembor/agent-rules-books --all`</sub>
 - **[narrator-ai-cli-skill](https://github.com/NarratorAI-Studio/narrator-ai-cli-skill)** — AI 解说大师 — Agent skill；封装 narrator-ai-cli 供 Claude/Codex 等工具调用
-  <sub>★ 3.3k · MIT · pip · pushed 2026-07-05 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 3.4k · MIT · pip · pushed 2026-07-05 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install "narrator-ai-cli @ git+https://github.com/NarratorAI-Studio/narrator-ai-cli.git"`</sub>
 - **[comet](https://github.com/rpamis/comet)** — Comet: agent skill harness for turning ideas into evaluated workflows
   <sub>★ 3.3k · JavaScript · MIT · npm · pushed 2026-11-28 · Win · WSL2 · macOS · Linux</sub>
@@ -2144,7 +2143,7 @@ Page **1** of 4, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 2.8k · Shell · MIT · npx · pushed 2026-11-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add wondelai/skills --all --global`</sub>
 - **[ex-ussr-kinship-research](https://github.com/DenisSergeevitch/ex-ussr-kinship-research)** — Evidence-first genealogy skill for AI agents (Codex, Claude Code): church books, civil, military, deportation and repression records across the former USSR. Replies in your language.
-  <sub>★ 2.8k · Python · MIT · npx · pushed 2026-11-26 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 2.8k · Python · MIT · npx · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add https://github.com/DenisSergeevitch/ex-ussr-kinship-research`</sub>
 - **[kotlin-footguns](https://github.com/maxrave-dev/kotlin-footguns)** — Battle-tested agent skills mapping the footguns of Kotlin, Compose Multiplatform and the desktop JVM — mined from a production music app, not from documentation.
   <sub>★ 2.8k · Python · GPL-3.0 · npx · pushed 2026-10-29 · Win · WSL2? · macOS · Linux</sub>
@@ -2269,12 +2268,12 @@ Page **1** of 4, because this list is longer than the 512 KB GitHub will render 
 - **[math-modeling-skill](https://github.com/XiaoMaColtAI/math-modeling-skill)** — 数学建模技能 - 面向 CUMCM、MCM/ICM 等数学建模竞赛的三阶段工作流：建模分析、Python/MATLAB 编程与 DOCX 论文生成。包含丰富的算法资源库(优化/预测/评价/图论/机器学习等)、角色指导文档、论文模板和实用工具脚本
   <sub>★ 2k · Python · npx · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add https://github.com/xiaomacoltai/math-modeling-skill --skill math-modeling`</sub>
-- **[synthadoc](https://github.com/axoviq-ai/synthadoc)** — Synthadoc: An open-source LLM knowledge compilation engine that turns raw documents into structured, local-first wikis. A transparent, human-readable alternative to traditional RAG, which can be self-managed and self-improved without the use of any tools.
-  <sub>★ 2k · Python · AGPL-3.0 · pip · pushed 2026-11-27 · Win? · WSL2 · macOS? · Linux? · Docker</sub>
-  <sub>`pip install "synthadoc[vectors]" # recommended — includes semantic search`</sub>
 - **[bama](https://github.com/daveebbelaar/bama)** — BAMA: Build Any Mac App. Agent skills to research, clone, design, build, optimize, and test native macOS apps with Swift and SwiftUI.
   <sub>★ 2k · Swift · MIT · npx · pushed 2026-11-05 · macOS</sub>
   <sub>`npx skills@latest add daveebbelaar/bama`</sub>
+- **[synthadoc](https://github.com/axoviq-ai/synthadoc)** — Synthadoc: An open-source LLM knowledge compilation engine that turns raw documents into structured, local-first wikis. A transparent, human-readable alternative to traditional RAG, which can be self-managed and self-improved without the use of any tools.
+  <sub>★ 2k · Python · AGPL-3.0 · pip · pushed 2026-11-27 · Win? · WSL2 · macOS? · Linux? · Docker</sub>
+  <sub>`pip install "synthadoc[vectors]" # recommended — includes semantic search`</sub>
 - **[investorskills](https://github.com/questflowai/investorskills)** — Investor Skills is an open-source library that turns durable investing judgment into portable, structured formats. It collects how great investors think, filter opportunities, size risk, and act under uncertainty — then structures those patterns so humans can study them and AI finance agents can apply them.
   <sub>★ 1.9k · Swift · MIT · npx · pushed 2026-08-23 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add https://github.com/xuboyuebobb/investorskills`</sub>
@@ -2311,27 +2310,27 @@ Page **1** of 4, because this list is longer than the 512 KB GitHub will render 
 - **[ktx](https://github.com/Kaelio/ktx)** — ktx is an executable context layer for data and analytics agents 🐙 Allow Claude Code, Codex, or other AI agents to query analytical databases accurately and with full context of your company
   <sub>★ 1.6k · TypeScript · Apache-2.0 · npm · pushed 2026-11-18 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g @kaelio/ktx`</sub>
-- **[golive-skill](https://github.com/mikehasa/golive-skill)** — Take your agent-built product live: hosting, database, domain, email, payments — on your own accounts. Open-source Agent Skill + zero-dependency Node CLI: detect → plan → approve → apply → verify. No GoLive account, backend or telemetry.
-  <sub>★ 1.6k · TypeScript · MIT · npx · pushed 2026-10-11 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`npx skills add https://github.com/mikehasa/golive-skill --skill golive --global`</sub>
 - **[attention-span](https://github.com/alexgreensh/attention-span)** — Make your agents talk human. ADHD-friendly output styles for Claude Code, Codex, and others. So you can pay attention, not tokens.
   <sub>★ 1.6k · Python · AGPL-3.0 · source · pushed 2026-10-30 · Win? · WSL2 · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/alexgreensh/attention-span.git`</sub>
+- **[golive-skill](https://github.com/mikehasa/golive-skill)** — Take your agent-built product live: hosting, database, domain, email, payments — on your own accounts. Open-source Agent Skill + zero-dependency Node CLI: detect → plan → approve → apply → verify. No GoLive account, backend or telemetry.
+  <sub>★ 1.6k · TypeScript · MIT · npx · pushed 2026-10-11 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>`npx skills add https://github.com/mikehasa/golive-skill --skill golive --global`</sub>
 - **[second-brain-os](https://github.com/undefined-ui/second-brain-os)** — Guides and resources for AI engineers: an agents course, five handbooks, a hands-on second-brain project and a vetted reading list.
   <sub>★ 1.6k · HTML · MIT · clone · pushed 2026-11-03 · Win? · WSL2? · Linux?</sub>
   <sub>`git clone https://github.com/undefined-ui/second-brain-os.git`</sub>
 - **[code-animation-prompts](https://github.com/XiaoyeCodes/code-animation-prompts)** — 341 种代码动画风格提示词、196 张参考静帧与离线挑选器，封装为 Claude Code / Codex Skill，支持一键导入与 HTML 视频渲染。
   <sub>★ 1.6k · HTML · clone · pushed 2026-11-05</sub>
   <sub>`git clone https://github.com/XiaoyeCodes/code-animation-prompts.git`</sub>
+- **[ecommerce-visual-copywriting-skill](https://github.com/feichanggege/ecommerce-visual-copywriting-skill)** — 电商视觉文案设计SOP Skill - 让电商设计小白也能一键做出5年资深设计经验的商品图片.兼容 Claude / Codex / Cursor / Workbuddy 等 SKILL.md Agent. AI-powered e-commerce visual strategy skill for main images, PDP/A+, copywriting, localization, evidence-aware compliance and image prompts.
+  <sub>★ 1.5k · Python · MIT · npx · pushed 2026-10-30 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>`npx skills add feichanggege/ecommerce-visual-copywriting-skill`</sub>
 - **[3dviz-pro-max](https://github.com/viettranx/3dviz-pro-max)** — Agent skill for creative 3D visualization: turn an idea into a Three.js/Blender scene worth exploring. Claude Code + Codex plugin, 223 recipes, 440 knowledge records, 22 proved kits, 37 runnable studies.
   <sub>★ 1.5k · JavaScript · MIT · clone · pushed 2026-09-11 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/viettranx/3dviz-pro-max.git`</sub>
 - **[skill-up](https://github.com/alibaba/skill-up)** — Evaluate Agent Skills and environments. Evolve Skills with evidence.
   <sub>★ 1.5k · Go · Apache-2.0 · npx · pushed 2026-11-27 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npx skills add https://github.com/alibaba/skill-up/tree/main/skills/skill-upper -g -a codex -y`</sub>
-- **[ecommerce-visual-copywriting-skill](https://github.com/feichanggege/ecommerce-visual-copywriting-skill)** — 电商视觉文案设计SOP Skill - 让电商设计小白也能一键做出5年资深设计经验的商品图片.兼容 Claude / Codex / Cursor / Workbuddy 等 SKILL.md Agent. AI-powered e-commerce visual strategy skill for main images, PDP/A+, copywriting, localization, evidence-aware compliance and image prompts.
-  <sub>★ 1.5k · Python · MIT · npx · pushed 2026-10-30 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`npx skills add feichanggege/ecommerce-visual-copywriting-skill`</sub>
 - **[skills](https://github.com/dzhng/skills)** — Reusable AI agent skills for growing software farms: explore ideas, write specs, let agents build unattended, then curate what grew — weed, prune, and review. Works with Claude Code, Codex, and other skill-compatible agents.
   <sub>★ 1.5k · HTML · MIT · npx · pushed 2026-11-13 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add dzhng/skills`</sub>
@@ -2368,6 +2367,9 @@ Page **1** of 4, because this list is longer than the 512 KB GitHub will render 
 - **[wallstreet-explainer](https://github.com/HeyChengC/wallstreet-explainer)** — 华尔街式财经/科技解读短片 skill：设计思路、风格语言，以及找片、截图、配音、渲染和混音工具。
   <sub>★ 1.4k · JavaScript · clone · pushed 2026-11-20 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/HeyChengC/wallstreet-explainer.git`</sub>
+- **[100x-engineer-skill](https://github.com/DeadInternetStudios/100x-engineer-skill)** — 100x is a skill by a former Cursor engineer that turns prompts into formally verified, production-ready code
+  <sub>★ 1.4k · JavaScript · MIT · npx · pushed 2026-11-28 · Win · WSL2? · macOS · Linux</sub>
+  <sub>`npx skills add DeadInternetStudios/100x-engineer-skill --skill '*' -g`</sub>
 - **[chubbyskills](https://github.com/chubbyguan/chubbyskills)** — 把中文全渠道内容（抖音 / B站 / 小红书 / 公众号 / X / 播客）采集进个人知识库的 14 个 AI Skill：图文存图、视频转文字稿、字幕优先免 GPU、RSS/YouTube 订阅调度与每日情报简报，附带知识库 MCP server。｜ Ingest Chinese content into your personal knowledge base — image/video routing, subtitle-first transcription, feed subscriptions with daily digests, and a KB MCP server.
   <sub>★ 1.4k · Python · MIT · pipx · pushed 2026-10-14 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pipx install git+https://github.com/chubbyguan/chubbyskills.git`</sub>
@@ -2380,9 +2382,6 @@ Page **1** of 4, because this list is longer than the 512 KB GitHub will render 
 - **[skills](https://github.com/AI-Builder-Club/skills)** — Codebase harness + loop engineer
   <sub>★ 1.3k · Python · source · pushed 2026-09-15 · WSL2 · macOS? · Linux</sub>
   <sub>`git clone https://github.com/AI-Builder-Club/skills.git`</sub>
-- **[100x-engineer-skill](https://github.com/DeadInternetStudios/100x-engineer-skill)** — 100x is a skill by a former Cursor engineer that turns prompts into formally verified, production-ready code
-  <sub>★ 1.3k · JavaScript · MIT · npx · pushed 2026-11-28 · Win · WSL2? · macOS · Linux</sub>
-  <sub>`npx skills add DeadInternetStudios/100x-engineer-skill --skill '*' -g`</sub>
 - **[novel-to-game](https://github.com/zenstory-ai/novel-to-game)** — 小说改游戏 Agent 技能包：通读拆书、玩法与美术策划、代码构建与盲玩验收，支持网页、互动影游与微信/抖音/TapTap 小游戏 ｜ Agent skills for adapting novels into playable games
   <sub>★ 1.3k · Markdown · MIT · npx · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add zenstory-ai/novel-to-game -g -y -s '*' \`</sub>
@@ -2407,6 +2406,9 @@ Page **1** of 4, because this list is longer than the 512 KB GitHub will render 
 - **[speak-human-tw](https://github.com/Raymondhou0917/speak-human-tw)** — 「說人話」：繁體中文的去 AI 味改寫 skill。抓 38 種 AI 寫作痕跡，順手校正中國用語與半形標點，給 Claude Code / Codex / Cursor 用。
   <sub>★ 1.2k · Python · MIT · clone · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Raymondhou0917/speak-human-tw.git`</sub>
+- **[dashboard-design-skill](https://github.com/abdiraimov-otabek/dashboard-design-skill)** — A Claude Code skill for clean, honest dashboard UI: KPI tiles, charts, date pickers, ranked lists, states, layouts and a screenshot QA pass. Distilled from 127 shipped dashboards.
+  <sub>★ 1.2k · MIT · clone · pushed 2026-11-25</sub>
+  <sub>`git clone https://github.com/abdiraimov-otabek/dashboard-design-skill`</sub>
 
 Page **1** of 4, because this list is longer than the 512 KB GitHub will render in one file. In order: **1** · [2](scouted-on-github-2.md) · [3](scouted-on-github-3.md) · [4](scouted-on-github-4.md) — [continue on page 2 →](scouted-on-github-2.md)
 

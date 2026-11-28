@@ -2,7 +2,7 @@
 
 Capability bundles an agent loads on demand — SKILL.md packages, subagents, slash commands, and the directories that collect them.
 
-**1,639 projects** · 1,483 with stars to rank by · 8,100,371 combined stars
+**1,637 projects** · 1,481 with stars to rank by · 8,101,639 combined stars
 
 [← every topic](README.md) · [← back to the mega list](../README.md) · [**filter this live →**](https://aaa.jeremyfhall.com/catalog/#topic=agent-skills)
 
@@ -14,10 +14,8 @@ Page **3** of 3, because this list is longer than the 512 KB GitHub will render 
 
 No stars of their own to rank by — a folder inside someone else's repository, or a link GitHub no longer serves. Listed anyway, so nothing quietly disappears from a count.
 
-<sub>Projects 76–156 of 156. The rest are on this page's other parts, linked above and below.</sub>
+<sub>Projects 78–156 of 156. The rest are on this page's other parts, linked above and below.</sub>
 
-- **[igamingsychov/watch-igaming](https://github.com/igamingsychov/watch-igaming)** — Source for watch-igaming
-- **[ilyautov/humanizer-ru](https://github.com/ilyautov/humanizer-ru/tree/main/skills/humanizer-ru)** — humanizer-ru: редактура русского текста для AI-агентов. Убирает канцелярит и шаблонные обороты, сверяет смысл и факты. 67 признаков, 21 жёсткий запрет, сканер, CLI, MCP и расширение Chrome. | Russian…
 - **[ilyautov/small-business-ru](https://github.com/ilyautov/small-business-ru/tree/main/small-business-ru/skills)** — 34 открытых AI-скилла для малого бизнеса РФ: налоги УСН, деньги, проверка контрагента по ИНН. Числа считаются кодом, данные из реальных реестров. | 34 open AI skills for Russian small business: taxes…
 - **[Instant-Expert/skills](https://github.com/Instant-Expert/skills)** — Official Instant Expert source for the ask-human-expert skill - ask real executives, operators and domain experts a question for a written or voice answer or a short call, with a free test mode and t…
 - **[izzzzzi/assh](https://github.com/izzzzzi/agent-assh/tree/main/skills/assh)** — SSH workflow helper for LLM agents

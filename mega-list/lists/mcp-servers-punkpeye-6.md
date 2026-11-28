@@ -152,7 +152,7 @@ Page **6** of 7, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 651 · GDScript · source · pushed 2026-11-26 · Win?</sub>
   <sub>`git clone https://github.com/youichi-uda/godot-mcp-pro.git`</sub>
 - **[google/three-live](https://github.com/google/three-live)** — Compile, lint, simulate (60 Hz), and render headless 4-up 3D contact sheets from Three.js to GLB, USDZ, Android (Filament / Jetpack XR), iOS/visionOS (RealityKit), and WebXR
-  <sub>★ 527 · TypeScript · Apache-2.0 · cargo · pushed 2026-11-28 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 528 · TypeScript · Apache-2.0 · cargo · pushed 2026-11-28 · Win · WSL2? · macOS · Linux</sub>
   <sub>`cargo install three-live-compiler --bin three-live-cli`</sub>
 - **[opgginc/opgg-mcp](https://github.com/opgginc/opgg-mcp)** — Real-time gaming data for League of Legends, TFT and Valorant: champion analytics, esports schedules, meta compositions and character statistics
   <sub>★ 109 · TypeScript · MIT · source · pushed 2026-11-19 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -260,7 +260,7 @@ Page **6** of 7, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 5 · TypeScript · MIT · psh · pushed 2026-11-16 · Win · WSL2? · macOS? · Linux?</sub>
   <sub>`iwr https://raw.githubusercontent.com/drgost1/Tufan-Blox-Bridge/main/install.ps1 | iex`</sub>
 - **[gripforgeai/mcp](https://github.com/gripforgeai/mcp)** — Attach weapons and props to rigged 3D characters: finds the hand bone, scales the prop, closes the fist and exports three.js, Unity or Godot binds and GLBs
-  <sub>★ 5 · TypeScript · MIT · source · pushed 2026-11-14 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 5 · TypeScript · MIT · source · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/gripforgeai/mcp.git`</sub>
 - **[Grinv/steam-games-mcp](https://github.com/Grinv/steam-games-mcp)** — Search the Steam store (deals, reviews, Steam Deck compatibility) plus player profiles, libraries, achievements and friends via the Steam Web API
   <sub>★ 5 · TypeScript · MIT · npx · pushed 2026-11-20 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -401,10 +401,10 @@ Page **6** of 7, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 1.7k · Python · AGPL-3.0 · npx · pushed 2026-11-26 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npx skills add patrickchugh/terravision`</sub>
 - **[awdr74100/figwright](https://github.com/awdr74100/figwright)** — Bidirectional Figma bridge: turn selections into framework-aware code reusing your components and tokens, or create frames, text, styles, variables and screens
-  <sub>★ 1.6k · TypeScript · MIT · npm · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 1.6k · TypeScript · MIT · npm · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm i -g @figwright/mcp`</sub>
 - **[Kentucky-ai/opentakeoff](https://github.com/Kentucky-ai/opentakeoff)** — Construction plan takeoff: load plan PDFs, read title blocks, set drawing scale, trace rooms and export quantities like square footage and linear feet
-  <sub>★ 925 · TypeScript · AGPL-3.0 · npx · pushed 2026-11-24 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 927 · TypeScript · AGPL-3.0 · npx · pushed 2026-11-24 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx -y opentakeoff-mcp`</sub>
 - **[cisco-open/network-sketcher](https://github.com/cisco-open/network-sketcher)** — Local-first network design: create Cisco-style network master files, L1/L2/L3 topology diagrams, HTML viewers, device tables and AI context files
   <sub>★ 427 · Python · Apache-2.0 · clone · pushed 2026-11-26 · Win · WSL2? · macOS · Linux</sub>
@@ -974,7 +974,7 @@ Page **6** of 7, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 5 · TypeScript · MIT · npm · pushed 2026-10-10 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g @r-huijts/ethics-vibe-check`</sub>
 - **[UnitVectorY-Labs/mcp-graphql-forge](https://github.com/UnitVectorY-Labs/mcp-graphql-forge)** — Expose curated GraphQL queries as modular tools via configuration
-  <sub>★ 5 · Go · MIT · go · pushed 2026-11-25 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 5 · Go · MIT · go · pushed 2026-11-28 · Win · WSL2? · macOS · Linux</sub>
   <sub>`go install github.com/UnitVectorY-Labs/mcp-graphql-forge@latest`</sub>
 - **[megberts/mcp-websitepublisher-ai](https://github.com/megberts/mcp-websitepublisher-ai)** — Build and publish websites through conversation: manage pages, assets, entities, records and integrations
   <sub>★ 5 · MIT · source · pushed 2026-11-24 · Win?</sub>
@@ -1727,7 +1727,7 @@ Page **6** of 7, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 3 · TypeScript · MIT · clone · pushed 2026-09-07 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/roamzy-io/mcp-server.git`</sub>
 - **[vbhjckfd/timetable-api-node](https://github.com/vbhjckfd/timetable-api-node)** — Real-time Lviv (Ukraine) public transport: stop arrivals, live vehicle positions, route geometry and nearby stop discovery
-  <sub>★ 3 · TypeScript · MIT · source · pushed 2026-11-26 · WSL2 · Linux · Docker</sub>
+  <sub>★ 3 · TypeScript · MIT · source · pushed 2026-11-28 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/vbhjckfd/timetable-api-node.git`</sub>
 - **[alcylu/nightlife-mcp](https://github.com/alcylu/nightlife-mcp)** — Tokyo nightlife: event discovery, venue search, performer info, recommendations and VIP table booking
   <sub>★ 2 · TypeScript · MIT · source · pushed 2026-11-15 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1859,7 +1859,7 @@ Page **6** of 7, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 96 · Java · MIT · npx · pushed 2026-11-25 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx -y @smithery/cli install @mahdin75/geoserver-mcp --client claude`</sub>
 - **[Vortx-AI/emem](https://github.com/Vortx-AI/emem)** — Signed geospatial facts with citable receipts for place-based questions: elevation, land cover, surface water, vegetation and built-up areas
-  <sub>★ 91 · Rust · Apache-2.0 · pip · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 91 · Rust · Apache-2.0 · pip · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pip install ememdev`</sub>
 - **[Knight60/ArcGIS-Pro-MCP](https://github.com/Knight60/ArcGIS-Pro-MCP)** — #️⃣ 🏠 🪟 - ArcGIS Pro add-in that lets an assistant drive the open project: layers, attributes, selections, symbology, layouts, rasters, geoprocessing tools and arcpy
   <sub>★ 83 · C# · AGPL-3.0 · source · pushed 2026-11-20 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -2084,7 +2084,7 @@ Page **6** of 7, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 16 · Rust · Apache-2.0 · psh · pushed 2026-11-27 · Win · WSL2? · macOS · Linux</sub>
   <sub>`irm https://raw.githubusercontent.com/openreadout/openreadout/main/scripts/install.ps1 | iex`</sub>
 - **[nickjlamb/pubcrawl](https://github.com/nickjlamb/pubcrawl)** — PubMed, Europe PMC (including preprints), FDA/DailyMed and UK eMC drug labelling, and ClinicalTrials.gov for AI assistants, including side-by-side US vs UK label comparison. Every result cites its PMID, NCT ID or DOI; no API key required
-  <sub>★ 15 · TypeScript · MIT · npm · pushed 2026-11-24 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 15 · TypeScript · MIT · npm · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npm install -g @pharmatools/pubcrawl`</sub>
 - **[davidmosiah/wellness-nourish](https://github.com/davidmosiah/wellness-nourish)** — Nutrition and hydration tracking: food search, barcode lookup, meal estimation, intake logs and daily summaries
   <sub>★ 12 · TypeScript · MIT · npx · pushed 2026-11-05 · Win? · WSL2? · macOS? · Linux?</sub>

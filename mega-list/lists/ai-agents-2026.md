@@ -485,7 +485,7 @@ Curated by **[caramaschiHG/awesome-ai-agents-2026](https://github.com/caramaschi
   <sub>★ 69.6k · Python · Apache-2.0 · npm · pushed 2026-11-27 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`npm install -g @mem0/cli # or: pip install mem0-cli`</sub>
 - **[Pathway](https://github.com/pathwaycom/pathway)** — Live data RAG. Real-time streaming. 50k+ stars
-  <sub>★ 62k · Python · pip · pushed 2026-11-28 · Win? · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 61.9k · Python · pip · pushed 2026-11-28 · Win? · WSL2? · macOS · Linux · Docker</sub>
   <sub>`pip install -U pathway`</sub>
 - **[Milvus](https://github.com/milvus-io/milvus)** — Cloud-native vector DB. Billion-scale
   <sub>★ 46.8k · Go · Apache-2.0 · source · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>

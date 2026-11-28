@@ -393,7 +393,7 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 775 · TypeScript · Apache-2.0 · pip · pushed 2023-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install --upgrade skyagi`</sub>
 - **[LLama Cpp Agent](https://github.com/Maximilian-Winter/llama-cpp-agent)** — The llama-cpp-agent framework is a tool designed for easy interaction with Large Language Models. github
-  <sub>★ 664 · Python · pip · pushed 2026-03-09 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 666 · Python · pip · pushed 2026-03-09 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install llama-cpp-agent`</sub>
 - **[Lynkr](https://github.com/Fast-Editor/Lynkr)** — Lynkr is a proxy that lets Claude Code CLI talk to non-Anthropic LLMs, manage local tools, and compose Model Context Protocol (MCP) servers with prompt caching, repo intelligence, and Git-aware automation and several other features similar to anthropic backend
   <sub>★ 642 · JavaScript · Apache-2.0 · npm · pushed 2026-11-15 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
@@ -1635,7 +1635,7 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 127 · Jupyter Notebook · source · pushed 2024-03-13</sub>
   <sub>`git clone https://github.com/feifeibear/LLMRoofline.git`</sub>
 - **[Dnd-Llm-Game](https://github.com/tegridydev/dnd-llm-game)** — MVP of an idea using multiple local LLM models to simulate and play D&amp;D
-  <sub>★ 126 · Python · source · pushed 2026-11-24 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 126 · Python · source · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/tegridydev/dnd-llm-game.git`</sub>
 - **[Langchain-Projects-Llm](https://github.com/ananthanarayanan431/Langchain-Projects-LLM)** — Various projects using Large Language Model (GPT &amp; LLAMA) other open source model from HuggingFace and OpenAI. OpenAI API required for ru…
   <sub>★ 124 · Jupyter Notebook · Unlicense · source · pushed 2026-10-25</sub>
@@ -2178,7 +2178,7 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 842 · Python · MIT · source · pushed 2026-11-11 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Haervwe/open-webui-tools.git`</sub>
 - **[Dingo](https://github.com/MigoXLab/dingo)** — Dingo - A Comprehensive Data Quality Evaluation Tool
-  <sub>★ 770 · Python · Apache-2.0 · pip · pushed 2026-11-25 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 771 · Python · Apache-2.0 · pip · pushed 2026-11-25 · Win · WSL2? · macOS · Linux</sub>
   <sub>`pip install dingo-python`</sub>
 - **[Claudesync](https://github.com/jahwag/ctxsync)** — ClaudeSync is a Python tool that automates the synchronization of local files with Claude.ai Projects
   <sub>★ 738 · Python · MIT · source · pushed 2026-06-11 · Win · WSL2? · macOS · Linux</sub>
@@ -2271,7 +2271,7 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 154 · Shell · MIT · brew · pushed 2025-07-17 · Win · WSL2 · macOS · Linux</sub>
   <sub>`brew tap aerugo/prelude`</sub>
 - **[SkillLite](https://github.com/EXboys/skilllite)** — A lightweight, zero-dependency runtime for the agentsskills protocol that enables AI agents to securely execute portable skills locally. Written in Rust with native OS sandboxing, millisecond cold starts, single binary deployment github
-  <sub>★ 154 · Rust · MIT · cargo · pushed 2026-11-27 · Win · WSL2 · macOS · Linux</sub>
+  <sub>★ 154 · Rust · MIT · cargo · pushed 2026-11-28 · Win · WSL2 · macOS · Linux</sub>
   <sub>`cargo install --path skilllite`</sub>
 - **[Llm-Term](https://github.com/dh1011/llm-term)** — A Rust-based CLI tool that generates and executes terminal commands using OpenAI's language models
   <sub>★ 153 · C · MIT · source · pushed 2026-07-05 · Win · WSL2? · Linux</sub>
@@ -2352,7 +2352,7 @@ Page **1** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 52 · Kotlin · Apache-2.0 · source · pushed 2026-01-29</sub>
   <sub>`git clone https://github.com/xemantic/xemantic-ai-tool-schema.git`</sub>
 - **[Widemem-Ai](https://github.com/remete618/widemem-ai)** — Lightweight Python memory layer for LLM agents with importance scoring, temporal decay, 3-tier hierarchical memory, YMYL prioritization, and batch conflict resolution. Local-first with SQLite + FAISS. github | website | pypi
-  <sub>★ 50 · Python · Apache-2.0 · pip · pushed 2026-10-24 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 50 · Python · Apache-2.0 · pip · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install "widemem-ai[local]" # FAISS, Ollama client, sentence-transformers`</sub>
 - **[ChatSpatial](https://github.com/cafferychen777/ChatSpatial)** — MCP server enabling spatial transcriptomics analysis via natural language. Integrates 60+ methods for spatial domains, deconvolution, cell communication, and trajectory analysis
   <sub>★ 49 · Python · MIT · uv · pushed 2026-10-20 · Win · WSL2? · macOS · Linux · Docker</sub>

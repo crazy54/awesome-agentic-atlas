@@ -13,7 +13,7 @@ Curated by **[Piebald-AI/awesome-gemini-cli](https://github.com/Piebald-AI/aweso
 | <a href="https://github.com/google-gemini/gemini-cli"><img src="https://raw.githubusercontent.com/google-gemini/gemini-cli/main/docs/assets/gemini-screenshot.png" width="260"></a> | <a href="https://github.com/QwenLM/qwen-code/"><img src="https://img.alicdn.com/imgextra/i3/O1CN01l5GyhGuOPGC3XHtt_!!6000000005884-2-tps-1742-903.png" width="260"></a> | <a href="https://github.com/google-gemini/cookbook"><img src="https://opengraph.githubassets.com/1/google-gemini/cookbook" width="260"></a> |
 | **[Gemini CLI](https://github.com/google-gemini/gemini-cli)**<br>★ 109.3k | **[Qwen Code](https://github.com/QwenLM/qwen-code/)**<br>★ 31k | **[Gemini CLI cookbook](https://github.com/google-gemini/cookbook)**<br>★ 18k |
 | <a href="https://github.com/google-github-actions/run-gemini-cli"><img src="https://opengraph.githubassets.com/1/google-github-actions/run-gemini-cli" width="260"></a> | <a href="https://github.com/vybestack/llxprt-code"><img src="https://opengraph.githubassets.com/1/vybestack/llxprt-code" width="260"></a> | <a href="https://github.com/heygen-com/hyperframes"><img src="https://static.heygen.ai/hyperframes-oss/docs/images/design-templates/biennale-yellow.png" width="260"></a> |
-| **[Run Gemini CLI](https://github.com/google-github-actions/run-gemini-cli)**<br>★ 2.1k | **[LLxprt Code](https://github.com/vybestack/llxprt-code)**<br>★ 703 | **[HyperFrames](https://github.com/heygen-com/hyperframes)**<br>★ 91.7k |
+| **[Run Gemini CLI](https://github.com/google-github-actions/run-gemini-cli)**<br>★ 2.1k | **[LLxprt Code](https://github.com/vybestack/llxprt-code)**<br>★ 703 | **[HyperFrames](https://github.com/heygen-com/hyperframes)**<br>★ 91.8k |
 
 ## Contents
 
@@ -56,10 +56,10 @@ Curated by **[Piebald-AI/awesome-gemini-cli](https://github.com/Piebald-AI/aweso
 ## Commands &amp; Extensions
 
 - **[HyperFrames](https://github.com/heygen-com/hyperframes)** — Official Gemini CLI extension for HeyGen's open-source AI video editor (88K+ GitHub stars): make launch videos, explainers and motion graphics, caption your own footage and remake any video, rendered from HTML, CSS and GSAP to MP4. Install: gemini extensions install https://github.com/heygen-com/hyperframes --auto-update
-  <sub>★ 91.7k · TypeScript · Apache-2.0 · npx · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 91.8k · TypeScript · Apache-2.0 · npx · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add heygen-com/hyperframes # pick "Core Skills" in the picker`</sub>
 - **[last30days](https://github.com/mvanhorn/last30days-skill)** — Gemini CLI extension and Agent Skill that researches any topic across Reddit, X, YouTube, TikTok, Hacker News, Polymarket, GitHub and the web from the last 30 days, ranks results by real engagement (upvotes, likes, prediction-market odds), and writes one cited brief. Reddit, Hacker News, Polymarket and GitHub work with no API key. MIT. Install: gemini extensions install https://github.com/mvanhorn
-  <sub>★ 76.5k · Python · MIT · npx · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 76.6k · Python · MIT · npx · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add mvanhorn/last30days-skill -g`</sub>
 - **[AIHawk](https://github.com/feder-cr/Jobs_Applier_AI_Agent)** — Gives Gemini CLI a real Firefox to drive from plain-English instructions: opens pages, clicks, types, reads and screenshots through the real pointer and keyboard. Open source, MIT. Install via gemini extensions install https://github.com/feder-cr/AIHawk
   <sub>★ 32.7k · Python · MIT · psh · pushed 2026-11-24 · Win · WSL2? · macOS? · Linux?</sub>
@@ -71,7 +71,7 @@ Curated by **[Piebald-AI/awesome-gemini-cli](https://github.com/Piebald-AI/aweso
   <sub>★ 1.3k · JavaScript · MIT · psh · pushed 2026-11-27 · Win</sub>
   <sub>`irm https://raw.githubusercontent.com/JayPokale/Chisle/main/install.ps1 | iex`</sub>
 - **[OpenAccountants](https://github.com/openaccountants/openaccountants)** — 371 tax classification skills across 134 countries. Classify bank statement transactions into VAT/GST, income tax, and social contribution categories with conservative defaults
-  <sub>★ 513 · HTML · AGPL-3.0 · source · pushed 2026-11-28</sub>
+  <sub>★ 514 · HTML · AGPL-3.0 · source · pushed 2026-11-28</sub>
   <sub>`git clone https://github.com/openaccountants/openaccountants.git`</sub>
 - **[ru-text](https://github.com/talkstream/ru-text)** — Russian text quality — ~1,040 rules for typography, info-style, editorial, UX writing, business correspondence
   <sub>★ 309 · Shell · MIT · npx · pushed 2026-10-25 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -79,12 +79,12 @@ Curated by **[Piebald-AI/awesome-gemini-cli](https://github.com/Piebald-AI/aweso
 - **[Supercov](https://github.com/supercorp-ai/supercov)** — Coverage, security and code quality for coding agents. Gemini CLI extension that runs the project's existing tests, measures line, branch and MC/DC coverage, and hands Gemini the untested code to test next. Install with gemini extensions install https://github.com/supercorp-ai/supercov
   <sub>★ 173 · Rust · MIT · npx · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx supercov quality`</sub>
+- **[Dex](https://github.com/exmergo/dex)** — Gemini CLI extension with three Agent Skills for analytics engineering: explore a warehouse or DuckDB file read-only (profiles, PII flags, verified joins), author dbt models and semantic layers as reviewable diffs, and detect schema drift. Install with gemini extensions install https://github.com/exmergo/dex; needs uv
+  <sub>★ 148 · Python · Apache-2.0 · npx · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>`npx skills add exmergo/dex`</sub>
 - **[LintLang](https://github.com/hermes-labs-ai/lintlang)** — Static linter and Gemini CLI extension for agent instructions, tool descriptions, and prompt configuration
   <sub>★ 147 · Python · Apache-2.0 · uv · pushed 2026-11-09 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uvx lintlang scan AGENTS.md`</sub>
-- **[Dex](https://github.com/exmergo/dex)** — Gemini CLI extension with three Agent Skills for analytics engineering: explore a warehouse or DuckDB file read-only (profiles, PII flags, verified joins), author dbt models and semantic layers as reviewable diffs, and detect schema drift. Install with gemini extensions install https://github.com/exmergo/dex; needs uv
-  <sub>★ 146 · Python · Apache-2.0 · npx · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`npx skills add exmergo/dex`</sub>
 - **[PlaceCall](https://github.com/voygr-tech/placecall)** — Gemini CLI extension (skill + remote MCP server) that places real outbound phone calls to US businesses for bookings, inquiries and quotes, and returns the outcome and transcript. Paid API. Install: gemini extensions install https://github.com/voygr-tech/placecall
   <sub>★ 122 · Shell · MIT · clone · pushed 2026-11-25</sub>
   <sub>`git clone https://github.com/voygr-tech/placecall`</sub>
@@ -272,7 +272,7 @@ Curated by **[Piebald-AI/awesome-gemini-cli](https://github.com/Piebald-AI/aweso
 ## Prompts
 
 - **[OrcaPromptVault](https://github.com/Continuum-AI-Corp/OrcaPromptVault)** — Dated archive of the system prompts and tool schemas shipped AI agents send, including the one Gemini CLI itself puts on the wire
-  <sub>★ 514 · AGPL-3.0 · clone · pushed 2026-10-01</sub>
+  <sub>★ 515 · AGPL-3.0 · clone · pushed 2026-10-01</sub>
   <sub>`git clone https://github.com/Continuum-AI-Corp/OrcaReplay`</sub>
 
 ## MCP Servers
@@ -308,7 +308,7 @@ Curated by **[Piebald-AI/awesome-gemini-cli](https://github.com/Piebald-AI/aweso
   <sub>★ 169 · Swift · MIT · brew · pushed 2026-11-27 · macOS</sub>
   <sub>`brew install --cask ateymoori/tap/oh-my-android`</sub>
 - **[npmscan](https://github.com/salemalem/npmscan-mcp-plugin)** — npm supply-chain security: checks packages for malware, known vulnerabilities, typosquats, maintainer takeovers and risky install scripts before install, and audits package.json, lockfiles, SBOMs and PR dependency changes. 23 read-only tools, no API key, no signup. Remote Streamable HTTP, bundled with 5 skills as a Gemini CLI extension. Install: gemini extensions install https://github.com/salemal
-  <sub>★ 163 · TypeScript · MIT · pipx · pushed 2026-11-27 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 164 · TypeScript · MIT · pipx · pushed 2026-11-27 · Win · WSL2? · macOS · Linux</sub>
   <sub>`pipx install --force "plugin-scanner==3.57.0"`</sub>
 - **[KubeStellar Console kc-agent](https://github.com/kubestellar/console)** — Multi-cluster Kubernetes MCP server bridging Gemini CLI to kubeconfig and Kubernetes APIs. Manage clusters, policies, and 20+ CNCF project integrations across edge and cloud. Install via brew tap kubestellar/tap &amp;&amp; brew install kc-agent
   <sub>★ 155 · TypeScript · Apache-2.0 · brew · pushed 2026-11-28 · Win? · WSL2 · macOS · Linux?</sub>
@@ -323,17 +323,17 @@ Curated by **[Piebald-AI/awesome-gemini-cli](https://github.com/Piebald-AI/aweso
   <sub>★ 101 · Rust · AGPL-3.0 · brew · pushed 2026-11-27 · Win? · WSL2 · macOS · Linux · Docker</sub>
   <sub>`brew install nika-open/tap/nika`</sub>
 - **[emem](https://github.com/Vortx-AI/emem)** — Shared, signed and content-addressed memory of the physical world that AI agents can read, cite, transfer and independently verify. 108 tools, no API key, no signup. Remote Streamable HTTP. Install: gemini extensions install https://emem.dev/gemini-extension.json
-  <sub>★ 91 · Rust · Apache-2.0 · pip · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 91 · Rust · Apache-2.0 · pip · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pip install ememdev`</sub>
 - **[LWC](https://github.com/JanYork/llm-wiki-cli)** — Local-first, source-grounded project memory for Gemini CLI and other coding agents. Provides bounded recall, citations, atomic changesets, an installable Agent Skill, and a read-only stdio MCP server (lwc serve --mcp). Apache-2.0
   <sub>★ 75 · Rust · Apache-2.0 · source · pushed 2026-11-28 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/JanYork/llm-wiki-cli.git`</sub>
+- **[SolidPing](https://github.com/fclairamb/solidping)** — Uptime and synthetic monitoring with a remote MCP server (OAuth) to create, run and diagnose checks. Works with Gemini CLI: gemini mcp add --transport http solidping https://solidping.io/api/v1/mcp
+  <sub>★ 66 · Go · AGPL-3.0 · winget · pushed 2026-11-28 · Win · WSL2? · macOS? · Linux · Docker</sub>
+  <sub>`winget install fclairamb.SolidPing`</sub>
 - **[Unreal-MCP](https://github.com/IvanMurzak/Unreal-MCP)** — Open-source MCP server connecting AI agents to Unreal Engine 5.7, editor and runtime (C++ plugin + .NET sidecar)
   <sub>★ 65 · C++ · Apache-2.0 · npm · pushed 2026-11-28 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm install -g unreal-mcp-cli # or: npx unreal-mcp-cli@latest <command>`</sub>
-- **[SolidPing](https://github.com/fclairamb/solidping)** — Uptime and synthetic monitoring with a remote MCP server (OAuth) to create, run and diagnose checks. Works with Gemini CLI: gemini mcp add --transport http solidping https://solidping.io/api/v1/mcp
-  <sub>★ 65 · Go · AGPL-3.0 · winget · pushed 2026-11-28 · Win · WSL2? · macOS? · Linux · Docker</sub>
-  <sub>`winget install fclairamb.SolidPing`</sub>
 - **[RunAPI MCP](https://github.com/runapi-ai/mcp)** — Remote MCP server for browsing model catalogs, checking pricing, and creating image, video, music, audio, and other model API tasks through RunAPI. Works with Gemini CLI: gemini mcp add --transport http runapi https://mcp.runapi.ai/mcp
   <sub>★ 58 · TypeScript · Apache-2.0 · npx · pushed 2026-11-24 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx @runapi.ai/mcp init claude`</sub>
@@ -386,7 +386,7 @@ Curated by **[Piebald-AI/awesome-gemini-cli](https://github.com/Piebald-AI/aweso
   <sub>★ 6 · MIT · source · pushed 2026-11-01</sub>
   <sub>`git clone https://github.com/foklepoint/court-rules-mcp.git`</sub>
 - **[BrewPage](https://github.com/kochetkov-ma/brewpage-openapi)** — Gemini CLI can publish HTML, Markdown, files, static sites, JSON and key-value data to BrewPage and return shareable links. Save form responses as Page data. The remote MCP at https://brewpage.app/mcp exposes 13 discoverable tools, with anonymous publishing and optional OAuth for a BrewPage profile. Install with gemini extensions install https://github.com/kochetkov-ma/brewpage-openapi
-  <sub>★ 5 · TypeScript · Apache-2.0 · source · pushed 2026-11-26 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 5 · TypeScript · Apache-2.0 · source · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/kochetkov-ma/brewpage-openapi.git`</sub>
 - **[Budna MCP](https://github.com/budna-marketplace/mcp)** — Read-only MCP server for Budna, a Swedish marketplace for new and pre-owned items: search and inspect public listings, categories, filters, seller profiles, and bid and rating summaries from Gemini CLI. 23 tools, interactive listing cards in MCP Apps clients. Local stdio, no API key, no account. MIT. Run with npx --yes @budna-marketplace/mcp
   <sub>★ 5 · Rust · MIT · psh · pushed 2026-11-19 · Win · WSL2? · macOS · Linux</sub>
@@ -971,7 +971,7 @@ Curated by **[Piebald-AI/awesome-gemini-cli](https://github.com/Piebald-AI/aweso
   <sub>★ 34.6k · TypeScript · Apache-2.0 · brew · pushed 2026-11-05 · Win · WSL2? · macOS · Linux</sub>
   <sub>`brew install aionui`</sub>
 - **[Gemini CLI Desktop](https://github.com/Piebald-AI/gemini-cli-desktop)** — Beautiful desktop and web UI that makes Gemini CLI accessible to non-terminal/mobile users while preserving all its powerful features
-  <sub>★ 521 · TypeScript · MIT · clone · pushed 2026-11-26 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 522 · TypeScript · MIT · clone · pushed 2026-11-26 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/Piebald-AI/gemini-cli-desktop`</sub>
 - **[OpenCode Mobile](https://github.com/Eslamasabry/opencode-mobile-next)** — Independent, unofficial, open-source (MIT) Android app that runs Gemini CLI, with Claude Code, Codex, Qwen Code and other agents, on the phone itself in an Ubuntu environment it installs inside the app, or connects to an agent on your computer. Approve tool requests from a notification or widget, review diffs, preview the dev server. Made by its owner with substantial AI assistance
   <sub>★ 179 · Kotlin · MIT · source · pushed 2026-11-28 · WSL2? · Linux</sub>

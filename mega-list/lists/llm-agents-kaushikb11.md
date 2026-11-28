@@ -114,7 +114,7 @@ Curated by **[kaushikb11/awesome-llm-agents](https://github.com/kaushikb11/aweso
   <sub>★ 166 · TypeScript · Apache-2.0 · source · pushed 2026-02-09 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/axar-ai/axar.git`</sub>
 - **[NarraNexus](https://github.com/NetMindAI-Open/NarraNexus)** — Builds nexuses where agent intelligence emerges
-  <sub>★ 91 · Python · Apache-2.0 · clone · pushed 2026-11-23 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 90 · Python · Apache-2.0 · clone · pushed 2026-11-23 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/NetMindAI-Open/NarraNexus.git`</sub>
 - **[ProtoLink](https://github.com/nMaroulis/protolink)** — Python agents with native A2A communication
   <sub>★ 85 · Python · MIT · pip · pushed 2026-11-07 · Win? · WSL2? · macOS? · Linux?</sub>

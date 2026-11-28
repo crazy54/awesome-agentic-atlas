@@ -2,7 +2,7 @@
 
 Image, audio, video, voice and prose agents, and the ones that play games.
 
-**33 projects** · 32 with stars to rank by · 506,162 combined stars
+**33 projects** · 32 with stars to rank by · 506,176 combined stars
 
 [← every topic](README.md) · [← back to the mega list](../README.md) · [**filter this live →**](https://aaa.jeremyfhall.com/catalog/#topic=creative-voice-media)
 
@@ -48,8 +48,8 @@ Image, audio, video, voice and prose agents, and the ones that play games.
 | 27 | **[Claude Style Patch](https://github.com/andrewroxby/claude-style-patch)**<br><sub>andrewroxby/claude-style-patch</sub> | 165 | 1 | <sub>Claude Code, Claude / Anthropic</sub> | <sub>—</sub> | `git clone https://github.com/andrewroxby/claude-style-patch.git` | by Andrew Roxby - A CLAUDE.md section that constrains Claude's prose style. It bans specific habits, including announcing a point before making it, colon-hinged sentences where th… |
 | 28 | **[bibigpt-skill](https://github.com/JimmyLv/bibigpt-skill)**<br><sub>JimmyLv/bibigpt-skill</sub> | 147 | 1 | <sub>Claude Code, Claude / Anthropic, MCP, Codex / OpenAI, Cursor</sub> | <sub>Win · WSL2? · macOS? · Linux?</sub> | `winget install BibiGPT --source winget` | AI-powered video, audio &amp; podcast summarization |
 | 29 | **[Book Factory](https://github.com/robertguss/claude-code-toolkit)**<br><sub>robertguss/claude-code-toolkit</sub> | 143 | 1 | <sub>Claude Code, Claude / Anthropic</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `git clone https://github.com/robertguss/claude-code-toolkit.git` | by Robert Guss - A comprehensive pipeline of Skills that replicates traditional publishing infrastructure for nonfiction book creation using specialized Claude skills |
-| 30 | **[oh-my-patent](https://github.com/illusionaireal/oh-my-patent)**<br><sub>illusionaireal/oh-my-patent</sub> | 122 | 1 | <sub>Claude Code, Claude / Anthropic, opencode, Codex / OpenAI</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `npm install -g oh-my-patent` | by illusionaireal - A plugin for turning technical ideas into patent disclosures |
-| 31 | **[Scientific Writing Skills](https://github.com/dvdsosa/scientific-writing-skills)**<br><sub>dvdsosa/scientific-writing-skills</sub> | 47 | 1 | <sub>Claude Code, Claude / Anthropic</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `npx skills add dvdsosa/scientific-writing-skills` | by David Sosa-Trejo - Six Agent Skills for scientific writing based on Stanford's Writing in the Sciences course: sentence-level prose editing, IMRaD manuscript structure, the wri… |
+| 30 | **[oh-my-patent](https://github.com/illusionaireal/oh-my-patent)**<br><sub>illusionaireal/oh-my-patent</sub> | 123 | 1 | <sub>Claude Code, Claude / Anthropic, opencode, Codex / OpenAI</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `npm install -g oh-my-patent` | by illusionaireal - A plugin for turning technical ideas into patent disclosures |
+| 31 | **[Scientific Writing Skills](https://github.com/dvdsosa/scientific-writing-skills)**<br><sub>dvdsosa/scientific-writing-skills</sub> | 48 | 1 | <sub>Claude Code, Claude / Anthropic</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `npx skills add dvdsosa/scientific-writing-skills` | by David Sosa-Trejo - Six Agent Skills for scientific writing based on Stanford's Writing in the Sciences course: sentence-level prose editing, IMRaD manuscript structure, the wri… |
 | 32 | **[Molecular Animation](https://github.com/AmadeusBio-ai/Molecular_Animation)**<br><sub>AmadeusBio-ai/Molecular_Animation</sub> | 7 | 1 | <sub>Claude Code, Claude / Anthropic, MCP</sub> | <sub>Win? · WSL2? · macOS? · Linux?</sub> | `git clone https://github.com/AmadeusBio-ai/Molecular_Animation.git` | by Yangyi Liu - A new-film skill, agent guide (AGENTS.md) and Python framework with which Claude Code drives Blender over MCP to turn a scientific brief and PDB or AlphaFold struc… |
 
 ## Also here, unranked (1)

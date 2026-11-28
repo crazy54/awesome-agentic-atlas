@@ -2,7 +2,7 @@
 
 Targets aider.
 
-**46 projects** · 44 with stars to rank by · 76,401 combined stars
+**46 projects** · 44 with stars to rank by · 76,404 combined stars
 
 [← every target](README.md) · [← back to the mega list](../README.md) · [**filter this live →**](https://aaa.jeremyfhall.com/catalog/#target=aider)
 

@@ -2,11 +2,11 @@
 
 Speaks the Model Context Protocol — as a server, as a client, or as a gateway between.
 
-**6,678 projects** · 5,628 with stars to rank by · 9,380,601 combined stars
+**6,685 projects** · 5,635 with stars to rank by · 9,381,690 combined stars
 
 [← every target](README.md) · [← back to the mega list](../README.md) · [**filter this live →**](https://aaa.jeremyfhall.com/catalog/#target=mcp)
 
-✨ **3 new to the atlas** in the 11/28/26 import — marked below, and [filterable on the site](https://aaa.jeremyfhall.com/catalog/#target=mcp&new=1).
+✨ **10 new to the atlas** in the 11/28/26 import — marked below, and [filterable on the site](https://aaa.jeremyfhall.com/catalog/#target=mcp&new=1).
 
 Page **8** of 8, because this list is longer than the 512 KB GitHub will render in one file. In order: [1](mcp.md) · [2](mcp-2.md) · [3](mcp-3.md) · [4](mcp-4.md) · [5](mcp-5.md) · [6](mcp-6.md) · [7](mcp-7.md) · **8**.
 
@@ -14,8 +14,20 @@ Page **8** of 8, because this list is longer than the 512 KB GitHub will render 
 
 No stars of their own to rank by — a folder inside someone else's repository, or a link GitHub no longer serves. Listed anyway, so nothing quietly disappears from a count.
 
-<sub>Projects 173–1,050 of 1,050. The rest are on this page's other parts, linked above and below.</sub>
+<sub>Projects 161–1,050 of 1,050. The rest are on this page's other parts, linked above and below.</sub>
 
+- **[bguillow-rgb/percolate-mcp](https://github.com/bguillow-rgb/percolate-mcp)** — Read-only Percolate specialty coffee database: search coffees with tasting profiles, get per-coffee brew recipes, compare coffees and get brew suggestions
+- **[bguillow-rgb/perfume-picks-mcp](https://github.com/bguillow-rgb/perfume-picks-mcp)** — Read-only Perfume Picks fragrance database: search scents with notes and accords, find dupes, compare fragrances and get wear suggestions
+- **[bguillow-rgb/pour-picks-mcp](https://github.com/bguillow-rgb/pour-picks-mcp)** — Read-only Pour Picks bourbon and whiskey database: search bottles with tasting profiles, prices and ratings, compare bottles and find cheaper alternatives
+- **[Bishop81/imagedimensions-mcp](https://github.com/Bishop81/imagedimensions-mcp)** — Audit images on a web page via the imagedimensions.com API: natural vs rendered dimensions, oversized-image detection and format breakdown
+- **[Bishop81/wpgoldmine-mcp](https://github.com/Bishop81/wpgoldmine-mcp)** — Find WordPress and WooCommerce plugin opportunities: established plugins weakened by abandonment, low ratings or poor support, via wpgoldmine.io
+- **[BlackCat-cyber-creator/x402-agent-hub-mcp](https://github.com/BlackCat-cyber-creator/x402-agent-hub-mcp)** — Pay-per-call data for agents via x402 (USDC on Base, no API key): onchain reads across 7 EVM chains (balances, tokens, tx status, proxy detection, ENS, multichain portfolio), SEC EDGAR company financ…
+- **[Blackman99/postsleuth](https://github.com/Blackman99/postsleuth)** — Postfix delivery troubleshooting: queue grouped by deferral reason, qshape, mail log stats and traces, SPF/DKIM/DMARC/PTR checks. Read-only by default; requeue/flush/delete need an opt-in flag
+- **[blockvectra/agent-quickstart](https://github.com/blockvectra/agent-quickstart)** — Source for blockvectra-docs
+- **[BloodyReginaa/Neuro-CanvasLMS](https://github.com/BloodyReginaa/Neuro-CanvasLMS)** — Read-only Canvas LMS for students, deployed to your own free Cloudflare account and usable from Claude and ChatGPT on any device: deadlines, grades and feedback, announcements, and text from lecture…
+- **[bluetieroperations-create/blackwall-mcp](https://github.com/bluetieroperations-create/blackwall-mcp)** — Risk gate that agents call before irreversible actions, returning a risk score, reversibility class, red flags and a proceed/confirm/human-required decision
+- **[BlueWaterCorp/RiskModels_API](https://github.com/BlueWaterCorp/RiskModels_API)** — US equity and portfolio risk decomposition (market, sector, subsector and stock-specific), ETF hedge ratios and point-in-time fundamentals from the RiskModels factor model. Hosted MCP with OAuth, or…
+- **[bobaba99/motionlint](https://github.com/bobaba99/motionlint)** — Lint web animations with deterministic checks on the live page (duration, easing, stagger, exits, reduced motion, hover) plus optional vision-LLM UX review
 - **[bodyegypt/lobbyvoices-mcp](https://github.com/bodyegypt/lobbyvoices-mcp)** — Tools from Lobby, an AI receptionist for small businesses: write phone scripts and IVR menus, generate ElevenLabs agent prompts and role-play calls
 - **[bosmdavid-gif/dropthehassle-skill](https://github.com/bosmdavid-gif/dropthehassle-skill)** — Official DropTheHassle source for the dropthehassle-publish skill - check that a folder is a finished static build, publish it to a free HTTPS link, hand the human the claim link and verify it is liv…
 - **[BotHireAgent/BotHireMCPServer](https://github.com/BotHireAgent/BotHireMCPServer)** — BotHire agent-to-agent hiring marketplace: search agents and skills by capability and trust score, read live demand, and settle in USDT or USDC across chains

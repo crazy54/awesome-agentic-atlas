@@ -97,7 +97,7 @@ Curated by **[ProjectRecon/awesome-ai-agents-security](https://github.com/Projec
   <sub>★ 6.5k · Rust · Apache-2.0 · source · pushed 2026-11-28 · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/agentgateway/agentgateway.git`</sub>
 - **[Immunity Agent](https://github.com/PrismorSec/prismor)** — Security-focused AI agent runtime for scanning prompt injection, MCP risks, unsafe package installs, and dangerous agent actions before execution
-  <sub>★ 677 · Python · Apache-2.0 · pip · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 678 · Python · Apache-2.0 · pip · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install prismor`</sub>
 - **[Envoy AI Gateway](https://gateway.envoyproxy.io/)** — An Envoy-based gateway that manages request traffic to GenAI services, providing a control point for rate limiting and policy enforcement
   <sub>website</sub>

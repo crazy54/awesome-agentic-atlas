@@ -2,9 +2,11 @@
 
 The Model Context Protocol ecosystem: reference and third-party servers, inspectors, gateways, transports, and the sibling agent-to-agent protocols.
 
-**5,672 projects** · 4,711 with stars to rank by · 2,624,746 combined stars
+**5,672 projects** · 4,711 with stars to rank by · 2,625,016 combined stars
 
 [← every topic](README.md) · [← back to the mega list](../README.md) · [**filter this live →**](https://aaa.jeremyfhall.com/catalog/#topic=mcp-servers)
+
+✨ **2 new to the atlas** in the 11/28/26 import — marked below, and [filterable on the site](https://aaa.jeremyfhall.com/catalog/#topic=mcp-servers&new=1).
 
 Page **7** of 7, because this list is longer than the 512 KB GitHub will render in one file. In order: [1](mcp-servers.md) · [2](mcp-servers-2.md) · [3](mcp-servers-3.md) · [4](mcp-servers-4.md) · [5](mcp-servers-5.md) · [6](mcp-servers-6.md) · **7**.
 
@@ -12,8 +14,11 @@ Page **7** of 7, because this list is longer than the 512 KB GitHub will render 
 
 No stars of their own to rank by — a folder inside someone else's repository, or a link GitHub no longer serves. Listed anyway, so nothing quietly disappears from a count.
 
-<sub>Projects 267–961 of 961. The rest are on this page's other parts, linked above and below.</sub>
+<sub>Projects 264–961 of 961. The rest are on this page's other parts, linked above and below.</sub>
 
+- **[echoloc-ai/echoloc-mcp](https://github.com/echoloc-ai/echoloc-mcp)** — Company technographics from hiring data: find companies adopting, replacing or evaluating technologies and enrich domains with firmographics and hiring signals
+- **[eddyflores100-lang/alethech](https://github.com/eddyflores100-lang/alethech)** — Verifiable Ed25519-signed agent memory chain with fail-closed verification; offline-first TF-IDF recall (zero LLM tokens at runtime), artifact audit, durable snapshots with zero secret leakage, and a…
+- **[edkearth/mcp](https://github.com/edkearth/mcp)** — EDK-1, a spatial model for the physical world: find places and areas in plain language (visible features from street imagery, permits, 311, crashes, income or flood depth), inspect any point, route a…
 - **[einiba/canyougrab-api](https://github.com/einiba/canyougrab-api/tree/main/mcp-server)** — MCP server for confidence-scored domain availability checking via CanYouGrab.it
 - **[elang2/mcp-audit-gateway](https://github.com/elang2/mcp-audit-gateway)** — Transparent MCP proxy that keeps a signed, hash-chained audit trail of agent tool calls, with YAML policy enforcement and OpenTelemetry export
 - **[elaysuu/web-research-agent-mcp](https://github.com/elaysuu/web-research-agent-mcp)** — Company profiles, site audits (SEO, performance, security headers, broken links) and page-to-JSON extraction via a hosted API; requires your own RapidAPI key
