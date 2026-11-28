@@ -29,10 +29,10 @@ Curated by **[Merit-Systems/awesome-agentic-commerce](https://github.com/Merit-S
 ## Official Resources
 
 - **[x402 Foundation GitHub repo](https://github.com/x402-foundation/x402)** — canonical spec, SDKs, issues, proposals, and reference materials
-  <sub>★ 6.8k · TypeScript · Apache-2.0 · pip · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 6.8k · TypeScript · Apache-2.0 · pip · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install x402`</sub>
 - **[Issues](https://github.com/x402-foundation/x402/issues)** — A payments protocol for the internet. Built on HTTP.
-  <sub>★ 6.8k · TypeScript · Apache-2.0 · pip · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 6.8k · TypeScript · Apache-2.0 · pip · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install x402`</sub>
 - **[Coinbase x402 development fork](https://github.com/coinbase/x402)** — A payments protocol for the internet. Built on HTTP.
   <sub>★ 185 · TypeScript · Apache-2.0 · pip · pushed 2026-11-19 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -134,19 +134,19 @@ Curated by **[Merit-Systems/awesome-agentic-commerce](https://github.com/Merit-S
   <sub>★ 1 · JavaScript · source · pushed 2026-05-05 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/umangbuilds/moltpe-agent-payments.git`</sub>
 - **[x402 TypeScript SDKs](https://github.com/x402-foundation/x402/tree/main/typescript)** — A payments protocol for the internet. Built on HTTP.
-  <sub>TypeScript · Apache-2.0 · in-repo · pushed 2026-11-27</sub>
+  <sub>TypeScript · Apache-2.0 · in-repo · pushed 2026-11-28</sub>
   <sub>`git clone https://github.com/x402-foundation/x402.git && cd x402/typescript`</sub>
 - **[x402 Python SDK](https://github.com/x402-foundation/x402/tree/main/python/x402)** — Official Python client/server, facilitator, and MCP helpers
-  <sub>TypeScript · Apache-2.0 · in-repo · pushed 2026-11-27</sub>
+  <sub>TypeScript · Apache-2.0 · in-repo · pushed 2026-11-28</sub>
   <sub>`git clone https://github.com/x402-foundation/x402.git && cd x402/python/x402`</sub>
 - **[x402 Python SDK (PyPI)](https://pypi.org/project/x402/)** — Official Python package for client, server, facilitator, and framework integrations
   <sub>website</sub>
   <sub>`https://pypi.org/project/x402/`</sub>
 - **[x402 Go SDK](https://github.com/x402-foundation/x402/tree/main/go)** — Official Go client/server, facilitator, and MCP package
-  <sub>TypeScript · Apache-2.0 · in-repo · pushed 2026-11-27</sub>
+  <sub>TypeScript · Apache-2.0 · in-repo · pushed 2026-11-28</sub>
   <sub>`git clone https://github.com/x402-foundation/x402.git && cd x402/go`</sub>
 - **[x402 Java SDK](https://github.com/x402-foundation/x402/tree/main/java)** — Official Java implementation for JVM services
-  <sub>TypeScript · Apache-2.0 · in-repo · pushed 2026-11-27</sub>
+  <sub>TypeScript · Apache-2.0 · in-repo · pushed 2026-11-28</sub>
   <sub>`git clone https://github.com/x402-foundation/x402.git && cd x402/java`</sub>
 - **[x402-analytics (NPM)](https://www.npmjs.com/package/x402-analytics)** — Analytics wrapper for x402 payments with monitoring and insights
   <sub>website</sub>
@@ -269,7 +269,7 @@ Curated by **[Merit-Systems/awesome-agentic-commerce](https://github.com/Merit-S
 ## Ecosystem
 
 - **[gold-402](https://github.com/Haustorium12/gold-402)** — Curated x402 directory by 24K Labs. 300+ handpicked entries across facilitators, SDKs, MCP servers, APIs, and tools, with editorial writeups and verified badges for production-confirmed services. Backed by a 29,000+ entry full catalog sourced from CDP Bazaar and Agentic.market
-  <sub>★ 13 · Python · source · pushed 2026-11-26 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 13 · Python · source · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Haustorium12/gold-402.git`</sub>
 - **[x402Scan](https://x402scan.com/)** — Analytics and overview of the x402 ecosystem
   <sub>website</sub>
@@ -389,6 +389,6 @@ Curated by **[Merit-Systems/awesome-agentic-commerce](https://github.com/Merit-S
 
 ---
 
-Snapshot 2026-11-27. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-11-28. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
 Filter the same data in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/). Spreadsheet edition: retired. The last copy, built 2026-10-22, stays available but is no longer updated. The website is the maintained edition. Its last workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/download/v2026.10.22/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/download/v2026.10.22/Awesome-Agentic-Atlas-LIGHT.xlsx).

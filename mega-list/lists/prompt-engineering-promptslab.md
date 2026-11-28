@@ -11,9 +11,9 @@ Curated by **[promptslab/Awesome-Prompt-Engineering](https://github.com/promptsl
 |   |   |   |
 |---|---|---|
 | <a href="https://github.com/openai/codex"><img src="https://raw.githubusercontent.com/openai/codex/main/.github/codex-cli-splash.png" width="260"></a> | <a href="https://github.com/google-gemini/gemini-cli"><img src="https://raw.githubusercontent.com/google-gemini/gemini-cli/main/docs/assets/gemini-screenshot.png" width="260"></a> | <a href="https://github.com/zed-industries/zed"><img src="https://opengraph.githubassets.com/1/zed-industries/zed" width="260"></a> |
-| **[OpenAI Codex CLI](https://github.com/openai/codex)**<br>★ 136.6k | **[Gemini CLI](https://github.com/google-gemini/gemini-cli)**<br>★ 109.2k | **[Zed](https://github.com/zed-industries/zed)**<br>★ 95.8k |
+| **[OpenAI Codex CLI](https://github.com/openai/codex)**<br>★ 136.7k | **[Gemini CLI](https://github.com/google-gemini/gemini-cli)**<br>★ 109.3k | **[Zed](https://github.com/zed-industries/zed)**<br>★ 95.9k |
 | <a href="https://github.com/OpenHands/OpenHands"><img src="https://opengraph.githubassets.com/1/OpenHands/OpenHands" width="260"></a> | <a href="https://github.com/cline/cline"><img src="https://opengraph.githubassets.com/1/cline/cline" width="260"></a> | <a href="https://github.com/aaif-goose/goose"><img src="https://opengraph.githubassets.com/1/block/goose" width="260"></a> |
-| **[OpenHands](https://github.com/OpenHands/OpenHands)**<br>★ 94.4k | **[Cline](https://github.com/cline/cline)**<br>★ 71.9k | **[Goose](https://github.com/aaif-goose/goose)**<br>★ 57.1k |
+| **[OpenHands](https://github.com/OpenHands/OpenHands)**<br>★ 94.5k | **[Cline](https://github.com/cline/cline)**<br>★ 72k | **[Goose](https://github.com/aaif-goose/goose)**<br>★ 57.1k |
 
 ## Contents
 
@@ -35,22 +35,22 @@ Curated by **[promptslab/Awesome-Prompt-Engineering](https://github.com/promptsl
 ## Vibe Coding and AI Coding Assistants
 
 - **[OpenAI Codex CLI](https://github.com/openai/codex)** — Open-source terminal coding agent from OpenAI; lightweight, local-first, with sandboxed code execution. ~68K+ ⭐
-  <sub>★ 136.6k · Rust · Apache-2.0 · npm · pushed 2026-11-27 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 136.7k · Rust · Apache-2.0 · npm · pushed 2026-11-28 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm install -g @openai/codex`</sub>
 - **[Gemini CLI](https://github.com/google-gemini/gemini-cli)** — Google's open-source terminal AI agent with 1M-token context window and Google Search grounding. ~96K+ ⭐
-  <sub>★ 109.2k · TypeScript · Apache-2.0 · npm · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 109.3k · TypeScript · Apache-2.0 · npm · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g @google/gemini-cli`</sub>
 - **[Zed](https://github.com/zed-industries/zed)** — High-performance editor in Rust with native AI features, Zeta edit prediction, and Agent Client Protocol support. ~77K+ ⭐
-  <sub>★ 95.8k · Rust · source · pushed 2026-11-27 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 95.9k · Rust · source · pushed 2026-11-28 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/zed-industries/zed.git`</sub>
 - **[OpenHands](https://github.com/OpenHands/OpenHands)** — Leading open-source platform for cloud coding agents; consistently top on SWE-bench. Formerly OpenDevin. ~69K+ ⭐
-  <sub>★ 94.4k · TypeScript · MIT · npm · pushed 2026-11-27 · Win? · WSL2 · macOS? · Linux? · Docker</sub>
+  <sub>★ 94.5k · TypeScript · MIT · npm · pushed 2026-11-28 · Win? · WSL2 · macOS? · Linux? · Docker</sub>
   <sub>`npm install -g @openhands/agent-canvas`</sub>
 - **[Cline](https://github.com/cline/cline)** — Autonomous coding agent in VS Code with human-in-the-loop approvals; file editing, terminal commands, and browser use. ~59K+ ⭐
-  <sub>★ 71.9k · TypeScript · Apache-2.0 · npm · pushed 2026-11-26 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 72k · TypeScript · Apache-2.0 · npm · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm i -g cline`</sub>
 - **[Goose](https://github.com/aaif-goose/goose)** — Extensible open-source AI agent from Block (Square/Cash App); installs, executes, edits, and tests with any LLM. ~29K+ ⭐
-  <sub>★ 57.1k · Rust · Apache-2.0 · script · pushed 2026-11-26 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 57.1k · Rust · Apache-2.0 · script · pushed 2026-11-27 · Win · WSL2? · macOS · Linux</sub>
   <sub>`curl -fsSL https://github.com/aaif-goose/goose/releases/download/stable/download_cli.sh | bash`</sub>
 - **[Aider](https://github.com/Aider-AI/aider)** — AI pair programming in terminal with deep Git integration; maps entire codebases and auto-commits changes. ~42K+ ⭐
   <sub>★ 50.3k · Python · Apache-2.0 · source · pushed 2026-05-22 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -59,13 +59,13 @@ Curated by **[promptslab/Awesome-Prompt-Engineering](https://github.com/promptsl
   <sub>★ 36.6k · TypeScript · Apache-2.0 · source · pushed 2026-11-27 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/continuedev/continue.git`</sub>
 - **[Tabby](https://github.com/TabbyML/tabby)** — Self-hosted open-source AI coding assistant (Copilot alternative); runs entirely on your infrastructure. ~25K+ ⭐
-  <sub>★ 34k · Rust · source · pushed 2026-06-30 · WSL2 · macOS · Linux · Docker</sub>
+  <sub>★ 33.9k · Rust · source · pushed 2026-06-30 · WSL2 · macOS · Linux · Docker</sub>
   <sub>`git clone https://github.com/TabbyML/tabby.git`</sub>
 - **[Qwen Code](https://github.com/QwenLM/qwen-code)** — Open-source terminal AI agent optimized for Qwen3-Coder; multi-protocol support (OpenAI/Anthropic/Gemini APIs), 1,000 free requests/day. ~21K+ ⭐
-  <sub>★ 31k · TypeScript · Apache-2.0 · psh · pushed 2026-11-27 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 31k · TypeScript · Apache-2.0 · psh · pushed 2026-11-28 · Win · WSL2? · macOS · Linux</sub>
   <sub>`irm https://qwen-code-assets.oss-cn-hangzhou.aliyuncs.com/installation/install-qwen-standalone.ps1 | iex`</sub>
 - **[Crush](https://github.com/charmbracelet/crush)** — Glamorous agentic coding agent from Charmbracelet with multi-model support, LSP integration, and beautiful terminal UI. ~9K+ ⭐
-  <sub>★ 29.2k · Go · winget · pushed 2026-11-27 · Win · WSL2 · macOS · Linux</sub>
+  <sub>★ 29.2k · Go · winget · pushed 2026-11-28 · Win · WSL2 · macOS · Linux</sub>
   <sub>`winget install charmbracelet.crush`</sub>
 - **[Void](https://github.com/voideditor/void)** — Open-source Cursor alternative (VS Code fork); any model or local hosting with change visualization. ~28K+ ⭐
   <sub>★ 28.7k · TypeScript · Apache-2.0 · source · pushed 2026-06-02 · Win · macOS</sub>
@@ -74,7 +74,7 @@ Curated by **[promptslab/Awesome-Prompt-Engineering](https://github.com/promptsl
   <sub>★ 20.9k · Python · MIT · source · pushed 2026-11-23 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/SWE-agent/SWE-agent.git`</sub>
 - **[bolt.diy](https://github.com/stackblitz-labs/bolt.diy)** — Community fork of bolt.new with extended features and broader LLM flexibility. ~12K+ ⭐
-  <sub>★ 20.1k · TypeScript · MIT · clone · pushed 2026-11-21 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 20.2k · TypeScript · MIT · clone · pushed 2026-11-21 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`git clone https://github.com/stackblitz-labs/bolt.diy.git`</sub>
 - **[Devika](https://github.com/stitionai/devika)** — Open-source agentic software engineer; breaks down instructions, researches, and writes code. Devin alternative. ~18K+ ⭐
   <sub>★ 19.5k · Python · MIT · clone · pushed 2025-09-25 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -86,7 +86,7 @@ Curated by **[promptslab/Awesome-Prompt-Engineering](https://github.com/promptsl
   <sub>★ 13.9k · Go · MIT · go · pushed 2025-09-18 · Win? · WSL2? · macOS? · Linux</sub>
   <sub>`go install github.com/opencode-ai/opencode@latest`</sub>
 - **[Open SWE](https://github.com/langchain-ai/open-swe)** — LangChain's async cloud-hosted coding agent framework built on LangGraph with Slack/Linear integration. ~8K+ ⭐
-  <sub>★ 11.3k · Python · MIT · source · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 11.3k · Python · MIT · source · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/langchain-ai/open-swe.git`</sub>
 - **[CodeGeeX](https://github.com/zai-org/CodeGeeX)** — Open-source multilingual code generation model supporting 20+ languages with VS Code and JetBrains extensions. ~11K+ ⭐
   <sub>★ 8.8k · Python · Apache-2.0 · docker · pushed 2024-08-13 · Win · WSL2? · macOS · Linux · Docker</sub>
@@ -113,7 +113,7 @@ Curated by **[promptslab/Awesome-Prompt-Engineering](https://github.com/promptsl
   <sub>★ 713 · TypeScript · MIT · source · pushed 2025-05-20 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/trypear/pearai-app.git`</sub>
 - **[Autohand Code CLI](https://github.com/autohandai/code-cli)** — Self-evolving autonomous terminal coding agent with multi-provider LLM support, 40+ tools, and modular skills system
-  <sub>★ 220 · TypeScript · Apache-2.0 · npm · pushed 2026-11-26 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 219 · TypeScript · Apache-2.0 · npm · pushed 2026-11-26 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`npm install -g autohand-cli`</sub>
 - **[Claude Code](https://docs.anthropic.com/en/docs/claude-code)** — Anthropic's agentic coding CLI; understands full codebases and executes complex multi-step tasks via natural language
   <sub>website</sub>
@@ -185,40 +185,40 @@ Curated by **[promptslab/Awesome-Prompt-Engineering](https://github.com/promptsl
 ## Agent Frameworks
 
 - **[n8n](https://github.com/n8n-io/n8n)** — Workflow automation with AI agent capabilities and 400+ integrations. ~60K+ ⭐
-  <sub>★ 212.4k · TypeScript · script · pushed 2026-11-27 · WSL2 · macOS · Linux · Docker</sub>
+  <sub>★ 212.4k · TypeScript · script · pushed 2026-11-28 · WSL2 · macOS · Linux · Docker</sub>
   <sub>`curl -fsSL https://get.n8n.io | sh`</sub>
 - **[Dify](https://github.com/langgenius/dify)** — All-in-one backend for agentic workflows with tool-using agents and RAG
-  <sub>★ 162k · Python · source · pushed 2026-11-27 · WSL2 · Linux · Docker</sub>
+  <sub>★ 162k · Python · source · pushed 2026-11-28 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/langgenius/dify.git`</sub>
 - **[Langflow](https://github.com/langflow-ai/langflow)** — Node-based visual agent builder with drag-and-drop. ~50K+ ⭐
-  <sub>★ 157k · Python · MIT · docker · pushed 2026-11-27 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 157k · Python · MIT · docker · pushed 2026-11-28 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`docker run -p 7860:7860 -e LANGFLOW_SUPERUSER_PASSWORD langflowai/langflow:latest`</sub>
 - **[LangChain / LangGraph](https://github.com/langchain-ai/langchain)** — Most widely adopted LLM app framework; LangGraph adds graph-based multi-step agent workflows. ~100K+ / ~10K+ ⭐
-  <sub>★ 150.1k · Python · MIT · source · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 150.1k · Python · MIT · source · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/langchain-ai/langchain.git`</sub>
 - **[AutoGen (AG2)](https://github.com/microsoft/autogen)** — Microsoft's multi-agent conversational framework. ~40K+ ⭐
   <sub>★ 62k · Python · CC-BY-4.0 · pip · pushed 2026-11-12 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install -U "autogen-agentchat" "autogen-ext[openai]"`</sub>
 - **[CrewAI](https://github.com/crewAIInc/crewAI)** — Role-playing AI agent orchestration with 700+ integrations. ~44K+ ⭐
-  <sub>★ 61.3k · Python · MIT · npx · pushed 2026-11-26 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 61.3k · Python · MIT · npx · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add crewaiinc/skills`</sub>
 - **[LlamaIndex](https://github.com/run-llama/llama_index)** — Data framework for RAG and agent capabilities. ~40K+ ⭐
   <sub>★ 53k · Python · MIT · pip · pushed 2026-11-26 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install llama-index-core`</sub>
 - **[Agno (formerly Phidata)](https://github.com/agno-agi/agno)** — Python agent framework with microsecond instantiation. ~20K+ ⭐
-  <sub>★ 43.3k · Python · Apache-2.0 · source · pushed 2026-11-27 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 43.3k · Python · Apache-2.0 · source · pushed 2026-11-28 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/agno-agi/agno.git`</sub>
 - **[DSPy](https://github.com/stanfordnlp/dspy)** — Stanford's framework for programming LLMs with automatic prompt/weight optimization. ~22K+ ⭐
   <sub>★ 39.3k · Python · MIT · pip · pushed 2026-11-25 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install dspy`</sub>
 - **[OpenAI Agents SDK](https://github.com/openai/openai-agents-python)** — Official agent framework with function calling, guardrails, and handoffs. ~10K+ ⭐
-  <sub>★ 30.9k · Python · MIT · pip · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 30.9k · Python · MIT · pip · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install openai-agents`</sub>
 - **[Smolagents](https://github.com/huggingface/smolagents)** — Hugging Face's minimalist code-centric agent framework (~1000 LOC). ~15K+ ⭐
   <sub>★ 30.6k · Python · Apache-2.0 · pip · pushed 2026-11-26 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install "smolagents[toolkit]"`</sub>
 - **[Mastra](https://github.com/mastra-ai/mastra)** — TypeScript AI agent framework with assistants, RAG, and observability. ~20K+ ⭐
-  <sub>★ 29.9k · TypeScript · source · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 29.9k · TypeScript · source · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/mastra-ai/mastra.git`</sub>
 - **[Semantic Kernel](https://github.com/microsoft/semantic-kernel)** — Microsoft's AI framework powering M365 Copilot; C#, Python, Java. ~24K+ ⭐
   <sub>★ 28.8k · C# · MIT · pip · pushed 2026-11-27 · Win · WSL2? · macOS · Linux</sub>
@@ -230,13 +230,13 @@ Curated by **[promptslab/Awesome-Prompt-Engineering](https://github.com/promptsl
   <sub>★ 22.4k · Python · Apache-2.0 · pip · pushed 2026-11-26 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install google-adk`</sub>
 - **[Pydantic AI](https://github.com/pydantic/pydantic-ai)** — Type-safe agent framework using Pydantic for structured validation. ~8K+ ⭐
-  <sub>★ 21.4k · Python · MIT · uv · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 21.4k · Python · MIT · uv · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uv tool install pydantic-ai-pax`</sub>
 - **[PraisonAI](https://github.com/MervinPraison/PraisonAI)** — Multi-AI Agents framework with 100+ LLM support, MCP integration, and built-in memory
-  <sub>★ 9.4k · Python · MIT · pip · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 9.4k · Python · MIT · pip · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install praisonai`</sub>
 - **[Strands Agents (AWS)](https://github.com/strands-agents/harness-sdk)** — Model-agnostic framework with deep AWS integrations
-  <sub>★ 9.3k · TypeScript · Apache-2.0 · pip · pushed 2026-11-26 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 9.3k · TypeScript · Apache-2.0 · pip · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install strands-harness`</sub>
 - **[Neurolink](https://github.com/juspay/neurolink)** — Multi-provider AI agent framework unifying 12+ providers with workflow orchestration
   <sub>★ 167 · TypeScript · MIT · npx · pushed 2026-11-26 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
@@ -263,13 +263,13 @@ Curated by **[promptslab/Awesome-Prompt-Engineering](https://github.com/promptsl
   <sub>★ 92.3k · TypeScript · npx · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y @modelcontextprotocol/server-memory`</sub>
 - **[Context7](https://github.com/upstash/context7)** — MCP server providing version-specific documentation to reduce code hallucination
-  <sub>★ 65.5k · TypeScript · MIT · source · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 65.6k · TypeScript · MIT · source · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/upstash/context7.git`</sub>
 - **[GitHub MCP Server](https://github.com/github/github-mcp-server)** — GitHub's official MCP server for repo, issue, PR, and Actions interaction. ~15K+ ⭐
   <sub>★ 34.8k · Go · MIT · source · pushed 2026-11-27 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`git clone https://github.com/github/github-mcp-server.git`</sub>
 - **[FastMCP (Python)](https://github.com/PrefectHQ/fastmcp)** — High-level Pythonic framework for building MCP servers. ~5K+ ⭐
-  <sub>★ 28.8k · Python · Apache-2.0 · source · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 28.8k · Python · Apache-2.0 · source · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/jlowin/fastmcp.git`</sub>
 - **[MCP Inspector](https://github.com/modelcontextprotocol/inspector)** — Visual testing tool for MCP server development
   <sub>★ 11.4k · TypeScript · npx · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -323,7 +323,7 @@ Curated by **[promptslab/Awesome-Prompt-Engineering](https://github.com/promptsl
   <sub>★ 6.9k · Shell · MIT · npx · pushed 2026-10-31 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add uditgoenka/autoresearch`</sub>
 - **[HKUDS/ClawTeam](https://github.com/HKUDS/ClawTeam)** — Agent swarm intelligence for autoresearch — spawns parallel GPU research directions, distributes work across agents, aggregates results
-  <sub>★ 5.5k · Python · MIT · pip · pushed 2026-05-09 · WSL2 · macOS? · Linux</sub>
+  <sub>★ 5.6k · Python · MIT · pip · pushed 2026-05-09 · WSL2 · macOS? · Linux</sub>
   <sub>`pip install clawteam`</sub>
 - **[leo-lilinxiao/codex-autoresearch](https://github.com/leo-lilinxiao/codex-autoresearch)** — Codex-native autoresearch skill with resume support, lessons across runs, optional parallel experiments, and mode-specific workflows
   <sub>★ 3.3k · Python · MIT · source · pushed 2026-11-18 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -341,7 +341,7 @@ Curated by **[promptslab/Awesome-Prompt-Engineering](https://github.com/promptsl
   <sub>★ 1.3k · Python · Apache-2.0 · script · pushed 2026-10-26 · WSL2 · macOS · Linux · Docker</sub>
   <sub>`curl -fsSL https://raw.githubusercontent.com/sentient-agi/EvoSkill/main/install.sh | bash`</sub>
 - **[peterskoett/self-improving-agent](https://github.com/pskoett/self-improving-agent)** — Alternative self-improving agent architecture with reflection and meta-learning cycles
-  <sub>★ 792 · JavaScript · npm · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 793 · JavaScript · npm · pushed 2026-10-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm i -g clawhub`</sub>
 - **[mutable-state-inc/autoresearch-at-home](https://github.com/mutable-state-inc/autoresearch-at-home)** — Collaborative fork of upstream autoresearch that adds experiment claiming, shared best-config syncing, hypothesis exchange, and swarm-style coordination across many single-GPU agents
   <sub>★ 496 · Python · source · pushed 2026-03-13 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -512,10 +512,10 @@ Curated by **[promptslab/Awesome-Prompt-Engineering](https://github.com/promptsl
 ## LLM Evaluation Tools
 
 - **[Langfuse](https://github.com/langfuse/langfuse)** — Open-source LLM observability with tracing, prompt management, and human annotation. ~7K+ ⭐
-  <sub>★ 37.9k · TypeScript · npx · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 37.9k · TypeScript · npx · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx skills add langfuse/skills --skill "langfuse"`</sub>
 - **[Opik](https://github.com/comet-ml/opik)** — Evaluate, test, and ship LLM applications across dev and production lifecycles
-  <sub>★ 23.5k · Java · Apache-2.0 · npx · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 23.5k · Java · Apache-2.0 · npx · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx add-mcp https://www.comet.com/opik/api/v1/mcp --name opik-mcp`</sub>
 - **[DeepEval](https://github.com/confident-ai/deepeval)** — Open-source evaluation framework covering RAG, agents, and conversations with CI/CD integration. ~7K+ ⭐
   <sub>★ 19.7k · Python · Apache-2.0 · pip · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -524,13 +524,13 @@ Curated by **[promptslab/Awesome-Prompt-Engineering](https://github.com/promptsl
   <sub>★ 16.4k · Python · Apache-2.0 · pip · pushed 2026-11-14 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install ragas`</sub>
 - **[Arize AI / Phoenix](https://github.com/Arize-ai/phoenix)** — Real-time LLM monitoring with drift detection and tracing
-  <sub>★ 12.5k · Python · npx · pushed 2026-11-26 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 12.5k · Python · npx · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx @arizeai/phoenix-cli setup`</sub>
 - **[TruLens](https://github.com/truera/trulens)** — Evaluating and explaining LLM apps; tracks hallucinations, relevance, groundedness
-  <sub>★ 3.7k · Python · MIT · pip · pushed 2026-11-25 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 3.7k · Python · MIT · pip · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install trulens`</sub>
 - **[InspectAI](https://github.com/UKGovernmentBEIS/inspect_ai)** — Purpose-built for evaluating agents against benchmarks (UK AISI)
-  <sub>★ 3.4k · Python · MIT · clone · pushed 2026-11-26 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 3.4k · Python · MIT · clone · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/UKGovernmentBEIS/inspect_ai.git`</sub>
 - **[EvalView](https://github.com/hidai25/eval-view)** — CLI tool for testing multi-step AI agents with YAML test cases, regression detection, and production monitoring
   <sub>★ 142 · Python · Apache-2.0 · pip · pushed 2026-11-20 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -545,10 +545,10 @@ Curated by **[promptslab/Awesome-Prompt-Engineering](https://github.com/promptsl
 ## Prompt Management and Testing
 
 - **[Promptfoo](https://github.com/promptfoo/promptfoo)** — Open-source CLI for testing, evaluating, and red-teaming LLM prompts. YAML configs, CI/CD integration, adversarial testing. ~9K+ ⭐
-  <sub>★ 27.7k · TypeScript · MIT · npm · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 27.8k · TypeScript · MIT · npm · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g promptfoo`</sub>
 - **[Agenta](https://github.com/Agenta-AI/agenta)** — Open-source LLM developer platform for prompt management, evaluation, human feedback, and deployment
-  <sub>★ 4.9k · TypeScript · source · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 4.9k · TypeScript · source · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Agenta-AI/agenta.git`</sub>
 - **[OpenPrompt](https://github.com/thunlp/OpenPrompt)** — Open-source framework for prompt-learning research
   <sub>★ 4.9k · Python · Apache-2.0 · pip · pushed 2024-07-16 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -569,7 +569,7 @@ Curated by **[promptslab/Awesome-Prompt-Engineering](https://github.com/promptsl
   <sub>★ 2.8k · TypeScript · MIT · source · pushed 2023-04-25 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/microsoft/prompt-engine.git`</sub>
 - **[PromptInject](https://github.com/agencyenterprise/PromptInject)** — Framework for quantitative analysis of LLM robustness to adversarial prompt attacks
-  <sub>★ 532 · Python · MIT · source · pushed 2026-04-27 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 533 · Python · MIT · source · pushed 2026-04-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/agencyenterprise/PromptInject.git`</sub>
 - **[LynxPrompt](https://github.com/GeiserX/LynxPrompt)** — Self-hostable platform for managing AI IDE config files (.cursorrules, CLAUDE.md, copilot-instructions.md). Web UI, REST API, CLI, and federated blueprint marketplace for 30+ AI coding assistants
   <sub>★ 60 · TypeScript · AGPL-3.0 · brew · pushed 2026-11-24 · Win · WSL2? · macOS · Linux · Docker</sub>
@@ -653,7 +653,7 @@ Curated by **[promptslab/Awesome-Prompt-Engineering](https://github.com/promptsl
 ## Other Notable Repositories
 
 - **[Awesome ChatGPT Prompts / Prompts.chat](https://github.com/f/prompts.chat)** — World's largest open-source prompt library. 1000s of prompts for all major models
-  <sub>★ 178.7k · MDX · npx · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 178.7k · MDX · npx · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx prompts.chat new my-prompt-library`</sub>
 - **[Prompt Engineering Guide (DAIR.AI)](https://github.com/dair-ai/Prompt-Engineering-Guide)** — The definitive open-source guide and resource hub. 3M+ learners. ~55K+ ⭐
   <sub>★ 80.4k · MDX · MIT · source · pushed 2026-03-11</sub>
@@ -662,10 +662,10 @@ Curated by **[promptslab/Awesome-Prompt-Engineering](https://github.com/promptsl
   <sub>★ 77.5k · Jupyter Notebook · MIT · source · pushed 2026-11-25</sub>
   <sub>`git clone https://github.com/openai/openai-cookbook.git`</sub>
 - **[Embedchain](https://github.com/mem0ai/mem0)** — Framework to create ChatGPT-like bots over your dataset
-  <sub>★ 69.5k · Python · Apache-2.0 · npm · pushed 2026-11-27 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 69.6k · Python · Apache-2.0 · npm · pushed 2026-11-27 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`npm install -g @mem0/cli # or: pip install mem0-cli`</sub>
 - **[12-Factor Agents](https://github.com/humanlayer/12-factor-agents)** — Principles for building production-grade LLM-powered software. ~17K+ ⭐
-  <sub>★ 27.4k · TypeScript · source · pushed 2025-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 27.5k · TypeScript · source · pushed 2025-09-21 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/humanlayer/12-factor-agents.git`</sub>
 - **[Context Engineering Repository](https://github.com/jasontang-ai/Context-Engineering)** — First-principles handbook for moving beyond prompt engineering to context design
   <sub>★ 9.3k · Python · MIT · source · pushed 2026-02-27 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -683,7 +683,7 @@ Curated by **[promptslab/Awesome-Prompt-Engineering](https://github.com/promptsl
   <sub>★ 183 · TypeScript · MIT · source · pushed 2026-05-23 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/daxaur/openpaw.git`</sub>
 - **[Awesome Vibe Coding](https://github.com/taskade/awesome-vibe-coding)** — Curated list of 245+ tools and resources for building software through natural language prompts
-  <sub>★ 145 · CC-BY-4.0 · npx · pushed 2026-11-19 · WSL2 · macOS · Linux</sub>
+  <sub>★ 146 · CC-BY-4.0 · npx · pushed 2026-11-19 · WSL2 · macOS · Linux</sub>
   <sub>`npx -y @taskade/mcp-server`</sub>
 - **[Think Better](https://github.com/HoangTheQuyen/think-better)** — Open-source CLI that permanently injects 10 structured decision frameworks (MECE, Issue Trees, Pre-Mortems) and 12 cognitive bias detectors into AI assistant prompts. Go, MIT
   <sub>★ 126 · Python · MIT · psh · pushed 2026-11-26 · Win · WSL2? · macOS · Linux</sub>
@@ -710,7 +710,7 @@ Curated by **[promptslab/Awesome-Prompt-Engineering](https://github.com/promptsl
   <sub>★ 1.1k · CC0-1.0 · source · pushed 2026-11-21 · Win? · macOS?</sub>
   <sub>`git clone https://github.com/WecoAI/awesome-autoresearch.git`</sub>
 - **[ai-agents-2030/awesome-deep-research-agent](https://github.com/WuizaKaseiyo/awesome-deep-research-agent)** — Curated list of deep research agent papers and systems
-  <sub>★ 641 · source · pushed 2025-09-18</sub>
+  <sub>★ 640 · source · pushed 2025-09-18</sub>
   <sub>`git clone https://github.com/ai-agents-2030/awesome-deep-research-agent.git`</sub>
 - **[HKUST-KnowComp/Awesome-LLM-Scientific-Discovery](https://github.com/HKUST-KnowComp/Awesome-LLM-Scientific-Discovery)** — EMNLP 2025 survey on LLMs in scientific discovery
   <sub>★ 445 · MIT · source · pushed 2026-07-03 · Win · WSL2? · macOS · Linux</sub>
@@ -734,6 +734,6 @@ Curated by **[promptslab/Awesome-Prompt-Engineering](https://github.com/promptsl
 
 ---
 
-Snapshot 2026-11-27. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-11-28. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
 Filter the same data in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/). Spreadsheet edition: retired. The last copy, built 2026-10-22, stays available but is no longer updated. The website is the maintained edition. Its last workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/download/v2026.10.22/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/download/v2026.10.22/Awesome-Agentic-Atlas-LIGHT.xlsx).

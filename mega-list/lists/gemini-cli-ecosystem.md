@@ -11,9 +11,9 @@ Curated by **[Piebald-AI/awesome-gemini-cli](https://github.com/Piebald-AI/aweso
 |   |   |   |
 |---|---|---|
 | <a href="https://github.com/google-gemini/gemini-cli"><img src="https://raw.githubusercontent.com/google-gemini/gemini-cli/main/docs/assets/gemini-screenshot.png" width="260"></a> | <a href="https://github.com/QwenLM/qwen-code/"><img src="https://img.alicdn.com/imgextra/i3/O1CN01l5GyhGuOPGC3XHtt_!!6000000005884-2-tps-1742-903.png" width="260"></a> | <a href="https://github.com/google-gemini/cookbook"><img src="https://opengraph.githubassets.com/1/google-gemini/cookbook" width="260"></a> |
-| **[Gemini CLI](https://github.com/google-gemini/gemini-cli)**<br>★ 109.2k | **[Qwen Code](https://github.com/QwenLM/qwen-code/)**<br>★ 31k | **[Gemini CLI cookbook](https://github.com/google-gemini/cookbook)**<br>★ 18k |
+| **[Gemini CLI](https://github.com/google-gemini/gemini-cli)**<br>★ 109.3k | **[Qwen Code](https://github.com/QwenLM/qwen-code/)**<br>★ 31k | **[Gemini CLI cookbook](https://github.com/google-gemini/cookbook)**<br>★ 18k |
 | <a href="https://github.com/google-github-actions/run-gemini-cli"><img src="https://opengraph.githubassets.com/1/google-github-actions/run-gemini-cli" width="260"></a> | <a href="https://github.com/vybestack/llxprt-code"><img src="https://opengraph.githubassets.com/1/vybestack/llxprt-code" width="260"></a> | <a href="https://github.com/heygen-com/hyperframes"><img src="https://static.heygen.ai/hyperframes-oss/docs/images/design-templates/biennale-yellow.png" width="260"></a> |
-| **[Run Gemini CLI](https://github.com/google-github-actions/run-gemini-cli)**<br>★ 2.1k | **[LLxprt Code](https://github.com/vybestack/llxprt-code)**<br>★ 703 | **[HyperFrames](https://github.com/heygen-com/hyperframes)**<br>★ 91.2k |
+| **[Run Gemini CLI](https://github.com/google-github-actions/run-gemini-cli)**<br>★ 2.1k | **[LLxprt Code](https://github.com/vybestack/llxprt-code)**<br>★ 703 | **[HyperFrames](https://github.com/heygen-com/hyperframes)**<br>★ 91.7k |
 
 ## Contents
 
@@ -35,7 +35,7 @@ Curated by **[Piebald-AI/awesome-gemini-cli](https://github.com/Piebald-AI/aweso
 ## Official
 
 - **[Gemini CLI](https://github.com/google-gemini/gemini-cli)** — The official open-source AI agent that brings the power of Gemini directly into your terminal. Features context-aware coding assistance, file manipulation, and command execution capabilities
-  <sub>★ 109.2k · TypeScript · Apache-2.0 · npm · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 109.3k · TypeScript · Apache-2.0 · npm · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g @google/gemini-cli`</sub>
 - **[Gemini CLI cookbook](https://github.com/google-gemini/cookbook)** — Official collection of examples and guides demonstrating best practices for using the Gemini API. Essential resource for developers getting started
   <sub>★ 18k · Jupyter Notebook · Apache-2.0 · source · pushed 2026-11-27</sub>
@@ -47,43 +47,43 @@ Curated by **[Piebald-AI/awesome-gemini-cli](https://github.com/Piebald-AI/aweso
 ## Forks
 
 - **[Qwen Code](https://github.com/QwenLM/qwen-code/)** — Fork by the team behind Qwen LLM. Uses Qwen instead of Gemini
-  <sub>★ 31k · TypeScript · Apache-2.0 · psh · pushed 2026-11-27 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 31k · TypeScript · Apache-2.0 · psh · pushed 2026-11-28 · Win · WSL2? · macOS · Linux</sub>
   <sub>`irm https://qwen-code-assets.oss-cn-hangzhou.aliyuncs.com/installation/install-qwen-standalone.ps1 | iex`</sub>
 - **[LLxprt Code](https://github.com/vybestack/llxprt-code)** — An open-source multi-provider (including local) fork of Gemini CLI. Use whatever LLM you want to code in your terminal
-  <sub>★ 703 · TypeScript · Apache-2.0 · npm · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 703 · TypeScript · Apache-2.0 · npm · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g @vybestack/llxprt-code`</sub>
 
 ## Commands &amp; Extensions
 
 - **[HyperFrames](https://github.com/heygen-com/hyperframes)** — Official Gemini CLI extension for HeyGen's open-source AI video editor (88K+ GitHub stars): make launch videos, explainers and motion graphics, caption your own footage and remake any video, rendered from HTML, CSS and GSAP to MP4. Install: gemini extensions install https://github.com/heygen-com/hyperframes --auto-update
-  <sub>★ 91.2k · TypeScript · Apache-2.0 · npx · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 91.7k · TypeScript · Apache-2.0 · npx · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add heygen-com/hyperframes # pick "Core Skills" in the picker`</sub>
 - **[last30days](https://github.com/mvanhorn/last30days-skill)** — Gemini CLI extension and Agent Skill that researches any topic across Reddit, X, YouTube, TikTok, Hacker News, Polymarket, GitHub and the web from the last 30 days, ranks results by real engagement (upvotes, likes, prediction-market odds), and writes one cited brief. Reddit, Hacker News, Polymarket and GitHub work with no API key. MIT. Install: gemini extensions install https://github.com/mvanhorn
-  <sub>★ 76.1k · Python · MIT · npx · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 76.5k · Python · MIT · npx · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add mvanhorn/last30days-skill -g`</sub>
 - **[AIHawk](https://github.com/feder-cr/Jobs_Applier_AI_Agent)** — Gives Gemini CLI a real Firefox to drive from plain-English instructions: opens pages, clicks, types, reads and screenshots through the real pointer and keyboard. Open source, MIT. Install via gemini extensions install https://github.com/feder-cr/AIHawk
   <sub>★ 32.7k · Python · MIT · psh · pushed 2026-11-24 · Win · WSL2? · macOS? · Linux?</sub>
   <sub>`irm https://raw.githubusercontent.com/feder-cr/Jobs_Applier_AI_Agent/main/run.ps1 | iex`</sub>
 - **[brooks-lint](https://github.com/hyhmrright/brooks-lint)** — AI code reviews grounded in six classic engineering books. Diagnoses decay risks with structured findings (Symptom → Source → Consequence → Remedy)
-  <sub>★ 1.6k · HTML · MIT · npx · pushed 2026-11-26 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 1.6k · HTML · MIT · npx · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx brooks-lint@latest install codex`</sub>
 - **[Chisle](https://github.com/JayPokale/Chisle)** — Gemini CLI extension whose GEMINI.md makes answers shorter without dropping decisive facts: no filler or hedging, the smallest code that works (reuse, stdlib and installed dependencies before new code), and reading less (grep before opening files, sliced reads). Benchmarks with raw transcripts are in the repo. npx chisle mcp wrap also trims oversized MCP tool output in Gemini CLI. Install with gem
   <sub>★ 1.3k · JavaScript · MIT · psh · pushed 2026-11-27 · Win</sub>
   <sub>`irm https://raw.githubusercontent.com/JayPokale/Chisle/main/install.ps1 | iex`</sub>
 - **[OpenAccountants](https://github.com/openaccountants/openaccountants)** — 371 tax classification skills across 134 countries. Classify bank statement transactions into VAT/GST, income tax, and social contribution categories with conservative defaults
-  <sub>★ 512 · HTML · AGPL-3.0 · source · pushed 2026-11-27</sub>
+  <sub>★ 513 · HTML · AGPL-3.0 · source · pushed 2026-11-28</sub>
   <sub>`git clone https://github.com/openaccountants/openaccountants.git`</sub>
 - **[ru-text](https://github.com/talkstream/ru-text)** — Russian text quality — ~1,040 rules for typography, info-style, editorial, UX writing, business correspondence
-  <sub>★ 308 · Shell · MIT · npx · pushed 2026-10-25 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 309 · Shell · MIT · npx · pushed 2026-10-25 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add talkstream/ru-text`</sub>
 - **[Supercov](https://github.com/supercorp-ai/supercov)** — Coverage, security and code quality for coding agents. Gemini CLI extension that runs the project's existing tests, measures line, branch and MC/DC coverage, and hands Gemini the untested code to test next. Install with gemini extensions install https://github.com/supercorp-ai/supercov
-  <sub>★ 173 · Rust · MIT · npx · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 173 · Rust · MIT · npx · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx supercov quality`</sub>
 - **[LintLang](https://github.com/hermes-labs-ai/lintlang)** — Static linter and Gemini CLI extension for agent instructions, tool descriptions, and prompt configuration
   <sub>★ 147 · Python · Apache-2.0 · uv · pushed 2026-11-09 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uvx lintlang scan AGENTS.md`</sub>
 - **[Dex](https://github.com/exmergo/dex)** — Gemini CLI extension with three Agent Skills for analytics engineering: explore a warehouse or DuckDB file read-only (profiles, PII flags, verified joins), author dbt models and semantic layers as reviewable diffs, and detect schema drift. Install with gemini extensions install https://github.com/exmergo/dex; needs uv
-  <sub>★ 145 · Python · Apache-2.0 · npx · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 146 · Python · Apache-2.0 · npx · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add exmergo/dex`</sub>
 - **[PlaceCall](https://github.com/voygr-tech/placecall)** — Gemini CLI extension (skill + remote MCP server) that places real outbound phone calls to US businesses for bookings, inquiries and quotes, and returns the outcome and transcript. Paid API. Install: gemini extensions install https://github.com/voygr-tech/placecall
   <sub>★ 122 · Shell · MIT · clone · pushed 2026-11-25</sub>
@@ -92,13 +92,13 @@ Curated by **[Piebald-AI/awesome-gemini-cli](https://github.com/Piebald-AI/aweso
   <sub>★ 109 · Python · MIT · pip · pushed 2026-11-23 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install assay-ui`</sub>
 - **[wiki](https://github.com/plasma-ai/wiki)** — Indexed Markdown knowledge bases with a CLI and installable Agent Skill. wiki install writes the skill to ~/.agents/skills, which Gemini CLI discovers
-  <sub>★ 108 · Python · Apache-2.0 · pip · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 108 · Python · Apache-2.0 · pip · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install plasma-wiki`</sub>
 - **[Mobbin](https://github.com/mobbin/skills)** — Gemini CLI extension that gives Gemini 600,000+ real app screens, flows and website sections from Mobbin as UI references, plus skills to search them and redesign a screen from patterns real apps ship, in your own design system. Remote MCP https://api.mobbin.com/mcp with OAuth sign-in (Pro, Team or Enterprise plan). Install: gemini extensions install https://github.com/mobbin/skills, then /mcp aut
-  <sub>★ 87 · HTML · MIT · npx · pushed 2026-11-26 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 88 · HTML · MIT · npx · pushed 2026-11-26 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add mobbin/skills`</sub>
 - **[iOS Agent Skill](https://github.com/Nagarjuna2997/ios-agent-skill)** — Gemini CLI extension with Swift development guidance, read-only code review tools, and local Apple source/reference retrieval
-  <sub>★ 42 · HTML · MIT · source · pushed 2026-11-26 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 43 · HTML · MIT · source · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Nagarjuna2997/ios-agent-skill.git`</sub>
 - **[UI Verify](https://github.com/uiverify/uiverify)** — Visual testing for coding agents: your agent sees every UI change it makes, so visual bugs never reach production. Gemini CLI extension with 9 Agent Skills (set up visual regression tests for Storybook, Playwright and Vitest, keep captures deterministic, triage a build's changes) and the hosted UI Verify MCP server (15 tools) that shows the agent each change as a before and after against the basel
   <sub>★ 40 · TypeScript · MIT · npx · pushed 2026-11-20 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -110,10 +110,10 @@ Curated by **[Piebald-AI/awesome-gemini-cli](https://github.com/Piebald-AI/aweso
   <sub>★ 27 · Python · MIT · npx · pushed 2026-11-18 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add ysskrishna/ai-agent-skills`</sub>
 - **[xberg-io plugins](https://github.com/xberg-io/plugins)** — A suite of Gemini CLI extensions from Kreuzberg, Inc.: document extraction (xberg — 97+ formats with OCR), web crawling (crawlberg), HTML→Markdown, a universal LLM client for 143 providers (liter-llm), and code intelligence for 300+ languages (tree-sitter-language-pack). Install via gemini extensions install
-  <sub>★ 25 · Python · MIT · brew · pushed 2026-11-26 · macOS</sub>
+  <sub>★ 25 · Python · MIT · brew · pushed 2026-11-27 · macOS</sub>
   <sub>`brew install xberg-io/tap/<tool>`</sub>
 - **[Telegram Bot UI](https://github.com/hlibsuslov/telegram-bot-ui)** — Agent Skill that runs in Gemini CLI (from ~/.agents/skills/ or ~/.gemini/skills/) and other agents. Makes Telegram bots look and feel like real products: messages, keyboards, buttons, navigation, streaming AI replies with Stop, HTML widgets and premium emoji; also audits an existing bot's interface. Ships an offline Bot API catalog and is updated with every new Bot API release. Install with python
-  <sub>★ 21 · Python · MIT · clone · pushed 2026-11-26 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 22 · Python · MIT · clone · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/hlibsuslov/telegram-bot-ui.git`</sub>
 - **[Recommerce](https://github.com/budna-marketplace/recommerce)** — Agent Skills (SKILL.md) for new and pre-owned purchases: compare listings, assemble kits, inspect items, plan collection, weigh keep vs. repair vs. replace, and recheck before committing. Read-only, no API key, never contacts sellers or buys. MIT. Install with npx skills add budna-marketplace/recommerce -y -a gemini-cli
   <sub>★ 17 · TypeScript · MIT · npx · pushed 2026-11-09 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -125,10 +125,10 @@ Curated by **[Piebald-AI/awesome-gemini-cli](https://github.com/Piebald-AI/aweso
   <sub>★ 16 · TypeScript · MIT · npm · pushed 2026-11-17 · WSL2 · macOS? · Linux</sub>
   <sub>`npm i -g dejavu-gates`</sub>
 - **[figma-maxxing](https://github.com/thiagoxikota/figma-maxxing)** — Gemini CLI extension with 8 skills for agents editing real Figma files: Plugin API gotchas, checks before and after every write, comments to verified fixes, and a handoff gate. Built on figma-console-mcp; 3 of the checks also ran once on Figma's official MCP server. MIT. Install via gemini extensions install https://github.com/thiagoxikota/figma-maxxing
-  <sub>★ 13 · Markdown · MIT · npx · pushed 2026-11-26 · macOS</sub>
+  <sub>★ 13 · Markdown · MIT · npx · pushed 2026-11-27 · macOS</sub>
   <sub>`npx skills add thiagoxikota/figma-maxxing`</sub>
 - **[OsmO Phone Calls](https://github.com/getosmo/osmo-ai-plugins)** — Gemini CLI extension (GEMINI.md context + the remote MCP server https://api.getosmo.app/mcp) that has OsmO's voice AI phone businesses or helplines after you confirm, and returns the summary and transcript. OAuth sign-in with a phone number, no API key. 50 free credits for new users in the US, Canada, UK and Australia; paid after. With free credits, OsmO calls businesses and toll-free numbers; cal
-  <sub>★ 11 · MIT · source · pushed 2026-11-21</sub>
+  <sub>★ 11 · MIT · source · pushed 2026-11-27</sub>
   <sub>`git clone https://github.com/getosmo/osmo-ai-plugins.git`</sub>
 - **[Clera](https://github.com/getclera/mcp)** — Gemini CLI extension for hiring: search 210,000+ vetted startup candidates, review Clera's picks for your open roles and request intros through Clera's hosted OAuth MCP server
   <sub>★ 10 · MIT · npx · pushed 2026-11-21 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -137,8 +137,8 @@ Curated by **[Piebald-AI/awesome-gemini-cli](https://github.com/Piebald-AI/aweso
   <sub>★ 10 · Python · MIT · npx · pushed 2026-10-25 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add MohammadHijjawi97/since-cutoff`</sub>
 - **[Hermoso](https://github.com/hermoso-ai/hermoso)** — Gemini CLI extension for marketing: research competitors' ads in the Meta, Google and LinkedIn ad libraries, generate image, video and UGC avatar ads, post and schedule to your own social channels, and manage Meta Ads, Google Ads and TikTok Ads campaigns, through skills that drive the hermoso CLI. Install: gemini extensions install https://github.com/hermoso-ai/hermoso
-  <sub>★ 10 · JavaScript · MIT · npm · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`npm install -g hermoso@0.1.688 # once`</sub>
+  <sub>★ 10 · JavaScript · MIT · npm · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>`npm install -g hermoso@0.1.689 # once`</sub>
 - **[Hermeneutic](https://github.com/hermes-labs-ai/hermeneutic)** — Gemini CLI extension that reviews final-response wording for completion and certainty claims, then requests at most one evidence-focused revision through an AfterAgent hook. Runs the deterministic check locally
   <sub>★ 9 · Python · Apache-2.0 · source · pushed 2026-11-25 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/hermes-labs-ai/hermeneutic.git`</sub>
@@ -181,11 +181,14 @@ Curated by **[Piebald-AI/awesome-gemini-cli](https://github.com/Piebald-AI/aweso
 - **[Gemini Safety Net](https://github.com/kenryu42/gemini-safety-net)** — Gemini CLI extension that runs cc-safety-net as a BeforeTool hook. It blocks destructive Git and filesystem commands, and reads of secrets such as SSH keys and .env files, before Gemini runs the tool call. It parses the command, so wrapped forms such as bash -c are also checked. It is not a sandbox. MIT. Install with gemini extensions install https://github.com/kenryu42/gemini-safety-net
   <sub>★ 3 · JavaScript · MIT · npx · pushed 2026-09-29 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y cc-safety-net hook install --kimi-cli`</sub>
+- **[idea-to-motion](https://github.com/georgesmomo/idea-to-motion)** — Agent Skill that runs in Gemini CLI and other agents (npx skills add georgesmomo/idea-to-motion). Turns any idea into a motion-design video (MP4) with procedural music, synthesised sound effects and an optional local voice-over with captions; asks up to 3 questions only when the brief is incomplete. 14 styles, rendered locally with HyperFrames, no API key.Frames
+  <sub>★ 3 · JavaScript · MIT · npx · pushed 2026-11-09 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>`npx skills add georgesmomo/idea-to-motion`</sub>
 - **[AI Agent Templates](https://github.com/workspace-templates/ai-agent-templates)** — Hundreds of MIT-licensed skills, subagents, custom commands, MCP setups and GEMINI.md rules in Gemini CLI's own file layout (500 templates in all, also for Claude Code, Codex, Cursor and Copilot), installable with npx workspacetemplates add --tool gemini-cli
   <sub>★ 3 · JavaScript · MIT · npx · pushed 2026-11-20 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx workspacetemplates add pull-request-reviewer`</sub>
 - **[Kling AI China Plugin](https://github.com/klingai-tech/claude-plugin-cn)** — Official Gemini CLI extension for Kling AI's China OAuth MCP endpoint (https://klingai.com/mcp/plugin), with image and video generation, Elements, and task status. Kling 4.0 supports native 4K video and optional 10-bit HDR at 1080p or 4K when the account's live MCP tools expose those settings; HDR may incur additional usage charges (official details). Generation uses China Kling credits. Install:
-  <sub>★ 3 · npm · pushed 2026-11-26 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 3 · npm · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm i -g @klingai/cli-cn --registry=https://registry.npmjs.org`</sub>
 - **[Punchcard](https://github.com/Maksim-Burtsev/punchcard)** — Architecture-level code review grounded in thirty engineering books distilled into 78 principles. Three independent passes over a working tree, branch or PR, merged into one verdict; every blocker demonstrated by running the code. Install with npx skills add Maksim-Burtsev/punchcard -a gemini-cli
   <sub>★ 2 · HTML · MIT · npx · pushed 2026-10-19 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -208,14 +211,11 @@ Curated by **[Piebald-AI/awesome-gemini-cli](https://github.com/Piebald-AI/aweso
 - **[tech-to-motion](https://github.com/georgesmomo/tech-to-motion)** — Agent Skill that runs in Gemini CLI and other agents (npx skills add georgesmomo/tech-to-motion). Turns a docker-compose, Kubernetes manifests, Terraform, a CI workflow or a postmortem into a motion-design explainer video with animated architecture diagrams and synthesised sound, rendered locally with Hyper
   <sub>★ 2 · JavaScript · MIT · npx · pushed 2026-11-09 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx skills add georgesmomo/tech-to-motion`</sub>
-- **[idea-to-motion](https://github.com/georgesmomo/idea-to-motion)** — Agent Skill that runs in Gemini CLI and other agents (npx skills add georgesmomo/idea-to-motion). Turns any idea into a motion-design video (MP4) with procedural music, synthesised sound effects and an optional local voice-over with captions; asks up to 3 questions only when the brief is incomplete. 14 styles, rendered locally with HyperFrames, no API key.Frames
-  <sub>★ 2 · JavaScript · MIT · npx · pushed 2026-11-09 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
-  <sub>`npx skills add georgesmomo/idea-to-motion`</sub>
 - **[Publora](https://github.com/publora-team/gemini-cli-publora)** — Gemini CLI extension that schedules and publishes social media posts to LinkedIn, X, Instagram, Threads, TikTok, YouTube, Facebook, Bluesky, Mastodon and Telegram through the hosted Publora MCP server, with browser sign-in. Install: gemini extensions install https://github.com/publora-team/gemini-cli-publora
   <sub>★ 2 · MIT · source · pushed 2026-11-11</sub>
   <sub>`git clone https://github.com/publora-team/gemini-cli-publora.git`</sub>
 - **[Bravos](https://github.com/Bugb-Technologies/bravos-plugins)** — Gemini CLI extension (14 skills, the GuardLink MCP server and a GEMINI.md context file) for continuous threat modeling as code that proves the threats: built on GuardLink, it drives Gemini through the threat model, code graph, SAST and authorized pentests (cert-x-gen, against targets you own, loopback by default) that show which exposures are exploitable, then gates PRs and keeps a retest per fix.
-  <sub>★ 2 · JavaScript · npm · pushed 2026-11-07 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 2 · JavaScript · npm · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g @bugb-technologies/bravos`</sub>
 - **[Preview Lab](https://github.com/dbalas/preview-lab)** — Gemini CLI extension with an Agent Skill for reviewing UI changes. The agent screenshots the screens it changed with the installed Chrome and opens them in a local review page, where you approve each one or mark areas to change. The feedback goes back to the session as short markdown. Install: gemini extensions install https://github.com/dbalas/preview-lab
   <sub>★ 2 · JavaScript · MIT · npx · pushed 2026-11-20 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -245,7 +245,7 @@ Curated by **[Piebald-AI/awesome-gemini-cli](https://github.com/Piebald-AI/aweso
   <sub>★ 1 · JavaScript · MIT · npx · pushed 2026-11-20 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add moonetix/revenue-skills`</sub>
 - **[Wiro AI](https://github.com/wiroai/Wiro-Plugin)** — Gemini CLI extension for the hosted Wiro AI MCP server (https://mcp.wiro.ai/v1): run 1,000+ image, video, audio and LLM models, build and run workflows, and deploy and message AI agents from Gemini CLI. Ships five Agent Skills, including project media assets (images, icons, short videos, voice-overs and 3D models placed where the framework expects them) and realtime voice. Paid runs bill your Wiro
-  <sub>★ 1 · JavaScript · MIT · npx · pushed 2026-11-26 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 1 · JavaScript · MIT · npx · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add wiroai/Wiro-Plugin --skill wiro-ai --skill wiro-realtime-voice --skill wiro-workflows --skill wiro-agents --skill wiro-media-assets`</sub>
 - **[WaveSpeedAI](https://github.com/WaveSpeedAI/wavespeed-gemini-extension)** — Gemini CLI extension with an Agent Skill that uses the open-source wavespeed CLI to search WaveSpeedAI image, video, audio and 3D generation models, read their input schemas and run them, including local file uploads. Install with gemini extensions install https://github.com/WaveSpeedAI/wavespeed-gemini-extension
   <sub>★ 1 · MIT · npm · pushed 2026-11-05 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -260,7 +260,7 @@ Curated by **[Piebald-AI/awesome-gemini-cli](https://github.com/Piebald-AI/aweso
   <sub>source</sub>
   <sub>`git clone https://github.com/Quinnod345/ponder.git`</sub>
 - **[Kraft Lite](https://github.com/itsOmidKarami/kraft/tree/main/plugins/kraft-lite)** — Gemini CLI extension (also a Claude Code plugin) that walks a Kraft chain from spec to pull request inside one session: steps run in order from the chain file, it stops at each gate for a person's answer, and it caps its fix loops. No server; install from a clone with gemini extensions install /plugins/kraft-lite. Apache-2.0
-  <sub>Python · Apache-2.0 · in-repo · pushed 2026-11-26</sub>
+  <sub>Python · Apache-2.0 · in-repo · pushed 2026-11-27</sub>
   <sub>`git clone https://github.com/itsOmidKarami/kraft.git && cd kraft/plugins/kraft-lite`</sub>
 - **[Dopamine Talk](https://github.com/AnnenkovLabs/dopamine-talk)** — Agent Skills pack (dopamine-talk, dopamine-changelog, dopamine-readme) and a marker-managed GEMINI.md rules block that installs into Gemini CLI (~/.gemini/skills/ and ~/.gemini/GEMINI.md) and 20+ other coding agents without touching existing instructions. Cuts file-path narration, trailing hedging disclaimers, boilerplate padding, and unasked critic-gate suggestions. Ships separate native English
   <sub>psh · Win · WSL2 · macOS? · Linux?</sub>
@@ -272,49 +272,49 @@ Curated by **[Piebald-AI/awesome-gemini-cli](https://github.com/Piebald-AI/aweso
 ## Prompts
 
 - **[OrcaPromptVault](https://github.com/Continuum-AI-Corp/OrcaPromptVault)** — Dated archive of the system prompts and tool schemas shipped AI agents send, including the one Gemini CLI itself puts on the wire
-  <sub>★ 414 · AGPL-3.0 · clone · pushed 2026-10-01</sub>
+  <sub>★ 514 · AGPL-3.0 · clone · pushed 2026-10-01</sub>
   <sub>`git clone https://github.com/Continuum-AI-Corp/OrcaReplay`</sub>
 
 ## MCP Servers
 
 - **[Unity-MCP](https://github.com/IvanMurzak/Unity-MCP)** — Open-source MCP server connecting AI agents (including Gemini CLI) to the Unity Editor and runtime, with 100+ built-in tools
-  <sub>★ 4.7k · C# · Apache-2.0 · npm · pushed 2026-11-24 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 4.7k · C# · Apache-2.0 · npm · pushed 2026-11-28 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm install -g unity-mcp-cli`</sub>
 - **[deja-vu](https://github.com/vshulcz/deja-vu)** — Local memory over the session files Gemini CLI and 19 other agents already write to disk, so a new session can search what you did before — including the months before you installed it. MCP tools plus auto-recall on every prompt; one Go binary, no network calls, MIT. Install: deja install gemini-auto
   <sub>★ 1.7k · Go · MIT · winget · pushed 2026-11-27 · Win · WSL2? · macOS · Linux</sub>
   <sub>`winget install vshulcz.deja-vu`</sub>
 - **[Agent QA](https://github.com/vostride/agent-qa)** — Source-available (FSL-1.1-ALv2) QA agent for natural-language web and mobile tests. Run agent-qa mcp for authoring, execution, artifacts, and failure triage; dashboard-backed tools need a running dashboard and dashboardUrl. Model and infrastructure costs are separate
-  <sub>★ 824 · TypeScript · npx · pushed 2026-11-24 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 827 · TypeScript · npx · pushed 2026-11-24 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx agent-qa init`</sub>
 - **[Vestige](https://github.com/samvallad33/vestige)** — Memory system for coding agents: backfill ranks earlier records as candidate causes of a fresh failure even when they share no vocabulary with it, the composed graph records which memories were used together and surfaces never-tried combinations, retrieval decays on an FSRS-6 schedule, and receipts fail closed after compaction. Single Rust binary, local only. Install: gemini extensions install htt
-  <sub>★ 664 · Rust · AGPL-3.0 · npx · pushed 2026-11-26 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 664 · Rust · AGPL-3.0 · npx · pushed 2026-11-28 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npx @vestige/init`</sub>
 - **[Coding Tools MCP](https://github.com/mybolide/coding-tools-mcp)** — Desktop MCP workspace for coding agents: file edits, command execution, Git status and resumable history sessions behind one local stdio interface, so Gemini CLI gets project scaffolding and code search without four separate servers. Apache-2.0, official MCP Registry io.github.mybolide/coding-tools-mcp
   <sub>★ 439 · Rust · source · pushed 2026-10-28 · Win · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/mybolide/coding-tools-mcp.git`</sub>
 - **[Godot-MCP](https://github.com/IvanMurzak/Godot-MCP)** — Open-source MCP server connecting AI agents to the Godot Editor and runtime (Godot 4.x, C#)
-  <sub>★ 388 · C# · Apache-2.0 · npm · pushed 2026-11-25 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 390 · C# · Apache-2.0 · npm · pushed 2026-11-28 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm install -g godot-cli`</sub>
 - **[squirrelscan](https://github.com/squirrelscan/squirrelscan)** — Website audit MCP server for coding agents: run audits, read reports, and fix findings from Gemini CLI or any MCP client. 260+ rules across SEO, performance, security, accessibility, and agent experience, with fixes mapped to source. MIT CLI with a local stdio server (squirrel mcp) or hosted Remote MCP with OAuth: gemini mcp add --transport http squirrelscan https://mcp.squirrelscan.com/mcp
-  <sub>★ 338 · TypeScript · MIT · npm · pushed 2026-11-27 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 339 · TypeScript · MIT · npm · pushed 2026-11-28 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm install -g squirrelscan`</sub>
 - **[ClickHouse Loom](https://github.com/ClickHouse/loom)** — Shared long-term memory, document search and a code index for Gemini CLI through a self-hosted Loom MCP server. Install the release-candidate extension: gemini extensions install https://github.com/ClickHouse/loom --ref v1.3.0-rc.1
-  <sub>★ 244 · Python · Apache-2.0 · source · pushed 2026-11-27 · Win? · WSL2 · Linux · Docker</sub>
+  <sub>★ 248 · Python · Apache-2.0 · source · pushed 2026-11-28 · Win? · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/ClickHouse/loom.git`</sub>
 - **[Xquik MCP](https://github.com/Xquik-dev/x-twitter-scraper)** — X/Twitter data MCP server with 76 REST API endpoints, 20 extraction tools, account monitoring, and giveaway draws. Works with any MCP client including Gemini CLI
   <sub>★ 229 · TypeScript · MIT · npx · pushed 2026-11-25 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`bunx skills@1.5.3 add Xquik-dev/x-twitter-scraper`</sub>
 - **[Oh My Android](https://github.com/ateymoori/oh-my-android)** — MCP server that lets Gemini CLI see and drive the Android Emulator on macOS: screenshots, UI tree in dp, tap/type, dark mode, RTL, font scale, logcat. Free, MIT, native macOS app (macOS 26+, Apple silicon) with a built-in stdio server. Install: gemini mcp add --scope user oh-my-android ohmyandroid-mcp
-  <sub>★ 169 · Swift · MIT · brew · pushed 2026-11-26 · macOS</sub>
+  <sub>★ 169 · Swift · MIT · brew · pushed 2026-11-27 · macOS</sub>
   <sub>`brew install --cask ateymoori/tap/oh-my-android`</sub>
 - **[npmscan](https://github.com/salemalem/npmscan-mcp-plugin)** — npm supply-chain security: checks packages for malware, known vulnerabilities, typosquats, maintainer takeovers and risky install scripts before install, and audits package.json, lockfiles, SBOMs and PR dependency changes. 23 read-only tools, no API key, no signup. Remote Streamable HTTP, bundled with 5 skills as a Gemini CLI extension. Install: gemini extensions install https://github.com/salemal
-  <sub>★ 164 · TypeScript · MIT · pipx · pushed 2026-11-15 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 163 · TypeScript · MIT · pipx · pushed 2026-11-27 · Win · WSL2? · macOS · Linux</sub>
   <sub>`pipx install --force "plugin-scanner==3.57.0"`</sub>
 - **[KubeStellar Console kc-agent](https://github.com/kubestellar/console)** — Multi-cluster Kubernetes MCP server bridging Gemini CLI to kubeconfig and Kubernetes APIs. Manage clusters, policies, and 20+ CNCF project integrations across edge and cloud. Install via brew tap kubestellar/tap &amp;&amp; brew install kc-agent
-  <sub>★ 155 · TypeScript · Apache-2.0 · brew · pushed 2026-11-27 · Win? · WSL2 · macOS · Linux?</sub>
+  <sub>★ 155 · TypeScript · Apache-2.0 · brew · pushed 2026-11-28 · Win? · WSL2 · macOS · Linux?</sub>
   <sub>`brew tap kubestellar/tap`</sub>
 - **[Tapetide MCP](https://github.com/Tapetide-hq/nse-bse-indian-stock-market-data-mcp)** — Indian stock market data for Gemini CLI: quotes, quarterly financials, shareholding, a 326-ratio screener, FII/DII flows, option chains and company filings for about 8,200 NSE and BSE stocks. Remote Streamable HTTP with OAuth or a free personal token, or local stdio via npx -y tapetide-mcp; free plan available. MIT. Install: gemini extensions install https://github.com/Tapetide-hq/nse-bse-indian-s
-  <sub>★ 152 · TypeScript · MIT · source · pushed 2026-11-25 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 153 · TypeScript · MIT · source · pushed 2026-11-25 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Tapetide-hq/nse-bse-indian-stock-market-data-mcp.git`</sub>
 - **[Aria Icons](https://github.com/LeulAria/Aria-Icons)** — MCP server with 12 tools for searching ~1.4M open-source SVG icons and adding them as SVG or React/Vue/Svelte/Solid components; remote endpoint needs no auth. Add with gemini mcp add --transport http aria-icons https://icons.leularia.com/api/mcp
   <sub>★ 111 · TypeScript · MIT · npm · pushed 2026-10-17 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
@@ -326,13 +326,13 @@ Curated by **[Piebald-AI/awesome-gemini-cli](https://github.com/Piebald-AI/aweso
   <sub>★ 91 · Rust · Apache-2.0 · pip · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pip install ememdev`</sub>
 - **[LWC](https://github.com/JanYork/llm-wiki-cli)** — Local-first, source-grounded project memory for Gemini CLI and other coding agents. Provides bounded recall, citations, atomic changesets, an installable Agent Skill, and a read-only stdio MCP server (lwc serve --mcp). Apache-2.0
-  <sub>★ 75 · Rust · Apache-2.0 · source · pushed 2026-10-07 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 75 · Rust · Apache-2.0 · source · pushed 2026-11-28 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/JanYork/llm-wiki-cli.git`</sub>
 - **[Unreal-MCP](https://github.com/IvanMurzak/Unreal-MCP)** — Open-source MCP server connecting AI agents to Unreal Engine 5.7, editor and runtime (C++ plugin + .NET sidecar)
-  <sub>★ 64 · C++ · Apache-2.0 · npm · pushed 2026-11-27 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 65 · C++ · Apache-2.0 · npm · pushed 2026-11-28 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm install -g unreal-mcp-cli # or: npx unreal-mcp-cli@latest <command>`</sub>
 - **[SolidPing](https://github.com/fclairamb/solidping)** — Uptime and synthetic monitoring with a remote MCP server (OAuth) to create, run and diagnose checks. Works with Gemini CLI: gemini mcp add --transport http solidping https://solidping.io/api/v1/mcp
-  <sub>★ 63 · Go · AGPL-3.0 · winget · pushed 2026-11-27 · Win · WSL2? · macOS? · Linux · Docker</sub>
+  <sub>★ 65 · Go · AGPL-3.0 · winget · pushed 2026-11-28 · Win · WSL2? · macOS? · Linux · Docker</sub>
   <sub>`winget install fclairamb.SolidPing`</sub>
 - **[RunAPI MCP](https://github.com/runapi-ai/mcp)** — Remote MCP server for browsing model catalogs, checking pricing, and creating image, video, music, audio, and other model API tasks through RunAPI. Works with Gemini CLI: gemini mcp add --transport http runapi https://mcp.runapi.ai/mcp
   <sub>★ 58 · TypeScript · Apache-2.0 · npx · pushed 2026-11-24 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -344,7 +344,7 @@ Curated by **[Piebald-AI/awesome-gemini-cli](https://github.com/Piebald-AI/aweso
   <sub>★ 27 · Python · MIT · uv · pushed 2026-11-23 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uv tool install --upgrade selvedge`</sub>
 - **[LLMSlim](https://github.com/Thanatos9404/llmslim)** — Long-term memory for Gemini CLI and other MCP clients over a local stdio MCP server. Five tools (remember, recall, list_memories, forget, fit_context): messages are stored word for word in local SQLite or your own Postgres, and recall returns the stored messages that answer a question within a token budget, with no LLM call inside. MIT. Install: pip install "llmslim[mcp]", then gemini mcp add --sc
-  <sub>★ 26 · Python · MIT · uv · pushed 2026-11-23 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 27 · Python · MIT · uv · pushed 2026-11-23 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`uvx --from "llmslim[mcp]" llmslim mcp --help`</sub>
 - **[GameDev-MCP-Server](https://github.com/IvanMurzak/GameDev-MCP-Server)** — Open-source, engine-agnostic MCP server shared by Unity-MCP, Godot-MCP, and Unreal-MCP
   <sub>★ 22 · C# · Apache-2.0 · source · pushed 2026-11-24 · Win · WSL2? · macOS · Linux · Docker</sub>
@@ -356,10 +356,10 @@ Curated by **[Piebald-AI/awesome-gemini-cli](https://github.com/Piebald-AI/aweso
   <sub>★ 21 · TypeScript · MIT · npm · pushed 2026-10-20 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npm install -g goodmemory@0.8.3`</sub>
 - **[MarketMirror](https://github.com/DarkWorldCoder/market-mirror)** — Gemini CLI extension and MCP server that tests ads, prices, emails and sales pitches on simulated buyers and writes a go / iterate / no-go report. Install with gemini extensions install https://github.com/DarkWorldCoder/market-mirror
-  <sub>★ 21 · Python · AGPL-3.0 · clone · pushed 2026-11-25 · Win? · WSL2 · macOS? · Linux · Docker</sub>
+  <sub>★ 21 · Python · AGPL-3.0 · clone · pushed 2026-11-27 · Win? · WSL2 · macOS? · Linux · Docker</sub>
   <sub>`git clone https://github.com/DarkWorldCoder/market-mirror.git`</sub>
 - **[gemini-pro-mcp](https://github.com/Muzaqil555/gemini-pro-mcp)** — MCP server that brings a Google AI Pro subscription to Gemini CLI, Claude Code, Codex and the Antigravity CLI: Gemini through the Antigravity CLI on the plan's limits (no API bill), Deep Research, Google Flow videos of any length, Gemini Notebooks (Audio Overviews), AI Mode and Jules, plus Nano Banana images and Omni Flash video through the Gemini API. gemini-pro-mcp setup registers it with Gemini
-  <sub>★ 15 · Python · MIT · uv · pushed 2026-11-23 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 15 · Python · MIT · uv · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uvx gemini-pro-mcp setup`</sub>
 - **[Hyperconsciousness](https://github.com/louis030195/hyperconsciousness)** — Developer-alpha encrypted, append-only knowledge store with a Rust CLI and stdio MCP server. Gives agents scoped, expiring access to notes and supports device sync. MIT licensed
   <sub>★ 10 · Rust · MIT · script · pushed 2026-11-16 · Win · WSL2? · macOS · Linux</sub>
@@ -380,7 +380,7 @@ Curated by **[Piebald-AI/awesome-gemini-cli](https://github.com/Piebald-AI/aweso
   <sub>★ 7 · JavaScript · MIT · npx · pushed 2026-11-13 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npx -y vicem-cli gui`</sub>
 - **[Find MCP](https://github.com/agentage/find-mcp)** — Search 17,000+ MCP servers synced from the official MCP registry (registry.modelcontextprotocol.io). Remote Streamable HTTP (https://catalog.agentage.io/mcp, no auth for search) or stdio (npx -y @agentage/find-mcp). Works with Gemini CLI: gemini mcp add --transport http find-mcp https://catalog.agentage.io/mcp
-  <sub>★ 6 · TypeScript · MIT · source · pushed 2026-11-21 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 6 · TypeScript · MIT · source · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/agentage/find-mcp.git`</sub>
 - **[Court Rules](https://github.com/foklepoint/court-rules-mcp)** — U.S. federal court rules, local rules, judge standing orders and court holidays with filing deadline checks, over a hosted MCP server. Install: gemini extensions install https://github.com/foklepoint/court-rules-mcp
   <sub>★ 6 · MIT · source · pushed 2026-11-01</sub>
@@ -398,13 +398,13 @@ Curated by **[Piebald-AI/awesome-gemini-cli](https://github.com/Piebald-AI/aweso
   <sub>★ 4 · MIT · source · pushed 2026-11-04</sub>
   <sub>`git clone https://github.com/lusha-oss/lusha-mcp-plugin.git`</sub>
 - **[Minds](https://github.com/minds-ai-co/minds-mcp)** — Synthetic market research: create AI audiences, interview them and run studies such as MaxDiff, conjoint and NPS. Remote MCP server with OAuth; installable as a Gemini CLI extension
-  <sub>★ 4 · JavaScript · MIT · source · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 4 · JavaScript · MIT · source · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/minds-ai-co/minds-mcp.git`</sub>
 - **[Landed MCP](https://github.com/landedjobs/landed-mcp)** — Hosted MCP server for job search in Gemini CLI: rank AI and tech jobs against a role brief, read application forms, and fetch interview prep. No key needed
   <sub>★ 4 · TypeScript · MIT · docker · pushed 2026-11-26 · WSL2 · Linux · Docker</sub>
   <sub>`docker run -i --rm landed-mcp`</sub>
 - **[Sequenzy](https://github.com/Sequenzy/mcp)** — Hosted MCP server for Sequenzy, an email marketing platform for SaaS and ecommerce: manage subscribers, lists, tags and segments, build campaigns, sequences and templates, send transactional email, run A/B tests and read delivery stats from Gemini CLI. About 420 tools, each annotated read-only or destructive. Remote Streamable HTTP with OAuth sign-in (an API key also works); free plan with 2,500 e
-  <sub>★ 4 · TypeScript · MIT · npx · pushed 2026-11-26 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 4 · TypeScript · MIT · npx · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx @sequenzy/setup`</sub>
 - **[Unsora](https://github.com/Shipped-Studio/unsora)** — AI content generation and social media scheduling from Gemini CLI: generate images, video, music and voiceovers, clip long videos into short clips, and schedule or publish posts to YouTube, TikTok, Instagram, Facebook, LinkedIn, Bluesky, Threads and Pinterest. Official open-source MCP server (AGPL-3.0, in apps/mcp), hosted as remote Streamable HTTP with OAuth sign-in or an API key. Paid plans from
   <sub>★ 3 · TypeScript · AGPL-3.0 · source · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -422,7 +422,7 @@ Curated by **[Piebald-AI/awesome-gemini-cli](https://github.com/Piebald-AI/aweso
   <sub>★ 3 · JavaScript · MIT · npx · pushed 2026-10-15 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add bosmdavid-gif/dropthehassle-skill`</sub>
 - **[DC Hub](https://github.com/azmartone67/dchub-mcp-server)** — Live data for data-center site selection: a daily Data Center Power Index (DCPI) of where data centers can get grid power across 300+ markets, live grid feeds from the seven US ISOs, plus fiber, gas and electricity prices. Answers carry an as-of timestamp and a citation line. 94 tools, remote Streamable HTTP, free tier needs no key. Install: gemini extensions install https://github.com/azmartone67
-  <sub>★ 3 · JavaScript · MIT · npx · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 3 · JavaScript · MIT · npx · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx -y dchub-mcp-server`</sub>
 - **[Super](https://github.com/fitzyracing1/Super)** — Permission-gated superuser (sysadmin) MCP server that lets Gemini CLI check system status, disks and processes, run shell commands and read GitHub, behind a dangerous-command denylist, human approval gates, optional Cisco AI Defense and Duo authorization, and an append-only audit log. Python, local stdio; pip install superuser, then add the superuser command to your Gemini CLI MCP server config
   <sub>★ 3 · Python · uv · pushed 2026-11-13 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -464,7 +464,7 @@ Curated by **[Piebald-AI/awesome-gemini-cli](https://github.com/Piebald-AI/aweso
   <sub>★ 2 · MIT · source · pushed 2026-11-08 · macOS?</sub>
   <sub>`git clone https://github.com/freeman14/shotboard-mcp.git`</sub>
 - **[KissMyPost](https://github.com/krutytskyi/kissmypost-gemini)** — Reddit audience data for Gemini CLI over a remote MCP server: subreddit finder, best time to post, brand mentions
-  <sub>★ 2 · Python · source · pushed 2026-11-04 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 2 · Python · source · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/krutytskyi/kissmypost-gemini.git`</sub>
 - **[CloudGPU MCP](https://github.com/cloudgpu-app/cloudgpu-mcp)** — MIT-licensed local (stdio) MCP server that lets Gemini CLI rent a GPU by the minute on CloudGPU, run a job, download the results and shut the machine down; the same key also works with an OpenAI-compatible API for open models. Needs a CloudGPU account with prepaid balance
   <sub>★ 2 · JavaScript · MIT · npm · pushed 2026-11-26 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -491,7 +491,7 @@ Curated by **[Piebald-AI/awesome-gemini-cli](https://github.com/Piebald-AI/aweso
   <sub>★ 1 · MIT · source · pushed 2026-11-22</sub>
   <sub>`git clone https://github.com/i2v-ai/i2v-mcp.git`</sub>
 - **[Public Records Data](https://github.com/GeminiGeorge22/publicrecords-skills)** — Gemini CLI extension and hosted MCP servers for public-records and market data from 18 Apify Actors: US federal contracts and grants (SAM.gov, Grants.gov, USAspending), UK and EU tenders, city council meetings, ATS job postings, company social links, Etsy market research, competitor Google ads, sports odds, Spotify play counts, forecast track records and Skool community search. Tool calls run on y
-  <sub>★ 1 · MIT · npx · pushed 2026-11-26 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 1 · MIT · npx · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add GeminiGeorge22/publicrecords-skills`</sub>
 - **[TWZRD Agent Intel](https://intel.twzrd.xyz/mcp?utm_source=awesome-gemini-cli&utm_medium=referral)** — Trust scoring and identity verification for AI agent wallets on Solana. Verify agent identity before x402 micropayments or agent-initiated operations. Free: score_agent, preflight_check. Paid (x402): get_trust_receipt. Works with any MCP client including Gemini CLI
   <sub>website</sub>
@@ -506,7 +506,7 @@ Curated by **[Piebald-AI/awesome-gemini-cli](https://github.com/Piebald-AI/aweso
   <sub>website</sub>
   <sub>`https://skillagent.dev?utm_source=awesome-gemini-cli&utm_medium=referral`</sub>
 - **[Bestax](https://github.com/allxsmith/bestax/tree/main/bestax-mcp)** — MCP server that gives coding agents the props, examples, CSS variables and Agent Skills for the Bestax React component library (Bulma v1). Runs offline
-  <sub>TypeScript · MIT · in-repo · pushed 2026-11-26</sub>
+  <sub>TypeScript · MIT · in-repo · pushed 2026-11-28</sub>
   <sub>`git clone https://github.com/allxsmith/bestax.git && cd bestax/bestax-mcp`</sub>
 - **[LogNorm](https://lognorm.com?utm_source=awesome-gemini-cli&utm_medium=referral)** — Hosted remote MCP server that hands a website's SEO and AI-visibility (GEO) backlog (site audits, fixes, content drafts, AI-answer tracking) to coding agents. Remote Streamable HTTP with OAuth sign-in, no API key; free plan available. Source: lognorm/lognorm-mcp. Add with: gemini mcp add --transport http lognorm https://lognorm.com/api/mcp
   <sub>website</sub>
@@ -620,25 +620,25 @@ Curated by **[Piebald-AI/awesome-gemini-cli](https://github.com/Piebald-AI/aweso
 ## Agent Orchestration &amp; CLI Tools
 
 - **[Concord MCP](https://github.com/Get-Concord-AI/concord-mcp)** — Local-first shared work-state MCP server (npx -y @concord-ai/concord-mcp) that lets coding agents coordinate on one repo through presence, file claims, messaging, handoffs and review packets. Works with Gemini CLI alongside Claude Code, Codex, Cursor and other agents. TypeScript, stdio, MIT
-  <sub>★ 1.6k · TypeScript · MIT · npm · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 1.7k · TypeScript · MIT · npm · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g @concord-ai/concord-mcp`</sub>
 - **[Agentlas OS](https://github.com/agentlas-ai/Agentlas-OS)** — Local-first Agent Operation Environment (AOE) that installs into Gemini CLI and other supported hosts to build, route, and run specialist agent teams with portable packages, permissions, and verification gates
-  <sub>★ 1.4k · Python · Apache-2.0 · script · pushed 2026-11-25 · Win? · WSL2 · macOS · Linux</sub>
+  <sub>★ 1.4k · Python · Apache-2.0 · script · pushed 2026-11-28 · Win? · WSL2 · macOS · Linux</sub>
   <sub>`curl -fsSL https://raw.githubusercontent.com/agentlas-ai/Agentlas-OS/main/scripts/install-all-runtimes.sh | bash`</sub>
 - **[Bernstein](https://github.com/sipyourdrink-ltd/bernstein)** — Multi-agent orchestrator that coordinates Gemini CLI alongside Claude Code and Codex CLI. Spawns parallel coding agents from a single goal, verifies with tests, auto-commits. Deterministic Python coordination, zero LLM tokens on orchestration
-  <sub>★ 1.2k · Python · Apache-2.0 · uv · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 1.2k · Python · Apache-2.0 · uv · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`uv tool install bernstein # or: pipx install bernstein`</sub>
 - **[Parallel Code](https://github.com/johannesjo/parallel-code)** — Desktop app for orchestrating multiple AI coding agents (Claude Code, Codex CLI, Gemini CLI) simultaneously in isolated git worktrees
   <sub>★ 1.1k · TypeScript · MIT · clone · pushed 2026-11-27 · WSL2 · macOS · Linux</sub>
   <sub>`git clone https://github.com/johannesjo/parallel-code.git`</sub>
 - **[agent-manager](https://github.com/wainmann/agent-manager)** — Terminal UI that runs Gemini CLI alongside Claude Code, Codex, OpenCode and other coding-agent CLIs, each in its own persistent tmux session. One list shows every session's live status, prompts go into a pane without attaching, a session can spawn into its own Git worktree, and a full-file diff review sends line comments back to the agent. Launches your installed Gemini CLI unmodified, so login, c
-  <sub>★ 713 · Go · Apache-2.0 · scoop · pushed 2026-11-26 · Win · WSL2 · macOS · Linux</sub>
+  <sub>★ 713 · Go · Apache-2.0 · scoop · pushed 2026-11-27 · Win · WSL2 · macOS · Linux</sub>
   <sub>`scoop bucket add yoanwai https://github.com/YoanWai/scoop-bucket scoop install yoanwai/agent-manager`</sub>
 - **[hcom](https://github.com/aannoo/hcom)** — Let AI agents message, watch, and spawn each other across terminals. First-class Gemini CLI support with hooks integration and PTY wrapper. Also works with Claude Code, Codex, and OpenCode
   <sub>★ 678 · Rust · MIT · psh · pushed 2026-10-21 · Win · WSL2? · macOS? · Linux?</sub>
   <sub>`irm https://github.com/aannoo/hcom/releases/latest/download/hcom-installer.ps1 | iex`</sub>
 - **[AgentBox](https://github.com/madarco/agentbox)** — Run multiple coding agents (Gemini CLI, Claude Code, Codex, OpenCode) in parallel, each teleported into its own sandboxed VM — local Docker, self-hosted, or cloud (Hetzner, Daytona, Vercel, E2B, DigitalOcean). Sub-1s checkpoint startup; git credentials stay on the host. MIT
-  <sub>★ 586 · TypeScript · MIT · clone · pushed 2026-11-27 · WSL2 · macOS · Linux · Docker</sub>
+  <sub>★ 586 · TypeScript · MIT · clone · pushed 2026-11-28 · WSL2 · macOS · Linux · Docker</sub>
   <sub>`git clone https://github.com/madarco/agentbox`</sub>
 - **[Ivy Tendril](https://github.com/Ivy-Interactive/Ivy-Tendril)** — Open-source desktop app that orchestrates Gemini CLI alongside Claude Code, Codex, and Copilot through a plan-based lifecycle with verification gates, self-improving memory, and git worktree isolation. Local-first, agent-agnostic, FSL licensed
   <sub>★ 204 · C# · psh · pushed 2026-11-23 · Win · WSL2? · macOS · Linux</sub>
@@ -653,22 +653,22 @@ Curated by **[Piebald-AI/awesome-gemini-cli](https://github.com/Piebald-AI/aweso
   <sub>★ 162 · JavaScript · MIT · npm · pushed 2026-11-25 · WSL2 · macOS? · Linux</sub>
   <sub>`npm install -g clideck@2`</sub>
 - **[intentic](https://github.com/intentic/intentic)** — Self-hosted workspace that runs Gemini CLI over ACP (gemini --experimental-acp) alongside Claude Code, Codex, and OpenCode. Each agent gets its own Docker container and git worktree on hardware you own; terminals survive disconnects, any browser or phone reopens the same fleet, and changes land through per-file, per-hunk diff review. Scheduled and webhook-triggered runs. MIT
-  <sub>★ 100 · TypeScript · MIT · script · pushed 2026-11-27 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 102 · TypeScript · MIT · script · pushed 2026-11-28 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`curl -fsSL https://intentic.dev/connect | sh -s -- <SETUP_CODE>`</sub>
 - **[Preloop](https://github.com/preloop/preloop)** — Open-source AI agent control plane and software factory: every tool and model call allowed, denied or held for a human, budgeted and recorded, and agents run from tickets, webhooks and CI in hosted containers or on your own runners, landing work as pull requests. Works with Gemini CLI, Claude Code, Codex CLI, Cursor, OpenCode and Copilot CLI. Apache-2.0
-  <sub>★ 97 · Python · Apache-2.0 · script · pushed 2026-11-27 · Win · WSL2 · macOS · Linux · Docker</sub>
+  <sub>★ 97 · Python · Apache-2.0 · script · pushed 2026-11-28 · Win · WSL2 · macOS · Linux · Docker</sub>
   <sub>`curl -fsSL https://preloop.ai/install/cli | sh`</sub>
 - **[Crewly](https://github.com/stevehuang0115/crewly)** — MIT-licensed, local platform that runs a team of role-based agents (developer, QA, PM, orchestrator) on Gemini CLI, Claude Code, and Codex, with task delegation through agent skills, shared persistent memory, and a web dashboard of live agent terminals. Requires one of these agent CLIs installed and logged in
-  <sub>★ 94 · TypeScript · MIT · psh · pushed 2026-11-26 · Win · WSL2? · macOS? · Linux · Docker</sub>
+  <sub>★ 94 · TypeScript · MIT · psh · pushed 2026-11-28 · Win · WSL2? · macOS? · Linux · Docker</sub>
   <sub>`irm https://crewlyai.com/install.ps1 | iex`</sub>
 - **[Untether](https://github.com/littlebearapps/untether)** — Telegram bridge for Gemini CLI (and 5 other agents). Send tasks by voice, stream progress, configure approval mode (read-only/edit files/full access) via inline buttons. Self-hosted, MIT licensed
-  <sub>★ 77 · Python · MIT · uv · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 77 · Python · MIT · uv · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uv tool install untether # recommended`</sub>
 - **[YYLO](https://github.com/yylo-dev/yylo)** — Kanban-driven CLI orchestrator that runs Gemini CLI alongside Claude Code and Codex in parallel across isolated git worktrees, with a merge queue that reviews and merges verified task work. Git-native task state, per-agent worktree isolation, installable via npm. MIT
-  <sub>★ 69 · Python · MIT · npm · pushed 2026-11-24 · WSL2 · macOS? · Linux</sub>
+  <sub>★ 69 · Python · MIT · npm · pushed 2026-11-27 · WSL2 · macOS? · Linux</sub>
   <sub>`npm install --global '@yylo/cli@latest'`</sub>
 - **[Novadeck](https://github.com/novadeck-org/novadeck)** — Free, open-source desktop app for macOS, Windows and Linux that runs Antigravity CLI (agy), Gemini CLI's successor, side by side with Claude Code, Codex and opencode. Every agent's questions and permission asks land in one Inbox, and agents can message each other and start teammates in another harness
-  <sub>★ 64 · TypeScript · GPL-3.0 · script · pushed 2026-11-27 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 69 · TypeScript · GPL-3.0 · script · pushed 2026-11-28 · Win · WSL2? · macOS · Linux</sub>
   <sub>`curl -fsSL https://novadeck.dev/install.sh | sh`</sub>
 - **[squads-cli](https://github.com/agents-squads/squads-cli)** — Open source CLI for AI agent coordination that organizes agents into domain-aligned squads with persistent memory, goal tracking, and Git-native state. Works with Gemini CLI
   <sub>★ 56 · TypeScript · MIT · npm · pushed 2026-11-26 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -677,10 +677,10 @@ Curated by **[Piebald-AI/awesome-gemini-cli](https://github.com/Piebald-AI/aweso
   <sub>★ 52 · TypeScript · MIT · npx · pushed 2026-11-18 · WSL2 · macOS · Linux</sub>
   <sub>`bunx --bun wolfpack-bridge@latest`</sub>
 - **[Aixle Flow](https://github.com/AixleHQ/flow)** — Self-hosted Kanban board that runs Gemini CLI alongside Claude Code, Codex, Cursor CLI and other coding agents, each in its own container. Moving a card starts a durable workflow with parallel steps, approval gates and per-run token and cost tracking
-  <sub>★ 41 · Ruby · Apache-2.0 · clone · pushed 2026-11-27 · WSL2 · Linux · Docker</sub>
+  <sub>★ 41 · Ruby · Apache-2.0 · clone · pushed 2026-11-28 · WSL2 · Linux · Docker</sub>
   <sub>`git clone https://github.com/AixleHQ/flow.git`</sub>
 - **[SpaceApp](https://github.com/oll4com/spaceapp)** — Self-hosted web workspace that runs Gemini CLI alongside OpenCode, Codex, Claude Code and other coding CLIs as side-by-side panes in persistent rooms, with MCP servers and managed browser panes. Install: npx --yes run-spaceapp@latest install. Source-available (BSL 1.1)
-  <sub>★ 30 · TypeScript · MIT · npm · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 30 · TypeScript · MIT · npm · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npm install -g run-spaceapp`</sub>
 - **[Ralph Harness](https://github.com/rxdt/loopgate_harness)** — Tiny Python scaffold for running Gemini CLI, Claude Code, Codex CLI, and similar coding agents in guarded local loops. It uses repo-local specs, fresh-context iterations, hard caps, git-hook gates, CI verification, and coverage gates
   <sub>★ 28 · Python · MIT · source · pushed 2026-11-12 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -701,7 +701,7 @@ Curated by **[Piebald-AI/awesome-gemini-cli](https://github.com/Piebald-AI/aweso
   <sub>★ 8 · Go · Apache-2.0 · script · pushed 2026-11-26 · WSL2 · macOS · Linux</sub>
   <sub>`curl -fsSL https://raw.githubusercontent.com/xseman/pando/master/install.sh | sh`</sub>
 - **[DevIntern](https://github.com/getdevintern/devintern)** — Tool that picks up tickets from Jira, Linear, Trello, Asana, Azure DevOps, GitHub Issues, or markdown files and turns them into self-reviewed pull requests by driving Gemini CLI non-interactively (also supports Claude Code, Codex, and others). A feasibility gate flags vague tickets back to the tracker with questions; optional unattended mode schedules ticket pickup and turns PR review comments int
-  <sub>★ 5 · TypeScript · npx · pushed 2026-11-27 · Win? · WSL2? · macOS · Linux</sub>
+  <sub>★ 6 · TypeScript · npx · pushed 2026-11-28 · Win? · WSL2? · macOS · Linux</sub>
   <sub>`bunx skills add getdevintern/devintern \`</sub>
 - **[Jackalope](https://github.com/Jackalope-Dev/jackalope)** — Open-source desktop workspace that runs Gemini CLI alongside Claude Code, Codex, OpenCode and other agents, each task in its own git worktree, with diffs, checks and merge review in one view. Windows, macOS and Linux
   <sub>★ 5 · Rust · Apache-2.0 · brew · pushed 2026-11-26 · Win · WSL2? · macOS · Linux</sub>
@@ -752,13 +752,13 @@ Curated by **[Piebald-AI/awesome-gemini-cli](https://github.com/Piebald-AI/aweso
   <sub>★ 492 · JavaScript · Apache-2.0 · clone · pushed 2026-11-02 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/josstei/maestro-orchestrate`</sub>
 - **[Emdash Skills](https://github.com/heymegabyte/agent-skills)** — 14-category autonomous product-building OS with 18 specialized agents. Turns one-line prompts into deployed products. Includes GEMINI.md compatibility for cross-tool portability. Skills cover architecture, planning, quality, brand, media, observability, and deployment on Cloudflare Workers
-  <sub>★ 30 · TypeScript · npx · pushed 2026-11-27 · macOS</sub>
+  <sub>★ 30 · TypeScript · npx · pushed 2026-11-28 · macOS</sub>
   <sub>`npx jsr add @heymegabyte/agent-skills`</sub>
 
 ## Development Tools &amp; Utilities
 
 - **[Nix AI Tools](https://github.com/numtide/llm-agents.nix)** — Seamless Nix integration for reproducible Gemini CLI installations. Ensures consistent environments across teams and simplifies deployment with declarative configuration
-  <sub>★ 2.3k · Nix · MIT · source · pushed 2026-11-27 · WSL2 · macOS · Linux</sub>
+  <sub>★ 2.3k · Nix · MIT · source · pushed 2026-11-28 · WSL2 · macOS · Linux</sub>
   <sub>`git clone https://github.com/numtide/llm-agents.nix.git`</sub>
 - **[Rulesync](https://github.com/dyoshikawa/rulesync)** — The Node.js CLI tool that automatically generates configs (rules, ignore files, MCP servers, commands, and subagents) for various AI coding agents. Rulesync can convert configs between Gemini CLI and other AI agents in both directions
   <sub>★ 1.7k · TypeScript · MIT · npm · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -770,55 +770,55 @@ Curated by **[Piebald-AI/awesome-gemini-cli](https://github.com/Piebald-AI/aweso
   <sub>★ 1.3k · TypeScript · MIT · npm · pushed 2026-10-27 · WSL2 · macOS? · Linux</sub>
   <sub>`npm install -g ccmanager`</sub>
 - **[Agent Sessions](https://github.com/jazzyalex/agent-sessions)** — Local-first macOS app to search, browse, and resume Gemini CLI sessions alongside Codex CLI, Claude Code, OpenCode, and other agents, with live iTerm2 monitoring via Agent Cockpit
-  <sub>★ 956 · Swift · MIT · brew · pushed 2026-11-25 · macOS</sub>
+  <sub>★ 957 · Swift · MIT · brew · pushed 2026-11-25 · macOS</sub>
   <sub>`brew install --cask jazzyalex/agent-sessions/agent-sessions`</sub>
 - **[Agent Notifications](https://github.com/777genius/agent-notifications)** — Cross-platform desktop notifications and optional webhooks for Gemini CLI turn completion and tool permission requests. Also supports Claude Code, Codex CLI, OpenCode, Cursor CLI, and Qoder
-  <sub>★ 839 · Go · source · pushed 2026-11-27 · Win · WSL2 · macOS · Linux</sub>
+  <sub>★ 838 · Go · source · pushed 2026-11-28 · Win · WSL2 · macOS · Linux</sub>
   <sub>`git clone https://github.com/777genius/agent-notifications.git`</sub>
 - **[agnix](https://github.com/agent-sh/agnix)** — Linter for AI agent configurations. Validates GEMINI.md, SKILL.md, hooks, MCP, and more with 156 rules, auto-fix, and LSP server for real-time editor diagnostics
-  <sub>★ 499 · Rust · Apache-2.0 · npm · pushed 2026-11-26 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 500 · Rust · Apache-2.0 · npm · pushed 2026-11-28 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm install -g agnix`</sub>
 - **[ClawMetry](https://github.com/vivekchand/clawmetry)** — Self-hosted, local-first observability and kill switch for coding agents, reading Gemini CLI sessions alongside Claude Code, Codex, Cursor, OpenClaw, Aider, Goose, and others. Reads the session logs the runtimes already write on disk, so there is no SDK and nothing in the request path. Shows sessions, transcripts, tool calls, tokens, and cache-aware cost per session and model; an opt-in emergency
   <sub>★ 440 · Python · MIT · npx · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add vivekchand/clawmetry --skill agent-kill-switch`</sub>
 - **[Splitrail](https://github.com/Piebald-AI/splitrail)** — Comprehensive usage analytics platform that tracks and optimizes your Gemini CLI workflows, helping teams understand and improve their AI-assisted development patterns
-  <sub>★ 229 · Rust · MIT · source · pushed 2026-11-26 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 230 · Rust · MIT · source · pushed 2026-11-26 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/Piebald-AI/splitrail.git`</sub>
 - **[unslop](https://github.com/MohamedAbdallah-14/unslop)** — CLI and MCP server that removes AI writing patterns from text: tricolons, em-dash overuse, hedging stacks, sycophancy openers, and overused vocabulary. Works with any MCP client including Gemini CLI. Five intensity levels and a lint-only audit mode. Useful for cleaning commit messages, PR descriptions, and documentation
-  <sub>★ 200 · Python · MIT · pipx · pushed 2026-11-23 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 201 · Python · MIT · pipx · pushed 2026-11-23 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pipx install unslop`</sub>
 - **[Lockpaw](https://github.com/sorkila/lockpaw)** — macOS menu bar screen guard for unattended Gemini CLI runs. One hotkey covers the screen and blocks input while the agent keeps running (no sleep), and the locked screen glows plus fires a notification when Gemini CLI needs input or finishes, via a lockpaw ping hook. Touch ID unlock. Also works with Claude Code and Codex. Native Swift, free, open source
-  <sub>★ 188 · Swift · MIT · brew · pushed 2026-11-12 · macOS</sub>
+  <sub>★ 189 · Swift · MIT · brew · pushed 2026-11-12 · macOS</sub>
   <sub>`brew tap sorkila/lockpaw`</sub>
 - **[agenttrace](https://github.com/luoyuctl/agenttrace)** — Local-first TUI for Gemini CLI and AI coding agent session observability. Parses local logs for cost, tokens, tool failures, latency, anomalies, health gates, and diffs across Gemini CLI, Claude Code, Codex CLI, Aider, Cursor exports, OpenCode, and more
-  <sub>★ 157 · Rust · MIT · psh · pushed 2026-11-23 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 158 · Rust · MIT · psh · pushed 2026-11-23 · Win · WSL2? · macOS · Linux</sub>
   <sub>`irm https://raw.githubusercontent.com/luoyuctl/agenttrace/master/install.ps1 | iex`</sub>
 - **[aisw](https://github.com/burakdede/aisw)** — Saves Gemini CLI logins and API keys as named profiles and switches the live ~/.gemini state in one command, alongside Claude Code, Codex CLI and Antigravity CLI. Docs: aiswitcher.dev
-  <sub>★ 157 · Rust · MIT · cargo · pushed 2026-10-31 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 158 · Rust · MIT · cargo · pushed 2026-10-31 · Win · WSL2? · macOS · Linux</sub>
   <sub>`cargo install aisw`</sub>
 - **[Terminal Jarvis](https://github.com/BA-CalderonMorales/terminal-jarvis)** — Ultimate command center unifying multiple AI coding assistants in one elegant interface. Switch between tools seamlessly and manage sessions efficiently
   <sub>★ 138 · Rust · MIT · npm · pushed 2026-11-24 · Win? · WSL2? · macOS? · Linux</sub>
   <sub>`npm install -g terminal-jarvis`</sub>
 - **[Hexis](https://github.com/Bevel-Software/Hexis)** — Git-backed platform for skills, tools, and context for AI agents, available to Gemini CLI through a remote OAuth MCP server
-  <sub>★ 133 · TypeScript · Apache-2.0 · npx · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 134 · TypeScript · Apache-2.0 · npx · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx -y @bevel-software/hexis-mcp`</sub>
 - **[ChatVault](https://github.com/ssanaullahrais/Chat-Vault)** — Windows app that reads, searches and backs up your Gemini CLI chats across accounts, and continues any chat in Gemini CLI through a handoff file that carries the whole conversation
   <sub>★ 103 · TypeScript · MIT · clone · pushed 2026-11-26 · Win</sub>
   <sub>`git clone https://github.com/ssanaullahrais/Chat-Vault.git`</sub>
 - **[agy-powerline](https://github.com/wassim-azi/agy-powerline)** — Fast, configurable statusline for Antigravity CLI (agy), the successor to Gemini CLI, with real-time 5h/7d Gemini quota meters, pace markers, context usage, and interactive TUI and browser configurators. Zero dependencies, MIT
-  <sub>★ 84 · JavaScript · MIT · npx · pushed 2026-11-24 · Win · WSL2 · macOS · Linux</sub>
+  <sub>★ 87 · JavaScript · MIT · npx · pushed 2026-11-24 · Win · WSL2 · macOS · Linux</sub>
   <sub>`npx agy-powerline # install the statusline and open the editor`</sub>
 - **[Archcore](https://github.com/archcore-ai/archcore)** — Git-native context engineering CLI and MCP server for AI coding agents; archcore init --agent gemini-cli wires Gemini CLI hooks and MCP
   <sub>★ 79 · TypeScript · Apache-2.0 · psh · pushed 2026-11-19 · Win · WSL2 · macOS? · Linux?</sub>
   <sub>`irm https://archcore.ai/install.ps1 | iex`</sub>
 - **[EGC](https://github.com/Fmarzochi/EGC)** — Persistent cross-session memory for Gemini CLI and 12 other AI coding tools. SQLite-backed state survives context resets, install with npm install -g @egchq/egc
-  <sub>★ 70 · JavaScript · Apache-2.0 · npm · pushed 2026-11-26 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 70 · JavaScript · Apache-2.0 · npm · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g @egchq/egc`</sub>
 - **[LynxPrompt](https://github.com/GeiserX/LynxPrompt)** — Self-hosted web app that turns one set of AI coding rules into the file each tool reads: Gemini CLI's GEMINI.md, AGENTS.md, CLAUDE.md, Cursor rules and Copilot instructions, 30 rule-file formats in all. Blueprints carry variables so a team shares one set across projects, and the lynxp CLI writes the files into each repository. AGPL-3.0
   <sub>★ 60 · TypeScript · AGPL-3.0 · brew · pushed 2026-11-24 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`brew install GeiserX/lynxprompt/lynxprompt`</sub>
 - **[Caprock](https://github.com/dspv/caprock)** — Local dashboard that starts Gemini CLI sessions and follows them through the telemetry file Gemini writes, on the same screens as Claude Code, Codex and OpenCode: live activity, token cost per repository, searchable history
-  <sub>★ 54 · TypeScript · Apache-2.0 · scoop · pushed 2026-11-27 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 55 · Go · Apache-2.0 · scoop · pushed 2026-11-28 · Win · WSL2? · macOS · Linux</sub>
   <sub>`scoop bucket add dspv https://github.com/dspv/scoop-bucket scoop install caprock`</sub>
 - **[laya-guard](https://github.com/scs0209/laya-guard)** — Local guardrail with a BeforeTool hook for Gemini CLI (laya-guard install gemini-cli) that judges each shell command before it runs, using regex rules, protected paths, and a small on-device model. Blocked commands are denied; ones marked for review pass with a note. Also hooks into Claude Code, Codex, Cursor, and other agents. MIT
   <sub>★ 41 · Python · MIT · pip · pushed 2026-11-22 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -830,7 +830,7 @@ Curated by **[Piebald-AI/awesome-gemini-cli](https://github.com/Piebald-AI/aweso
   <sub>★ 36 · JavaScript · AGPL-3.0 · psh · pushed 2026-11-26 · Win · WSL2 · macOS · Linux</sub>
   <sub>`irm https://raw.githubusercontent.com/DevinoSolutions/anotifier-for-claude-codex-cursor/main/setup/install.ps1 | iex`</sub>
 - **[Align CLI](https://github.com/aligndottech/align-cli)** — Local CLI and MCP server that gives Gemini CLI your team's decisions from Jira, Confluence, Linear, Notion, Slack, Teams, Zoom, GitHub, GitLab, git history and repo docs, and checks its changes against them (Gemini's hook reports after the edit lands). Also works with Claude Code, Codex and others. Free, runs locally, MIT
-  <sub>★ 34 · TypeScript · MIT · npm · pushed 2026-11-26 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 34 · TypeScript · MIT · npm · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g @aligndottech/cli`</sub>
 - **[DOS](https://github.com/anthony-chaudhary/dos-kernel)** — Deterministic trust kernel for coding agents: hooks that verify "done" claims against git evidence and refuse file collisions between concurrent agents. Wires into Gemini CLI with dos init --hooks gemini; also ships an MCP server. Python, MIT
   <sub>★ 21 · Python · MIT · uv · pushed 2026-10-27 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -857,7 +857,7 @@ Curated by **[Piebald-AI/awesome-gemini-cli](https://github.com/Piebald-AI/aweso
   <sub>★ 13 · Python · Apache-2.0 · npx · pushed 2026-10-20 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add https://github.com/hermes-labs-ai/hermes-jailbench --skill hermes-jailbench`</sub>
 - **[skillet](https://github.com/Brattlof/skillet)** — Zero-dependency Go CLI / package manager that installs Agent Skills and MCP servers into Gemini CLI (and other tools), plus Claude Code slash commands and hooks
-  <sub>★ 10 · Go · MIT · go · pushed 2026-11-27 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 10 · Go · MIT · go · pushed 2026-11-28 · Win · WSL2? · macOS · Linux</sub>
   <sub>`go install github.com/Brattlof/skillet/cmd/skillet@latest`</sub>
 - **[spillage](https://github.com/maximilianfeix/spillage)** — Finds API keys in the chats, logs and checkpoints Gemini CLI keeps under ~/.gemini/tmp and in the MCP servers of ~/.gemini/settings.json, redacts them in place, and installs BeforeAgent / BeforeTool / SessionEnd hooks (spillage guard install) that block a prompt with a key in it and reads of .env. Python, no dependencies, no network; also covers Claude Code, Codex CLI and Cursor
   <sub>★ 8 · Python · MIT · uv · pushed 2026-11-23 · Win · WSL2? · macOS · Linux</sub>
@@ -872,13 +872,13 @@ Curated by **[Piebald-AI/awesome-gemini-cli](https://github.com/Piebald-AI/aweso
   <sub>★ 5 · Python · Apache-2.0 · pipx · pushed 2026-11-26 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pipx install ratchet-size`</sub>
 - **[OpenMoat](https://github.com/crocodile-labs/openmoat)** — Local policy layer with a BeforeTool hook for Gemini CLI (openmoat init) that checks every shell command, file read and write, web request and MCP call against one policy before it runs, blocking what the policy denies. Adds an egress proxy, MCP server pinning and a hash-chained audit log, and the same policy covers Claude Code, Codex, Cursor and other agents. Rust, MIT OR Apache-2.0
-  <sub>★ 5 · Rust · MIT · cargo · pushed 2026-11-27 · Win · WSL2 · macOS · Linux</sub>
+  <sub>★ 5 · Rust · MIT · cargo · pushed 2026-11-28 · Win · WSL2 · macOS · Linux</sub>
   <sub>`cargo install openmoat --locked`</sub>
 - **[AI Meter](https://github.com/dichiara19/ai-meter)** — Native Windows 11 app that lists active Gemini CLI sessions, on Windows and in WSL, with their model and context in use, next to Google Antigravity quotas and other AI usage limits in a taskbar pill
-  <sub>★ 5 · C# · Apache-2.0 · source · pushed 2026-11-26 · Win? · WSL2 · macOS? · Linux?</sub>
+  <sub>★ 5 · C# · Apache-2.0 · source · pushed 2026-11-28 · Win? · WSL2 · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/dichiara19/ai-meter.git`</sub>
 - **[Ironheights](https://github.com/Frank-Masciopinto/ironheights)** — Offline security scanner that protects any AI bot's skills: scans any skill folder with a SKILL.md (including Gemini CLI skills in ~/.gemini/skills/) for prompt injection, credential theft, and other risky patterns before you install it, with findings tagged by OWASP LLM Top 10 and OpenCRE ID. Reads files as data, never runs them, no telemetry. Run npx ironheights scan ./path/to/skill. Apache-2.0
-  <sub>★ 4 · TypeScript · Apache-2.0 · npm · pushed 2026-11-27 · WSL2? · macOS · Linux</sub>
+  <sub>★ 4 · TypeScript · Apache-2.0 · npm · pushed 2026-11-28 · WSL2? · macOS · Linux</sub>
   <sub>`npm install -g ironheights`</sub>
 - **[Dazzler](https://github.com/jongos/Dazzler)** — Agent Skill for frontend and document design (typography, palettes, 30 templates, offline design checks) with setup instructions for Gemini CLI
   <sub>★ 3 · Python · Apache-2.0 · npx · pushed 2026-11-18 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -899,7 +899,7 @@ Curated by **[Piebald-AI/awesome-gemini-cli](https://github.com/Piebald-AI/aweso
   <sub>★ 2 · Go · Apache-2.0 · go · pushed 2026-11-12 · Win? · WSL2? · macOS · Linux</sub>
   <sub>`go install github.com/xufei547/railse-opc/cmd/railse@latest`</sub>
 - **[AI Usage Meter (VS Code)](https://github.com/theluckystrike/ai-usage-meter-vscode)** — VS Code extension that reads Gemini CLI session files in ~/.gemini/tmp and shows today's tokens and estimated cost in the status bar, with a dashboard split by project and model. Also covers Claude Code and Codex. Runs offline, no login or API key
-  <sub>★ 2 · JavaScript · MIT · source · pushed 2026-11-26 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 2 · JavaScript · MIT · source · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/theluckystrike/ai-usage-meter-vscode.git`</sub>
 - **[ctx-receipt](https://github.com/Jenoyrex/ctx-receipt)** — Shows what Gemini CLI, Claude Code, Codex CLI, and Cursor pre-load into context before your first prompt: GEMINI.md and its imports, skills, and MCP servers, as token estimates. Includes a CI budget check and a GitHub Action
   <sub>★ 2 · TypeScript · MIT · npm · pushed 2026-11-14 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -917,7 +917,7 @@ Curated by **[Piebald-AI/awesome-gemini-cli](https://github.com/Piebald-AI/aweso
   <sub>website</sub>
   <sub>`https://issue-queue.readthedocs.io/en/latest/llm_agents.html?utm_source=awesome-gemini-cli&utm_medium=referral`</sub>
 - **[Gemini CLI Logs Prettifier](https://github.com/Manamama/Puzzles_for_AIs/tree/main/code/Gemini%20CLI%20logs%20prettifier)** — Renders the logs human readable (prettifies them) and browsable as interlinked HTML, with thoughtful explanations and clickable links
-  <sub>Python · MIT · in-repo · pushed 2026-11-24</sub>
+  <sub>Python · MIT · in-repo · pushed 2026-11-27</sub>
   <sub>`git clone https://github.com/Manamama/Puzzles_for_AIs.git && cd Puzzles_for_AIs/code/Gemini%20CLI%20logs%20prettifier`</sub>
 - **[MCP Config Doctor](https://mcpconfigdoctor.online/?utm_source=awesome-gemini-cli&utm_medium=referral)** — Browser-local diagnostic that validates Gemini CLI ~/.gemini/settings.json MCP server entries (shape, env/secret references, transport fields). Also covers Claude Code, Codex CLI, and VS Code MCP configs. No account, no telemetry, no remote calls — runs entirely in the browser
   <sub>website</sub>
@@ -947,7 +947,7 @@ Curated by **[Piebald-AI/awesome-gemini-cli](https://github.com/Piebald-AI/aweso
   <sub>MIT · npx · pushed 2026-11-01 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add alapha888/session-handoff-kit`</sub>
 - **[tattlr](https://github.com/kaygaaf/tattlr)** — Local CLI that reads session logs from Gemini CLI and other coding agents, and can hook those agents to block risky tool calls before they run
-  <sub>Go · MIT · npm · pushed 2026-11-25 · Win · WSL2? · macOS · Linux</sub>
+  <sub>Go · MIT · npm · pushed 2026-11-27 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm i -g tattlr`</sub>
 - **[Folkbench Switch](https://folkbench.com/en/switch?utm_source=github&utm_medium=awesome&utm_campaign=awesome-gemini-cli)** — Open-source desktop app (Tauri/Rust) that saves API provider profiles and writes the selected endpoint and key into Gemini CLI's ~/.gemini/.env and settings.json, with a diff preview before writing. Also handles Claude Code and Codex
   <sub>website</sub>
@@ -968,13 +968,13 @@ Curated by **[Piebald-AI/awesome-gemini-cli](https://github.com/Piebald-AI/aweso
 ## Interfaces
 
 - **[AionUi](https://github.com/iOfficeAI/AionUi)** — Free, local, open-source GUI app for Gemini CLI — Better Chat UI, File Management, AI image editing, multi-agent support, multi-LLMs &amp; apikey polling, code diff view &amp; more
-  <sub>★ 34.5k · TypeScript · Apache-2.0 · brew · pushed 2026-11-05 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 34.6k · TypeScript · Apache-2.0 · brew · pushed 2026-11-05 · Win · WSL2? · macOS · Linux</sub>
   <sub>`brew install aionui`</sub>
 - **[Gemini CLI Desktop](https://github.com/Piebald-AI/gemini-cli-desktop)** — Beautiful desktop and web UI that makes Gemini CLI accessible to non-terminal/mobile users while preserving all its powerful features
   <sub>★ 521 · TypeScript · MIT · clone · pushed 2026-11-26 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/Piebald-AI/gemini-cli-desktop`</sub>
 - **[OpenCode Mobile](https://github.com/Eslamasabry/opencode-mobile-next)** — Independent, unofficial, open-source (MIT) Android app that runs Gemini CLI, with Claude Code, Codex, Qwen Code and other agents, on the phone itself in an Ubuntu environment it installs inside the app, or connects to an agent on your computer. Approve tool requests from a notification or widget, review diffs, preview the dev server. Made by its owner with substantial AI assistance
-  <sub>★ 175 · Kotlin · MIT · source · pushed 2026-11-27 · WSL2? · Linux</sub>
+  <sub>★ 179 · Kotlin · MIT · source · pushed 2026-11-28 · WSL2? · Linux</sub>
   <sub>`git clone https://github.com/Eslamasabry/opencode-mobile-next.git`</sub>
 - **[Agent Workbench](https://github.com/cvelasquez/agent-workbench)** — Local web UI for Antigravity CLI (agy), the official successor to Gemini CLI: tabs, browsable history, conversations as cards, and its status and context meter through the status line. Runs Claude Code, Codex and OpenCode side by side and hands a conversation over from one CLI to another. It doesn't drive Gemini CLI itself; the repository includes a one-off importer for old Gemini CLI chats
   <sub>★ 14 · TypeScript · MIT · npm · pushed 2026-11-23 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1010,13 +1010,13 @@ Curated by **[Piebald-AI/awesome-gemini-cli](https://github.com/Piebald-AI/aweso
 ## API Bridges &amp; Proxies
 
 - **[CLIProxyAPI](https://github.com/router-for-me/CLIProxyAPI)** — Wrap Gemini CLI as an OpenAI/Gemini/Claude compatible API service, allowing you to enjoy the free Gemini 2.5 Pro model through API
-  <sub>★ 59.6k · Go · MIT · source · pushed 2026-11-27 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 59.6k · Go · MIT · source · pushed 2026-11-28 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/router-for-me/CLIProxyAPI.git`</sub>
 - **[Bifrost](https://github.com/maximhq/bifrost)** — Self-hosted gateway for Gemini CLI that unifies cloud and local model providers with routing, fallbacks, load balancing, and MCP support
-  <sub>★ 10.1k · Go · Apache-2.0 · npx · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 10.1k · Go · Apache-2.0 · npx · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx -y @maximhq/bifrost`</sub>
 - **[cliproxy-rs](https://github.com/vayungodara/cliproxy-rs)** — Rust rewrite of CLIProxyAPI with a built-in dashboard. Serves the Gemini API on a local endpoint (GOOGLE_GEMINI_BASE_URL), so Gemini CLI can run on Gemini API keys or on signed-in Claude and ChatGPT accounts
-  <sub>★ 81 · Rust · MIT · psh · pushed 2026-11-21 · Win · WSL2? · macOS · Linux · Docker</sub>
+  <sub>★ 82 · Rust · MIT · psh · pushed 2026-11-27 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`irm https://raw.githubusercontent.com/vayungodara/cliproxy-rs/master/install.ps1 | iex`</sub>
 - **[TeamoRouter](https://teamorouter.cn?utm_source=awesome-gemini-cli&utm_medium=referral)** — Hosted LLM gateway — managed alternative to self-hosted bridges. OpenAI-compatible and native Anthropic endpoints behind one API key; works with Gemini CLI, Claude Code, and Codex directly
   <sub>website</sub>
@@ -1031,7 +1031,7 @@ Curated by **[Piebald-AI/awesome-gemini-cli](https://github.com/Piebald-AI/aweso
 ## Education &amp; Study Tools
 
 - **[Exam Cram Coach](https://github.com/ZeKaiNie/universal-examprep-skill)** — Agent Skill for exam prep that runs in Gemini CLI and other agents (npx skills add ZeKaiNie/universal-examprep-skill). Teaches from a student's own lecture slides, notes and past papers with file and page citations, crops figures from the PDFs, quizzes only from their homework and past papers, and keeps progress across sessions. English and Chinese
-  <sub>★ 402 · Python · MIT · npx · pushed 2026-10-27 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 403 · Python · MIT · npx · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add ZeKaiNie/universal-examprep-skill`</sub>
 - **[codecall](https://github.com/GAURAV-1313/codecall)** — Agent Skill that runs in Gemini CLI and other agents (npx skills add GAURAV-1313/codecall). Quizzes you on the code your agent just wrote, traces one request flow file by file, or plants one bug for a debugging-interview drill and restores it with Git. No API key
   <sub>★ 16 · TypeScript · MIT · npm · pushed 2026-10-29 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -1058,6 +1058,6 @@ Curated by **[Piebald-AI/awesome-gemini-cli](https://github.com/Piebald-AI/aweso
 
 ---
 
-Snapshot 2026-11-27. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-11-28. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
 Filter the same data in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/). Spreadsheet edition: retired. The last copy, built 2026-10-22, stays available but is no longer updated. The website is the maintained edition. Its last workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/download/v2026.10.22/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/download/v2026.10.22/Awesome-Agentic-Atlas-LIGHT.xlsx).

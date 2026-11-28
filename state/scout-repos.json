@@ -5,6 +5,11 @@
    "section": "Coding Agents",
    "since": "2026-10-11"
   },
+  "0sec-labs/0security": {
+   "id": 1339271188,
+   "section": "MCP Servers",
+   "since": "2026-11-28"
+  },
   "0x0funky/agent-sprite-forge": {
    "id": 1219400421,
    "section": "Agent Skills",
@@ -945,6 +950,11 @@
    "section": "MCP Servers",
    "since": "2026-10-21"
   },
+  "DeadInternetStudios/100x-engineer-skill": {
+   "id": 1468649172,
+   "section": "Agent Skills",
+   "since": "2026-11-28"
+  },
   "DenisSergeevitch/agents-best-practices": {
    "id": 1240191065,
    "section": "Agent Skills",
@@ -1810,6 +1820,11 @@
    "section": "Orchestrators & Multi-Agent",
    "since": "2026-10-11"
   },
+  "Jakeschincariol/chatgpt-youtube-agent-skill": {
+   "id": 1382361239,
+   "section": "Assistants & Domain Agents",
+   "since": "2026-11-28"
+  },
   "Jakeschincariol/console-skill": {
    "id": 1429839594,
    "section": "Agent Skills",
@@ -2189,6 +2204,11 @@
    "id": 631484230,
    "section": "Assistants & Domain Agents",
    "since": "2026-10-11"
+  },
+  "LemonFace0309/charles-skills": {
+   "id": 1448945335,
+   "section": "Agent Skills",
+   "since": "2026-11-28"
   },
   "LeoKemp223/NextBoard": {
    "id": 1223713824,
@@ -4975,15 +4995,15 @@
    "section": "Orchestrators & Multi-Agent",
    "since": "2026-10-11"
   },
+  "asdfasdfasdfdsa/bnjd": {
+   "id": 1203185600,
+   "section": "Agent Skills",
+   "since": "2026-11-26"
+  },
   "asdfgh1445/ctf-super-hub": {
    "id": 1219151193,
    "section": "Agent Skills",
    "since": "2026-10-11"
-  },
-  "asfgsrgerg/jkandf": {
-   "id": 1203185600,
-   "section": "Agent Skills",
-   "since": "2026-11-26"
   },
   "asgeirtj/system_prompts_leaks": {
    "id": 976921297,
@@ -5645,6 +5665,11 @@
    "section": "Assistants & Domain Agents",
    "since": "2026-10-11"
   },
+  "clipy-recorder/clipy": {
+   "id": 1467736489,
+   "section": "Assistants & Domain Agents",
+   "since": "2026-11-28"
+  },
   "cloudflare/moltworker": {
    "id": 1143261428,
    "section": "Assistants & Domain Agents",
@@ -5659,6 +5684,11 @@
    "id": 1388367915,
    "section": "Agent Skills",
    "since": "2026-11-20"
+  },
+  "cloveric/tarobird": {
+   "id": 1446347272,
+   "section": "Orchestrators & Multi-Agent",
+   "since": "2026-11-28"
   },
   "cluster1900/apexo-code": {
    "id": 1250773924,
@@ -6425,6 +6455,11 @@
    "section": "Agent Skills",
    "since": "2026-11-20"
   },
+  "emirmrkaljevic/usb-rea": {
+   "id": 1418094021,
+   "section": "MCP Servers",
+   "since": "2026-11-28"
+  },
   "emma-sue/AegisOps": {
    "id": 1364178235,
    "section": "MCP Servers",
@@ -6959,6 +6994,11 @@
    "id": 1270567918,
    "section": "Orchestrators & Multi-Agent",
    "since": "2026-10-11"
+  },
+  "gosom/google-maps-scraper": {
+   "id": 631285104,
+   "section": "Agent Skills",
+   "since": "2026-11-28"
   },
   "gotalab/cc-sdd": {
    "id": 1021219064,
@@ -7520,6 +7560,11 @@
    "section": "MCP Servers",
    "since": "2026-10-11"
   },
+  "irraz/vulnerator-ai": {
+   "id": 1420920398,
+   "section": "Assistants & Domain Agents",
+   "since": "2026-11-28"
+  },
   "isjiamu/gzh-design-skill": {
    "id": 1285705904,
    "section": "Agent Skills",
@@ -8022,7 +8067,7 @@
   },
   "kortix-ai/CompanyOS": {
    "id": 868173144,
-   "section": "Assistants & Domain Agents",
+   "section": "Orchestrators & Multi-Agent",
    "since": "2026-10-31"
   },
   "krillinai/OpenCreator": {
@@ -8204,6 +8249,11 @@
    "id": 1278082400,
    "section": "MCP Servers",
    "since": "2026-10-13"
+  },
+  "lemomo-ai/lemo-animi": {
+   "id": 1459564876,
+   "section": "Agent Skills",
+   "since": "2026-11-28"
   },
   "lemomo-ai/lemo-opuscar": {
    "id": 1389011744,
@@ -8499,6 +8549,11 @@
    "id": 1309102418,
    "section": "Assistants & Domain Agents",
    "since": "2026-10-11"
+  },
+  "makushingu/harness-maxxing": {
+   "id": 1429337520,
+   "section": "Assistants & Domain Agents",
+   "since": "2026-11-28"
   },
   "malevrigns/agent-jev": {
    "id": 1380116460,
@@ -11759,6 +11814,11 @@
    "id": 1206400397,
    "section": "MCP Servers",
    "since": "2026-10-21"
+  },
+  "vyralcontent/content-skills": {
+   "id": 1272004366,
+   "section": "Agent Skills",
+   "since": "2026-11-28"
   },
   "w01fb0ss/PiBot": {
    "id": 1466272233,

@@ -11,9 +11,9 @@ Curated by **[machinae/awesome-claws](https://github.com/machinae/awesome-claws)
 |   |   |   |
 |---|---|---|
 | <a href="https://github.com/openclaw/openclaw"><img src="https://opengraph.githubassets.com/1/openclaw/openclaw" width="260"></a> | <a href="https://github.com/NousResearch/hermes-agent"><img src="https://opengraph.githubassets.com/1/NousResearch/hermes-agent" width="260"></a> | <a href="https://github.com/HKUDS/nanobot"><img src="https://opengraph.githubassets.com/1/HKUDS/nanobot" width="260"></a> |
-| **[OpenClaw](https://github.com/openclaw/openclaw)**<br>★ 395.3k | **[Hermes Agent](https://github.com/NousResearch/hermes-agent)**<br>★ 266.5k | **[nanobot](https://github.com/HKUDS/nanobot)**<br>★ 50.4k |
+| **[OpenClaw](https://github.com/openclaw/openclaw)**<br>★ 395.4k | **[Hermes Agent](https://github.com/NousResearch/hermes-agent)**<br>★ 266.7k | **[nanobot](https://github.com/HKUDS/nanobot)**<br>★ 50.4k |
 | <a href="https://github.com/AstrBotDevs/AstrBot"><img src="https://github.com/user-attachments/assets/f17cdb90-52d7-4773-be2e-ff64b566af6b" width="260"></a> | <a href="https://github.com/zeroclaw-labs/zeroclaw"><img src="https://opengraph.githubassets.com/1/zeroclaw-labs/zeroclaw" width="260"></a> | <a href="https://github.com/nanocoai/nanoclaw"><img src="https://opengraph.githubassets.com/1/qwibitai/nanoclaw" width="260"></a> |
-| **[AstrBot](https://github.com/AstrBotDevs/AstrBot)**<br>★ 47.6k | **[ZeroClaw](https://github.com/zeroclaw-labs/zeroclaw)**<br>★ 33.6k | **[NanoClaw](https://github.com/nanocoai/nanoclaw)**<br>★ 31.2k |
+| **[AstrBot](https://github.com/AstrBotDevs/AstrBot)**<br>★ 47.7k | **[ZeroClaw](https://github.com/zeroclaw-labs/zeroclaw)**<br>★ 33.6k | **[NanoClaw](https://github.com/nanocoai/nanoclaw)**<br>★ 31.2k |
 
 ## Contents
 
@@ -22,19 +22,19 @@ Curated by **[machinae/awesome-claws](https://github.com/machinae/awesome-claws)
 ## Main Projects
 
 - **[OpenClaw](https://github.com/openclaw/openclaw)** — TypeScript - The original full-featured personal AI assistant with multi-agent routing, voice wake, live canvas, companion apps, and 15+ messaging channels
-  <sub>★ 395.3k · TypeScript · MIT · npm · pushed 2026-11-27 · Win · WSL2 · macOS · Linux</sub>
+  <sub>★ 395.4k · TypeScript · MIT · npm · pushed 2026-11-28 · Win · WSL2 · macOS · Linux</sub>
   <sub>`npm install -g openclaw@latest --allow-scripts=openclaw`</sub>
 - **[Hermes Agent](https://github.com/NousResearch/hermes-agent)** — Python / TypeScript - Self-improving AI agent with autonomous skill creation, persistent memory, multi-platform messaging, and subagent delegation
-  <sub>★ 266.5k · Python · MIT · script · pushed 2026-11-27 · Win · WSL2 · macOS · Linux</sub>
+  <sub>★ 266.7k · Python · MIT · script · pushed 2026-11-28 · Win · WSL2 · macOS · Linux</sub>
   <sub>`curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash`</sub>
 - **[nanobot](https://github.com/HKUDS/nanobot)** — Python - Ultra-lightweight OpenClaw-style assistant focused on research workflows, one-click deploy, MCP support, and agent social networking
   <sub>★ 50.4k · Python · MIT · psh · pushed 2026-11-27 · Win · WSL2? · macOS? · Linux · Docker</sub>
   <sub>`irm https://raw.githubusercontent.com/HKUDS/nanobot/main/scripts/install.ps1 | iex`</sub>
 - **[AstrBot](https://github.com/AstrBotDevs/AstrBot)** — Python - Agentic IM chatbot infrastructure with broad IM platform support, LLM integrations, plugins, and AI features
-  <sub>★ 47.6k · Python · AGPL-3.0 · uv · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 47.7k · Python · AGPL-3.0 · uv · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`uv tool install astrbot --python 3.12`</sub>
 - **[ZeroClaw](https://github.com/zeroclaw-labs/zeroclaw)** — Rust - Trait-driven, zero-overhead AI infrastructure with a fully swappable core that deploys across environments
-  <sub>★ 33.6k · Rust · Apache-2.0 · script · pushed 2026-11-27 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 33.6k · Rust · Apache-2.0 · script · pushed 2026-11-28 · Win · WSL2? · macOS · Linux</sub>
   <sub>`curl -fsSL https://raw.githubusercontent.com/zeroclaw-labs/zeroclaw/master/install.sh | sh`</sub>
 - **[NanoClaw](https://github.com/nanocoai/nanoclaw)** — TypeScript - Lightweight container-sandboxed assistant designed to be simple to understand and extend via skills
   <sub>★ 31.2k · TypeScript · MIT · clone · pushed 2026-11-27 · Win · WSL2 · macOS · Linux</sub>
@@ -93,12 +93,12 @@ Curated by **[machinae/awesome-claws](https://github.com/machinae/awesome-claws)
 - **[Autobot](https://github.com/crystal-autobot/autobot)** — Crystal - AI assistant with kernel-enforced sandboxing, multi-provider LLM, voice, vision, cron, and MCP tools
   <sub>★ 47 · Crystal · MIT · brew · pushed 2026-11-01 · Win · WSL2? · macOS · Linux · Docker</sub>
   <sub>`brew tap crystal-autobot/tap`</sub>
+- **[ClawDroid](https://github.com/KarakuriAgent/clawdroid)** — Go / Kotlin - PicoClaw fork rebuilt as a native Android app with embedded Go backend, chat UI, voice mode, and digital assistant capabilities
+  <sub>★ 31 · Go · clone · pushed 2026-03-21 · WSL2? · Linux</sub>
+  <sub>`git clone https://github.com/KarakuriAgent/clawdroid.git`</sub>
 - **[pickle-bot](https://github.com/czl9707/pickle-bot)** — Python - A lightweight self-hosted personal AI assistant
   <sub>★ 30 · Python · pip · pushed 2026-10-26 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pip install pickle-bot`</sub>
-- **[ClawDroid](https://github.com/KarakuriAgent/clawdroid)** — Go / Kotlin - PicoClaw fork rebuilt as a native Android app with embedded Go backend, chat UI, voice mode, and digital assistant capabilities
-  <sub>★ 30 · Go · clone · pushed 2026-03-21 · WSL2? · Linux</sub>
-  <sub>`git clone https://github.com/KarakuriAgent/clawdroid.git`</sub>
 - **[BabyClaw](https://github.com/yogesharc/babyclaw)** — JavaScript - Lightweight single-file alternative to OpenClaw built on Claude Agent SDK. Telegram-controlled with voice messages, personality adaptation, and cron automation
   <sub>★ 15 · JavaScript · MIT · script · pushed 2026-02-17 · WSL2 · macOS · Linux</sub>
   <sub>`curl -fsSL https://raw.githubusercontent.com/yogesharc/babyclaw/main/setup-vps.sh | bash`</sub>
@@ -118,7 +118,7 @@ Curated by **[machinae/awesome-claws](https://github.com/machinae/awesome-claws)
   <sub>★ 9 · Python · Apache-2.0 · source · pushed 2026-11-26 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Abdur-rahmaanJ/angel-claw.git`</sub>
 - **[moxxy](https://github.com/moxxy-ai/moxxy)** — Rust - A self-hosted multi-agent AI framework built in Rust
-  <sub>★ 6 · TypeScript · MIT · npm · pushed 2026-11-27 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 6 · TypeScript · MIT · npm · pushed 2026-11-28 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npm install -g @moxxy/cli`</sub>
 - **[troublemaker](https://github.com/tinyfatco/troublemaker)** — TypeScript - Mom, liberated. Multi-platform AI agent runtime
   <sub>★ 1 · TypeScript · MIT · clone · pushed 2026-11-26 · WSL2 · macOS? · Linux · Docker</sub>
@@ -130,6 +130,6 @@ Curated by **[machinae/awesome-claws](https://github.com/machinae/awesome-claws)
 
 ---
 
-Snapshot 2026-11-27. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-11-28. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
 Filter the same data in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/). Spreadsheet edition: retired. The last copy, built 2026-10-22, stays available but is no longer updated. The website is the maintained edition. Its last workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/download/v2026.10.22/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/download/v2026.10.22/Awesome-Agentic-Atlas-LIGHT.xlsx).

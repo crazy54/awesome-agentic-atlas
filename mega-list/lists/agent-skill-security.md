@@ -13,7 +13,7 @@ Curated by **[LLMSecurity/awesome-agent-skills-security](https://github.com/LLMS
 | <a href="https://github.com/Significant-Gravitas/AutoGPT"><img src="https://raw.githubusercontent.com/Significant-Gravitas/AutoGPT/master/docs/home/.gitbook/assets/Banner_image.png" width="260"></a> | <a href="https://github.com/f/prompts.chat"><img src="https://raw.githubusercontent.com/f/prompts.chat/main/public/sponsors/clemta.webp" width="260"></a> | <a href="https://github.com/punkpeye/awesome-mcp-servers"><img src="https://opengraph.githubassets.com/1/punkpeye/awesome-mcp-servers" width="260"></a> |
 | **[AutoGPT Plugins](https://github.com/Significant-Gravitas/AutoGPT)**<br>★ 188.2k | **[awesome-chatgpt-prompts](https://github.com/f/prompts.chat)**<br>★ 178.7k | **[awesome-mcp-servers](https://github.com/punkpeye/awesome-mcp-servers)**<br>★ 98.6k |
 | <a href="https://github.com/e2b-dev/awesome-ai-agents"><img src="https://opengraph.githubassets.com/1/e2b-dev/awesome-ai-agents" width="260"></a> | <a href="https://github.com/promptfoo/promptfoo"><img src="https://raw.githubusercontent.com/promptfoo/promptfoo/main/site/static/img/claude-vs-gpt-example%402x.png" width="260"></a> | <a href="https://github.com/NVIDIA/NemoClaw"><img src="https://opengraph.githubassets.com/1/NVIDIA/NemoClaw" width="260"></a> |
-| **[awesome-ai-agents](https://github.com/e2b-dev/awesome-ai-agents)**<br>★ 31.1k | **[Promptfoo](https://github.com/promptfoo/promptfoo)**<br>★ 27.7k | **[NemoClaw](https://github.com/NVIDIA/NemoClaw)**<br>★ 23.1k |
+| **[awesome-ai-agents](https://github.com/e2b-dev/awesome-ai-agents)**<br>★ 31.1k | **[Promptfoo](https://github.com/promptfoo/promptfoo)**<br>★ 27.8k | **[NemoClaw](https://github.com/NVIDIA/NemoClaw)**<br>★ 23.1k |
 
 ## Contents
 
@@ -25,7 +25,7 @@ Curated by **[LLMSecurity/awesome-agent-skills-security](https://github.com/LLMS
 ## Agent Skill Specifications
 
 - **[AutoGPT Plugins](https://github.com/Significant-Gravitas/AutoGPT)** — Plugin system for autonomous agents
-  <sub>★ 188.2k · Python · source · pushed 2026-11-27 · Win? · WSL2 · macOS? · Linux · Docker</sub>
+  <sub>★ 188.2k · Python · source · pushed 2026-11-28 · Win? · WSL2 · macOS? · Linux · Docker</sub>
   <sub>`git clone https://github.com/Significant-Gravitas/AutoGPT.git`</sub>
 - **[AgentSkills.io](https://agentskills.io/specification)** — Agent skill definition and security requirements
   <sub>website</sub>
@@ -49,7 +49,7 @@ Curated by **[LLMSecurity/awesome-agent-skills-security](https://github.com/LLMS
 ## Related Awesome Lists
 
 - **[awesome-chatgpt-prompts](https://github.com/f/prompts.chat)** — Prompt engineering (includes adversarial examples)
-  <sub>★ 178.7k · MDX · npx · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 178.7k · MDX · npx · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx prompts.chat new my-prompt-library`</sub>
 - **[awesome-mcp-servers](https://github.com/punkpeye/awesome-mcp-servers)** — MCP server ecosystem (attack surface reference)
   <sub>★ 98.6k · MIT · source · pushed 2026-11-26 · Win · WSL2? · macOS · Linux · Docker</sub>
@@ -70,13 +70,13 @@ Curated by **[LLMSecurity/awesome-agent-skills-security](https://github.com/LLMS
 ## Tools &amp; Frameworks
 
 - **[Promptfoo](https://github.com/promptfoo/promptfoo)** — LLM red teaming and evaluation framework
-  <sub>★ 27.7k · TypeScript · MIT · npm · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 27.8k · TypeScript · MIT · npm · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g promptfoo`</sub>
 - **[NemoClaw](https://github.com/NVIDIA/NemoClaw)** — NVIDIA reference stack for running always-on AI agents more safely in sandboxes, with network policy, hardening, routed inference, and lifecycle controls
-  <sub>★ 23.1k · TypeScript · Apache-2.0 · source · pushed 2026-11-27 · Win? · WSL2 · macOS? · Linux?</sub>
+  <sub>★ 23.1k · TypeScript · Apache-2.0 · source · pushed 2026-11-28 · Win? · WSL2 · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/NVIDIA/NemoClaw.git`</sub>
 - **[CubeSandbox](https://github.com/TencentCloud/CubeSandbox)** — Hardware-isolated (per-kernel) sub-60ms sandbox for secure AI agent code execution, with an out-of-sandbox credential vault, eBPF network isolation, and domain-allowlisted egress controls with audit logging
-  <sub>★ 13.5k · Go · source · pushed 2026-11-27 · WSL2? · Linux</sub>
+  <sub>★ 13.5k · Go · source · pushed 2026-11-28 · WSL2? · Linux</sub>
   <sub>`git clone https://github.com/TencentCloud/CubeSandbox.git`</sub>
 - **[Garak](https://github.com/NVIDIA/garak)** — LLM vulnerability scanner
   <sub>★ 10.2k · Python · Apache-2.0 · source · pushed 2026-11-25 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -97,19 +97,19 @@ Curated by **[LLMSecurity/awesome-agent-skills-security](https://github.com/LLMS
   <sub>★ 1.5k · TypeScript · Apache-2.0 · pip · pushed 2024-08-07 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install rebuff`</sub>
 - **[HOL Guard](https://github.com/hashgraph-online/hol-guard)** — Local-first runtime firewall for AI coding agents: intercepts shell, secrets, MCP config changes, and package installs before execution
-  <sub>★ 1.1k · Rust · Apache-2.0 · pipx · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 1.1k · Rust · Apache-2.0 · pipx · pushed 2026-11-28 · Win? · WSL2? · macOS · Linux · Docker</sub>
   <sub>`pipx install hol-guard`</sub>
 - **[Pipelock](https://github.com/pipelab-org/pipelock)** — Open-source AI agent firewall and MCP-aware egress proxy with DLP, prompt injection scanning, process sandboxing, and mediator-signed action receipts
-  <sub>★ 1k · Go · Apache-2.0 · brew · pushed 2026-11-27 · Win? · WSL2 · macOS · Linux · Docker</sub>
+  <sub>★ 1k · Go · Apache-2.0 · brew · pushed 2026-11-28 · Win? · WSL2 · macOS · Linux · Docker</sub>
   <sub>`brew install luckyPipewrench/tap/pipelock`</sub>
 - **[API Relay Audit](https://github.com/toby-bridges/api-relay-audit)** — Local checks of third-party AI API relays used by agents for prompt/context signals, package-command rewriting, error leakage, and SSE integrity before trusting upstream traffic
   <sub>★ 934 · Python · AGPL-3.0 · source · pushed 2026-11-22 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/toby-bridges/api-relay-audit.git`</sub>
 - **[Tracekit](https://github.com/Cygnux-Labs/Tracekit)** — Out-of-process signer that coding-agent hooks, framework adapters and an MCP gateway ask before each tool call runs: it allows, denies or holds the call until a person approves the exact arguments, and signs every call, decision and result into a per-run hash chain that verifies offline; calls that bypass those hooks, adapters or the gateway aren't recorded
-  <sub>★ 917 · Python · MIT · npx · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 929 · Python · MIT · npx · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`npx @cygnuxlabs/tracekit up`</sub>
 - **[Vestige](https://github.com/samvallad33/vestige)** — Local safety and memory layer for AI agents: Operator Lite, a hook-based gate whose deterministic rules block destructive agent shell commands (force-push, destructive SQL, reverse shells, cloud-metadata access) before they run, and Strata, an append-only hash-chained memory log that traces poisoned memory back to the write that introduced it
-  <sub>★ 664 · Rust · AGPL-3.0 · npx · pushed 2026-11-26 · Win · WSL2? · macOS · Linux</sub>
+  <sub>★ 664 · Rust · AGPL-3.0 · npx · pushed 2026-11-28 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npx @vestige/init`</sub>
 - **[Invariant Guardrails](https://github.com/invariantlabs-ai/invariant)** — Policy-based agent security guardrails
   <sub>★ 479 · Python · Apache-2.0 · source · pushed 2026-01-12 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -118,25 +118,25 @@ Curated by **[LLMSecurity/awesome-agent-skills-security](https://github.com/LLMS
   <sub>★ 287 · Go · script · pushed 2026-10-31 · WSL2 · macOS · Linux · Docker</sub>
   <sub>`curl -fsSL https://raw.githubusercontent.com/clawvisor/clawvisor/main/scripts/install.sh | sh`</sub>
 - **[Humanbound](https://github.com/humanbound/humanbound)** — Open-source adversarial testing engine, SDK, and CLI for AI agents: runs live-endpoint, multi-turn, and tool-abuse tests against a deployed agent and converts findings into deployable guardrail rules
-  <sub>★ 258 · Python · Apache-2.0 · pip · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 259 · Python · Apache-2.0 · pip · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pip install 'humanbound[engine]'`</sub>
 - **[node9](https://github.com/node9-ai/node9-proxy)** — Security and governance layer that checks every tool call from coding agents and MCP servers before it runs: credential jail, secret and PII detection, human approval for risky actions, MCP tool definition pinning, SHA-256 pinning of installed skills and plugins, and one audit record across agents
-  <sub>★ 226 · TypeScript · Apache-2.0 · npm · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 226 · TypeScript · Apache-2.0 · npm · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npm install -g node9-ai # any platform`</sub>
 - **[Argus](https://github.com/gy15901580825/Argus)** — Red-team CLI for AI agents that runs probes through hostile MCP servers, browser trap pages and a mock payment merchant, and installs a Claude Code skill in a throwaway container to record the decoy secrets it reads, the commands it runs and the hosts it contacts, with SARIF output and a GitHub Action
   <sub>★ 219 · Python · Apache-2.0 · pipx · pushed 2026-11-24 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pipx install argus-probe # or: pip install argus-probe`</sub>
 - **[Agent Memory Guard](https://github.com/OWASP/www-project-agent-memory-guard)** — OWASP reference implementation for ASI06 (Memory Poisoning): runtime defense that screens every agent memory read/write through detectors + a declarative policy, with source-class provenance, forensic SecurityEvents, and snapshot rollback. LangChain/OpenAI-Agents/AutoGen/CrewAI/mem0 integrations
-  <sub>★ 214 · Python · Apache-2.0 · pip · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 214 · Python · Apache-2.0 · pip · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install agent-memory-guard`</sub>
 - **[SkillHawk](https://github.com/Berserk-hub150/skillhawk)** — Zero-dependency static security scanner for Agent Skills, SKILL.md, and MCP configurations; flags risky instruction patterns without executing the target
-  <sub>★ 117 · JavaScript · MIT · gh-action · pushed 2026-11-27</sub>
+  <sub>★ 117 · JavaScript · MIT · gh-action · pushed 2026-11-28</sub>
   <sub>`uses: Berserk-hub150/skillhawk@main # in .github/workflows/*.yml`</sub>
 - **[PIC Standard](https://github.com/pic-standard/pic-standard)** — Local-first standard and reference verifier that checks agent intent, provenance, and evidence at the action boundary and fails closed before high-impact tool calls; Python CLI, MCP/LangGraph/OpenClaw integrations, HTTP bridge, and a language-agnostic conformance suite
   <sub>★ 74 · Python · Apache-2.0 · clone · pushed 2026-11-16 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/pic-standard/pic-standard.git`</sub>
 - **[AVE (Agentic Vulnerability Enumeration)](https://github.com/aveproject/ave)** — Open standard and behavioral vulnerability taxonomy for agentic AI components (MCP servers, agent skills, LLM plugins), stable IDs scored with OWASP's AIVSS framework
-  <sub>★ 26 · Python · Apache-2.0 · source · pushed 2026-11-26 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 26 · Python · Apache-2.0 · source · pushed 2026-11-28 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/aveproject/ave.git`</sub>
 - **[trentclaw](https://github.com/trnt-ai/trent-openclaw-security-assessment)** — Security assessment skill for OpenClaw environments: scans gateway config, skill permissions, MCP trust boundaries, and plugins, and correlates them into chained attack paths with severity-ranked remediation steps
   <sub>★ 24 · Python · Apache-2.0 · source · pushed 2026-11-09 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -151,16 +151,16 @@ Curated by **[LLMSecurity/awesome-agent-skills-security](https://github.com/LLMS
   <sub>★ 16 · Python · pip · pushed 2026-05-05 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install mitmproxy fastapi uvicorn pyyaml requests pytest`</sub>
 - **[SkillTotal](https://github.com/pezhik/skilltotal)** — Static, offline scanner for AI components (MCP servers, agent skills, npm/PyPI packages, repos): supply-chain risk, dangerous capabilities, prompt-injection, exfiltration; deterministic, evidence-anchored, SARIF + pre-commit/GitHub Action
-  <sub>★ 16 · Python · Apache-2.0 · npx · pushed 2026-11-26 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`npx -y --package=skilltotal@1.15.0 -- skilltotal scan https://github.com/owner/repo`</sub>
+  <sub>★ 16 · Python · Apache-2.0 · npx · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>`npx -y --package=skilltotal@1.16.0 -- skilltotal scan https://github.com/owner/repo`</sub>
 - **[agent-audit-kit](https://github.com/sattyamjjain/agent-audit-kit)** — Offline static scanner for MCP and agent configurations with SARIF output, a GitHub Action, and a public ledger mapping each covered MCP CVE to the rule that detects it
-  <sub>★ 12 · Python · Apache-2.0 · pip · pushed 2026-11-26 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 12 · Python · Apache-2.0 · pip · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
   <sub>`pip install agent-audit-kit`</sub>
 - **[Ziran](https://github.com/taoq-ai/ziran)** — Security testing framework for AI agents that models tools as a graph to find dangerous tool chains, execution-level side effects, and multi-phase exploits
   <sub>★ 12 · Python · pip · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install ziran`</sub>
 - **[Sunglasses](https://github.com/sunglasses-dev/sunglasses)** — Runtime trust scanner for agent skills and tool use: a tested pattern library across 100+ attack categories (prompt injection, tool poisoning, MCP attacks, skill compromise; current counts in the README) plus a mechanism layer, shipped as a pip package, GitHub Action, and free web scanner with a published, reproducible precision/recall benchmark
-  <sub>★ 11 · Python · MIT · pip · pushed 2026-11-27 · WSL2 · macOS? · Linux? · Docker</sub>
+  <sub>★ 11 · Python · MIT · pip · pushed 2026-11-28 · WSL2 · macOS? · Linux? · Docker</sub>
   <sub>`pip install sunglasses # text scanning — zero dependencies`</sub>
 - **[SkillCI](https://github.com/kabirnarang39/skillci)** — Regression testing + OWASP Agentic Skills Top 10-mapped static security lint for Claude Skills. Adds a self-growing eval loop (an uncovered regression or successful redteam attack writes its own permanent test case) and git-native bisect to find the exact commit that broke a skill
   <sub>★ 8 · Go · Apache-2.0 · scoop · pushed 2026-08-13 · Win · WSL2? · macOS · Linux · Docker</sub>
@@ -178,13 +178,13 @@ Curated by **[LLMSecurity/awesome-agent-skills-security](https://github.com/LLMS
   <sub>★ 5 · Python · Apache-2.0 · uv · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`uvx agentfox scan machine`</sub>
 - **[OpenMoat](https://github.com/crocodile-labs/openmoat)** — Local Rust policy layer that checks coding-agent commands, file access, web requests and MCP calls through each agent's hooks before they run, with OS sandboxes for Claude Code, Codex and Cursor, an egress proxy, MCP server pinning and a hash-chained audit log
-  <sub>★ 5 · Rust · MIT · cargo · pushed 2026-11-27 · Win · WSL2 · macOS · Linux</sub>
+  <sub>★ 5 · Rust · MIT · cargo · pushed 2026-11-28 · Win · WSL2 · macOS · Linux</sub>
   <sub>`cargo install openmoat --locked`</sub>
 - **[SkillPreflight](https://github.com/agent-contracts/skill-preflight)** — Read-only pre-install scanner for local and GitHub agent skills, with a 0-100 score across safety, permissions, token cost, and maintainability; JSON/SARIF output and a GitHub Action
   <sub>★ 4 · TypeScript · MIT · npx · pushed 2026-11-23 · Win · WSL2? · macOS · Linux</sub>
   <sub>`npx skill-preflight@latest scan https://github.com/agent-contracts/skill-preflight/tree/main/examples/risky-skill`</sub>
 - **[Ironheights](https://github.com/Frank-Masciopinto/ironheights)** — Open-source pre-install static scanner for OpenClaw/ClawHub agent skills (SKILL.md): rules for instruction override, hidden text, credential reads, exfiltration, remote-exec installs and persistence, plus integrity pinning and quarantine
-  <sub>★ 4 · TypeScript · Apache-2.0 · npm · pushed 2026-11-27 · WSL2? · macOS · Linux</sub>
+  <sub>★ 4 · TypeScript · Apache-2.0 · npm · pushed 2026-11-28 · WSL2? · macOS · Linux</sub>
   <sub>`npm install -g ironheights`</sub>
 - **[DScan](https://github.com/DeepScan-Security/dscan)** — Open-source agent security suite for runtime tool-call tracing, prompt-injection shielding, MCP audits, adversarial testing, and sequence-level attack detection
   <sub>★ 3 · Python · pip · pushed 2026-07-21 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -286,13 +286,13 @@ Curated by **[LLMSecurity/awesome-agent-skills-security](https://github.com/LLMS
   <sub>TypeScript · MIT · npx · pushed 2026-10-12 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx ultraprobe scan -p "You are a helpful assistant"`</sub>
 - **[Know Your Agent](https://github.com/RishabhPande/know-your-agent)** — Educational Python examples of Ed25519-signed agent credentials, narrowed delegation, revocation and scoped authorization for synthetic purchases
-  <sub>Python · MIT · clone · pushed 2026-11-25 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>Python · MIT · clone · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/RishabhPande/know-your-agent.git`</sub>
 
 ## Benchmarks &amp; Datasets
 
 - **[Orca AI Incident Archive](https://github.com/Continuum-AI-Corp/Orca-AI-Incident-Archive)** — Real-world agent security incidents (MCP, tool/skill supply chain, indirect prompt injection, rogue tool actions), each flagged confirmed victim vs. research demo
-  <sub>★ 384 · HTML · source · pushed 2026-11-12</sub>
+  <sub>★ 443 · HTML · source · pushed 2026-11-27</sub>
   <sub>`git clone https://github.com/Continuum-AI-Corp/Orca-AI-Incident-Archive.git`</sub>
 - **[ASB](https://github.com/agiresearch/ASB)** — Comprehensive agent security
   <sub>★ 333 · Python · MIT · clone · pushed 2026-09-30 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -439,6 +439,6 @@ Curated by **[LLMSecurity/awesome-agent-skills-security](https://github.com/LLMS
 
 ---
 
-Snapshot 2026-11-27. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-11-28. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
 Filter the same data in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/). Spreadsheet edition: retired. The last copy, built 2026-10-22, stays available but is no longer updated. The website is the maintained edition. Its last workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/download/v2026.10.22/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/download/v2026.10.22/Awesome-Agentic-Atlas-LIGHT.xlsx).

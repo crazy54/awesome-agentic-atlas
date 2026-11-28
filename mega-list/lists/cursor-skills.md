@@ -31,8 +31,8 @@ Curated by **[spencerpauly/awesome-cursor-skills](https://github.com/spencerpaul
 - [Authentication &amp; Payments](#authentication--payments) (3)
 - [Analytics &amp; Tracking](#analytics--tracking) (4)
 - [Error Tracking &amp; Monitoring](#error-tracking--monitoring) (1)
-- [Cursor Rules](#cursor-rules) (3)
 - [Tools](#tools) (3)
+- [Cursor Rules](#cursor-rules) (3)
 - [Learning](#learning) (4)
 - [Directories](#directories) (4)
 
@@ -252,7 +252,7 @@ Curated by **[spencerpauly/awesome-cursor-skills](https://github.com/spencerpaul
 ## Code Quality &amp; Security
 
 - **[HOL Guard](https://github.com/hashgraph-online/hol-guard)** — Security harness that intercepts tool calls in AI coding agents before files change or network is contacted
-  <sub>★ 1.1k · Rust · Apache-2.0 · pipx · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux? · Docker</sub>
+  <sub>★ 1.1k · Rust · Apache-2.0 · pipx · pushed 2026-11-28 · Win? · WSL2? · macOS · Linux · Docker</sub>
   <sub>`pipx install hol-guard`</sub>
 - **[reviewing-code](https://github.com/spencerpauly/awesome-cursor-skills/tree/HEAD/resources/reviewing-code/SKILL.md)** — Thorough code review focused on correctness, maintainability, performance, and best practices
   <sub>Python · CC0-1.0 · in-repo · pushed 2026-08-02</sub>
@@ -288,7 +288,7 @@ Curated by **[spencerpauly/awesome-cursor-skills](https://github.com/spencerpaul
   <sub>Python · CC0-1.0 · in-repo · pushed 2026-08-02</sub>
   <sub>`git clone https://github.com/spencerpauly/awesome-cursor-skills.git && cd awesome-cursor-skills/resources/fixing-broken-links/SKILL.md`</sub>
 - **[penthera](https://github.com/danoszz/penthera/tree/main/skills/penthera)** — Security scanner for web apps covering TLS, headers, auth hardening, secret scanning, IDOR/OAuth, and injection probes, with OWASP-mapped findings and SARIF output. Runs as a Cursor skill or CLI for authorized testing only
-  <sub>JavaScript · MIT · in-repo · pushed 2026-11-26</sub>
+  <sub>JavaScript · MIT · in-repo · pushed 2026-11-27</sub>
   <sub>`git clone https://github.com/danoszz/penthera.git && cd penthera/skills/penthera`</sub>
 
 ## Testing
@@ -303,7 +303,7 @@ Curated by **[spencerpauly/awesome-cursor-skills](https://github.com/spencerpaul
   <sub>Python · CC0-1.0 · in-repo · pushed 2026-08-02</sub>
   <sub>`git clone https://github.com/spencerpauly/awesome-cursor-skills.git && cd awesome-cursor-skills/resources/python-tdd-with-uv/SKILL.md`</sub>
 - **[mattpocock-tdd](https://github.com/mattpocock/skills/tree/main/tdd)** — Vertical-slice TDD for AI agents — one test, one implementation, repeat. Prevents over-engineering and speculative tests
-  <sub>Shell · MIT · in-repo · pushed 2026-11-25</sub>
+  <sub>Shell · MIT · in-repo · pushed 2026-11-27</sub>
   <sub>`git clone https://github.com/mattpocock/skills.git && cd skills/tdd`</sub>
 - **[anthropic-webapp-testing](https://github.com/anthropics/skills/tree/main/skills/webapp-testing)** — Automated browser testing for web apps with screenshot verification and interaction flows
   <sub>Python · in-repo · pushed 2026-11-16</sub>
@@ -396,13 +396,13 @@ Curated by **[spencerpauly/awesome-cursor-skills](https://github.com/spencerpaul
   <sub>★ 1 · Shell · MIT · npx · pushed 2026-07-27 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx @hanv89/azure-arch-skill@latest install --agent=claude-code`</sub>
 - **[mattpocock-prd-to-issues](https://github.com/mattpocock/skills/tree/main/prd-to-issues)** — Convert a product requirements doc into a set of well-scoped GitHub issues
-  <sub>Shell · MIT · in-repo · pushed 2026-11-25</sub>
+  <sub>Shell · MIT · in-repo · pushed 2026-11-27</sub>
   <sub>`git clone https://github.com/mattpocock/skills.git && cd skills/prd-to-issues`</sub>
 - **[mattpocock-improve-architecture](https://github.com/mattpocock/skills/tree/main/improve-codebase-architecture)** — Analyze a codebase and propose concrete architecture improvements
-  <sub>Shell · MIT · in-repo · pushed 2026-11-25</sub>
+  <sub>Shell · MIT · in-repo · pushed 2026-11-27</sub>
   <sub>`git clone https://github.com/mattpocock/skills.git && cd skills/improve-codebase-architecture`</sub>
 - **[mattpocock-grill-me](https://github.com/mattpocock/skills/tree/main/grill-me)** — Challenge assumptions and push back on ideas before committing to an approach
-  <sub>Shell · MIT · in-repo · pushed 2026-11-25</sub>
+  <sub>Shell · MIT · in-repo · pushed 2026-11-27</sub>
   <sub>`git clone https://github.com/mattpocock/skills.git && cd skills/grill-me`</sub>
 - **[anthropic-mcp-builder](https://github.com/anthropics/skills/tree/main/skills/mcp-builder)** — Build Model Context Protocol servers from scratch with tool definitions and transport setup
   <sub>Python · in-repo · pushed 2026-11-16</sub>
@@ -483,10 +483,10 @@ Curated by **[spencerpauly/awesome-cursor-skills](https://github.com/spencerpaul
   <sub>Python · CC0-1.0 · in-repo · pushed 2026-08-02</sub>
   <sub>`git clone https://github.com/spencerpauly/awesome-cursor-skills.git && cd awesome-cursor-skills/resources/adding-feature-flags/SKILL.md`</sub>
 - **[posthog-llm-analytics](https://github.com/PostHog/skills/tree/main/skills/posthog/llm-analytics)** — Instrument LLM calls with token usage, latency, cost tracking, and model comparison
-  <sub>Python · MIT · in-repo · pushed 2026-11-26</sub>
+  <sub>Python · MIT · in-repo · pushed 2026-11-27</sub>
   <sub>`git clone https://github.com/PostHog/skills.git && cd skills/skills/posthog/llm-analytics`</sub>
 - **[posthog-migrations](https://github.com/PostHog/skills/tree/main/skills/posthog/migrations)** — Migrate from other analytics providers (Amplitude, Mixpanel, GA) to PostHog
-  <sub>Python · MIT · in-repo · pushed 2026-11-26</sub>
+  <sub>Python · MIT · in-repo · pushed 2026-11-27</sub>
   <sub>`git clone https://github.com/PostHog/skills.git && cd skills/skills/posthog/migrations`</sub>
 
 ## Error Tracking &amp; Monitoring
@@ -494,6 +494,18 @@ Curated by **[spencerpauly/awesome-cursor-skills](https://github.com/spencerpaul
 - **[adding-error-tracking](https://github.com/spencerpauly/awesome-cursor-skills/tree/HEAD/resources/adding-error-tracking/SKILL.md)** — Add Sentry crash reporting, performance monitoring, and source maps
   <sub>Python · CC0-1.0 · in-repo · pushed 2026-08-02</sub>
   <sub>`git clone https://github.com/spencerpauly/awesome-cursor-skills.git && cd awesome-cursor-skills/resources/adding-error-tracking/SKILL.md`</sub>
+
+## Tools
+
+- **[npx skills](https://github.com/vercel-labs/skills)** — CLI to search, install, and manage skills
+  <sub>★ 41.2k · TypeScript · MIT · npx · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>`npx skills add vercel-labs/agent-skills`</sub>
+- **[PostHog/context-mill](https://github.com/PostHog/context-mill)** — Assemble context for AI agents into Agent Skills-compliant packages
+  <sub>★ 73 · JavaScript · source · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>`git clone https://github.com/PostHog/context-mill.git`</sub>
+- **[Anthropic Skill Creator](https://github.com/anthropics/skills/tree/main/skills/skill-creator)** — Official skill for drafting, testing, and optimizing custom SKILL.md files
+  <sub>Python · in-repo · pushed 2026-11-16</sub>
+  <sub>`git clone https://github.com/anthropics/skills.git && cd skills/skills/skill-creator`</sub>
 
 ## Cursor Rules
 
@@ -506,18 +518,6 @@ Curated by **[spencerpauly/awesome-cursor-skills](https://github.com/spencerpaul
 - **[tugkanboz/awesome-cursorrules](https://github.com/tugkanboz/awesome-cursorrules)** — Showcases modern Cursor Rules system with MDC format
   <sub>★ 24 · MIT · clone · pushed 2026-09-29</sub>
   <sub>`git clone https://github.com/your-org/awesome-cursor-rules`</sub>
-
-## Tools
-
-- **[npx skills](https://github.com/vercel-labs/skills)** — CLI to search, install, and manage skills
-  <sub>★ 41.1k · TypeScript · MIT · npx · pushed 2026-11-27 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`npx skills add vercel-labs/agent-skills`</sub>
-- **[PostHog/context-mill](https://github.com/PostHog/context-mill)** — Assemble context for AI agents into Agent Skills-compliant packages
-  <sub>★ 73 · JavaScript · source · pushed 2026-11-26 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`git clone https://github.com/PostHog/context-mill.git`</sub>
-- **[Anthropic Skill Creator](https://github.com/anthropics/skills/tree/main/skills/skill-creator)** — Official skill for drafting, testing, and optimizing custom SKILL.md files
-  <sub>Python · in-repo · pushed 2026-11-16</sub>
-  <sub>`git clone https://github.com/anthropics/skills.git && cd skills/skills/skill-creator`</sub>
 
 ## Learning
 
@@ -552,6 +552,6 @@ Curated by **[spencerpauly/awesome-cursor-skills](https://github.com/spencerpaul
 
 ---
 
-Snapshot 2026-11-27. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-11-28. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
 Filter the same data in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/). Spreadsheet edition: retired. The last copy, built 2026-10-22, stays available but is no longer updated. The website is the maintained edition. Its last workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/download/v2026.10.22/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/download/v2026.10.22/Awesome-Agentic-Atlas-LIGHT.xlsx).

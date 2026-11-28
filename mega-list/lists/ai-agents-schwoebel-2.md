@@ -4,7 +4,7 @@
 
 Curated by **[jim-schwoebel/awesome_ai_agents](https://github.com/jim-schwoebel/awesome_ai_agents)** — all credit for the selection belongs there. This page adds stars, platform evidence, an install line and a screenshot to each entry.
 
-953 entries · 827 distinct repos · 8 sections
+951 entries · 825 distinct repos · 8 sections
 
 [← back to the mega list](../README.md)
 
@@ -17,11 +17,8 @@ Page **2** of 2, because this list is longer than the 512 KB GitHub will render 
 
 ## Security
 
-<sub>Entries 16–38 of 38. The rest are on this page's other parts, linked above and below.</sub>
+<sub>Entries 17–38 of 38. The rest are on this page's other parts, linked above and below.</sub>
 
-- **[Multi-Agent-Secops-Llm](https://github.com/tegridydev/multi-agent-secops-llm)** — This project is a multi-agent security framework that utilizes multiple LLM models to analyze and generate comprehensive security briefs
-  <sub>★ 10 · Python · MIT · source · pushed 2026-11-25 · Win? · WSL2? · macOS? · Linux?</sub>
-  <sub>`git clone https://github.com/tegridydev/multi-agent-secops-llm.git`</sub>
 - **[Agriaid](https://github.com/shamspias/AgriAid)** — AgriAid is an AI-powered tool for farmers &amp; agricultural agents in Bangladesh, offering plant disease forecasting &amp; identification. Using…
   <sub>★ 7 · Python · clone · pushed 2023-03-31 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/shamspias/agriaid.git`</sub>
@@ -98,13 +95,13 @@ Page **2** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 2.2k · MIT · source · pushed 2026-11-27 · Win · WSL2? · macOS · Linux</sub>
   <sub>`git clone https://github.com/Xnhyacinth/Awesome-LLM-Long-Context-Modeling.git`</sub>
 - **[Theagentcompany](https://github.com/TheAgentCompany/TheAgentCompany)** — An agent benchmark with tasks in a simulated software company
-  <sub>★ 821 · Python · MIT · script · pushed 2025-11-17 · Win? · WSL2 · macOS · Linux · Docker</sub>
+  <sub>★ 824 · Python · MIT · script · pushed 2025-11-17 · Win? · WSL2 · macOS · Linux · Docker</sub>
   <sub>`curl -fsSL https://github.com/TheAgentCompany/the-agent-company-backup-data/releases/download/setup-script-20241208/setup.sh | sh`</sub>
 - **[Agentlab](https://github.com/ServiceNow/AgentLab)** — AgentLab - An open-source framework for developing, testing, and benchmarking web agents on diverse tasks, designed for scalability and re…
   <sub>★ 669 · Python · pip · pushed 2026-10-06 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install agentlab`</sub>
 - **[Appworld](https://github.com/StonyBrookNLP/appworld)** — Repository for "AppWorld - A Controllable World of Apps and People for Benchmarking Interactive Coding Agent", ACL'24 Best Resource Paper
-  <sub>★ 561 · Python · Apache-2.0 · pip · pushed 2026-11-15 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 562 · Python · Apache-2.0 · pip · pushed 2026-11-15 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install appworld`</sub>
 - **[Bigcodebench](https://github.com/bigcode-project/bigcodebench)** — BigCodeBench - Benchmarking Code Generation Towards AGI
   <sub>★ 517 · Python · Apache-2.0 · pip · pushed 2026-01-03 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -161,7 +158,7 @@ Page **2** of 2, because this list is longer than the 512 KB GitHub will render 
   <sub>★ 33 · Python · source · pushed 2024-12-06 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/XiaoMi/MobileBench.git`</sub>
 - **[Flowbench](https://github.com/Justherozen/FlowBench)** — [EMNLP 2024] FlowBench - Revisiting and Benchmarking Workflow-Guided Planning for LLM-based Agents
-  <sub>★ 26 · Python · source · pushed 2025-01-06 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 25 · Python · source · pushed 2025-01-06 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Justherozen/FlowBench.git`</sub>
 - **[Shampoosalesagent](https://github.com/jackfsuia/ShampooSalesAgent)** — A minimal LLM sales agent framework for sales agent fast deployment and benchmark. Support OpenAI models, Claude, HuggingFace models, Gem…
   <sub>★ 20 · Python · MIT · clone · pushed 2024-09-06 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -240,6 +237,6 @@ Page **2** of 2, because this list is longer than the 512 KB GitHub will render 
 
 ---
 
-Snapshot 2026-11-27. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-11-28. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
 Filter the same data in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/). Spreadsheet edition: retired. The last copy, built 2026-10-22, stays available but is no longer updated. The website is the maintained edition. Its last workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/download/v2026.10.22/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/download/v2026.10.22/Awesome-Agentic-Atlas-LIGHT.xlsx).

@@ -2,20 +2,30 @@
 
 Capability bundles an agent loads on demand — SKILL.md packages, subagents, slash commands, and the directories that collect them.
 
-**1,635 projects** · 1,477 with stars to rank by · 8,064,230 combined stars
+**1,639 projects** · 1,483 with stars to rank by · 8,100,371 combined stars
 
 [← every topic](README.md) · [← back to the mega list](../README.md) · [**filter this live →**](https://aaa.jeremyfhall.com/catalog/#topic=agent-skills)
 
-✨ **12 new to the atlas** in the 11/27/26 import — marked below, and [filterable on the site](https://aaa.jeremyfhall.com/catalog/#topic=agent-skills&new=1).
+✨ **6 new to the atlas** in the 11/28/26 import — marked below, and [filterable on the site](https://aaa.jeremyfhall.com/catalog/#topic=agent-skills&new=1).
 
 Page **3** of 3, because this list is longer than the 512 KB GitHub will render in one file. In order: [1](agent-skills.md) · [2](agent-skills-2.md) · **3**.
 
-## Also here, unranked (158)
+## Also here, unranked (156)
 
 No stars of their own to rank by — a folder inside someone else's repository, or a link GitHub no longer serves. Listed anyway, so nothing quietly disappears from a count.
 
-<sub>Projects 88–158 of 158. The rest are on this page's other parts, linked above and below.</sub>
+<sub>Projects 76–156 of 156. The rest are on this page's other parts, linked above and below.</sub>
 
+- **[igamingsychov/watch-igaming](https://github.com/igamingsychov/watch-igaming)** — Source for watch-igaming
+- **[ilyautov/humanizer-ru](https://github.com/ilyautov/humanizer-ru/tree/main/skills/humanizer-ru)** — humanizer-ru: редактура русского текста для AI-агентов. Убирает канцелярит и шаблонные обороты, сверяет смысл и факты. 67 признаков, 21 жёсткий запрет, сканер, CLI, MCP и расширение Chrome. | Russian…
+- **[ilyautov/small-business-ru](https://github.com/ilyautov/small-business-ru/tree/main/small-business-ru/skills)** — 34 открытых AI-скилла для малого бизнеса РФ: налоги УСН, деньги, проверка контрагента по ИНН. Числа считаются кодом, данные из реальных реестров. | 34 open AI skills for Russian small business: taxes…
+- **[Instant-Expert/skills](https://github.com/Instant-Expert/skills)** — Official Instant Expert source for the ask-human-expert skill - ask real executives, operators and domain experts a question for a written or voice answer or a short call, with a free test mode and t…
+- **[izzzzzi/assh](https://github.com/izzzzzi/agent-assh/tree/main/skills/assh)** — SSH workflow helper for LLM agents
+- **[Kadajett/cockney](https://github.com/Kadajett/cockney)** — MIT source for the cockney skill - terse Cockney-voiced replies and the smallest correct change (reuse, stdlib before dependencies, no speculative abstraction), switching to plain English for securit…
+- **[kasovy/neverapply-mcp](https://github.com/kasovy/neverapply-mcp)** — Source for neverapply
+- **[kevinmmiddleton/unpaid-intern](https://github.com/kevinmmiddleton/unpaid-intern)** — Source for unpaid-intern
+- **[kochetkov-ma/brewpage-publish](https://github.com/kochetkov-ma/claude-brewcode/tree/main/skills/brewpage-publish)** — Claude Code plugin suite: brewcode (skill/agent/rule authoring, semble semantic search, superreview and teams setups), brewdoc (doc sync, PDF, publish), brewtools (text optimization, secrets scan, de…
+- **[kotobuki09/instructree](https://github.com/kotobuki09/instructree)** — Source for the instructree skill - local instruction-scope mapping, metadata and link validation, recursive Copilot import audits, and SARIF reports (MIT)
 - **[Krexa-xyz/skills](https://github.com/Krexa-xyz/skills/tree/main/skills/krexa)** — Agent skills for Krexa: backtest, paper-trade and run trading agents from Hermes, OpenClaw, Claude and more
 - **[Linked-API/linkedin](https://github.com/Linked-API/linkedin-skills/tree/main/linkedin)** — LinkedIn automation skills for AI agents – sales, social selling, data extraction, and more.
 - **[lliu56/minicut-skills](https://github.com/lliu56/minicut-skills)** — Source for minicut-film-studio
@@ -92,6 +102,6 @@ Page **3** of 3, because this list is longer than the 512 KB GitHub will render 
 
 ---
 
-Snapshot 2026-11-27. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-11-28. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
 Filter the same data in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/). Spreadsheet edition: retired. The last copy, built 2026-10-22, stays available but is no longer updated. The website is the maintained edition. Its last workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/download/v2026.10.22/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/download/v2026.10.22/Awesome-Agentic-Atlas-LIGHT.xlsx).

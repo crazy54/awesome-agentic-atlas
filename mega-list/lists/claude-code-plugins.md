@@ -11,7 +11,7 @@ Curated by **[ccplugins/awesome-claude-code-plugins](https://github.com/ccplugin
 |   |   |   |
 |---|---|---|
 | <a href="https://github.com/JuliusBrussee/cavekit"><img src="https://opengraph.githubassets.com/1/JuliusBrussee/blueprint" width="260"></a> | <a href="https://github.com/qualixar/superlocalmemory"><img src="https://img.youtube.com/vi/PMWW_ypsL60/hqdefault.jpg" width="260"></a> | <a href="https://github.com/ofershap/tailwind-best-practices"><img src="https://opengraph.githubassets.com/1/ofershap/tailwind-best-practices" width="260"></a> |
-| **[blueprint](https://github.com/JuliusBrussee/cavekit)**<br>★ 1.2k | **[superlocalmemory](https://github.com/qualixar/superlocalmemory)**<br>★ 292 | **[tailwind-best-practices](https://github.com/ofershap/tailwind-best-practices)**<br>★ 14 |
+| **[blueprint](https://github.com/JuliusBrussee/cavekit)**<br>★ 1.2k | **[superlocalmemory](https://github.com/qualixar/superlocalmemory)**<br>★ 293 | **[tailwind-best-practices](https://github.com/ofershap/tailwind-best-practices)**<br>★ 14 |
 | <a href="https://github.com/ofershap/sveltekit-best-practices"><img src="https://opengraph.githubassets.com/1/ofershap/sveltekit-best-practices" width="260"></a> | <a href="https://github.com/JasonColapietro/ios-app-dev-skills"><img src="https://raw.githubusercontent.com/JasonColapietro/ios-app-dev-skills/main/docs/showcase/app-store-submissions-board.png" width="260"></a> | <a href="https://github.com/claw-army/claude-node"><img src="https://opengraph.githubassets.com/1/claw-army/claude-node" width="260"></a> |
 | **[sveltekit-best-practices](https://github.com/ofershap/sveltekit-best-practices)**<br>★ 13 | **[ios-app-dev-skills](https://github.com/JasonColapietro/ios-app-dev-skills)**<br>★ 10 | **[claw-army/claude-node](https://github.com/claw-army/claude-node)**<br>★ 9 |
 
@@ -48,7 +48,7 @@ Curated by **[ccplugins/awesome-claude-code-plugins](https://github.com/ccplugin
   <sub>★ 1.2k · MIT · npx · pushed 2026-11-17 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add JuliusBrussee/cavekit`</sub>
 - **[superlocalmemory](https://github.com/qualixar/superlocalmemory)** — External: Persistent memory + learning MCP server for Claude Code. Zero-cloud, 6-channel retrieval, 16K+ monthly downloads. Backed by 3 arXiv papers
-  <sub>★ 292 · Python · AGPL-3.0 · npm · pushed 2026-11-21 · Win? · WSL2? · macOS · Linux?</sub>
+  <sub>★ 293 · Python · AGPL-3.0 · npm · pushed 2026-11-21 · Win? · WSL2? · macOS · Linux?</sub>
   <sub>`npm install -g superlocalmemory # add --media to also turn on pictures and documents`</sub>
 - **[tailwind-best-practices](https://github.com/ofershap/tailwind-best-practices)** — Tailwind CSS v4 patterns — stop agents from generating v3 code
   <sub>★ 14 · JavaScript · MIT · npx · pushed 2026-02-20 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -459,7 +459,7 @@ Curated by **[ccplugins/awesome-claude-code-plugins](https://github.com/ccplugin
 ## Security, Compliance, &amp; Legal
 
 - **[skillfortify](https://github.com/qualixar/skillfortify)** — External: Formal verification scanner for AI agent skills (including Claude Code skills + MCP servers). 100% precision on 540-skill benchmark. ASBOM generation. arXiv:2603.00195
-  <sub>★ 42 · Python · pip · pushed 2026-10-02 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 43 · Python · pip · pushed 2026-10-02 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`pip install skillfortify`</sub>
 - **[security-sweep](https://github.com/Onome-AJ/security-sweep-plugin)** — Comprehensive security scanner covering OWASP Top 10 (2025), Mobile Top 10 (2024), and LLM Top 10 (2025). Scans for hardcoded secrets, injection flaws, auth issues, misconfigurations, AI-specific vulnerabilities, mobile security, and data exposure
   <sub>★ 15 · MIT · source · pushed 2026-04-05</sub>
@@ -561,7 +561,7 @@ Curated by **[ccplugins/awesome-claude-code-plugins](https://github.com/ccplugin
 ## Project &amp; Product Management
 
 - **[plannotator](https://github.com/backnotprop/plannotator)** — Interactive plan review UI with visual annotation (install via /plugin marketplace add backnotprop/plannotator)
-  <sub>★ 15.3k · TypeScript · Apache-2.0 · psh · pushed 2026-11-27 · Win · WSL2 · macOS · Linux</sub>
+  <sub>★ 15.5k · TypeScript · Apache-2.0 · psh · pushed 2026-11-28 · Win · WSL2 · macOS · Linux</sub>
   <sub>`irm https://plannotator.ai/install.ps1 | iex`</sub>
 - **[product-manager-skills](https://github.com/Digidai/product-manager-skills)** — Senior PM agent with 30+ frameworks, 32 SaaS metrics with exact formulas, 12 templates, and anti-pattern detection. Pure Markdown, MIT-0 license
   <sub>★ 208 · Shell · npx · pushed 2026-04-12 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -747,7 +747,7 @@ Curated by **[ccplugins/awesome-claude-code-plugins](https://github.com/ccplugin
 ## Documentation
 
 - **[llm-wiki](https://github.com/praneybehl/llm-wiki-plugin)** — Build a compounding, LLM-curated personal knowledge base in any project (Karpathy's LLM Wiki pattern). Skill + 5 /wiki:* commands with sharded indexes, BM25 search, and a structural lint script
-  <sub>★ 126 · Python · MIT · npx · pushed 2026-10-29 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 127 · Python · MIT · npx · pushed 2026-10-29 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx skills add praneybehl/llm-wiki-plugin -a <agent> -g`</sub>
 - **[trigger-tree](https://github.com/Hedde/trigger_tree)** — Documentation-discovery telemetry for Claude Code — heat/cold maps, health grade, evidence-backed router fixes. 100% local, zero tokens. /tt
   <sub>★ 16 · Python · MIT · uv · pushed 2026-11-02 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -879,13 +879,13 @@ Curated by **[ccplugins/awesome-claude-code-plugins](https://github.com/ccplugin
 ## Communication &amp; Integrations
 
 - **[whatsapp-claude-plugin](https://github.com/Rich627/whatsapp-claude-plugin)** — WhatsApp channel plugin for Claude Code. Connects as a linked device via Baileys v7 with bidirectional messaging, full media support, voice transcription, permission relay, and access control
-  <sub>★ 129 · TypeScript · Apache-2.0 · source · pushed 2026-10-26 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 130 · TypeScript · Apache-2.0 · source · pushed 2026-10-26 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`git clone https://github.com/Rich627/whatsapp-claude-plugin.git`</sub>
 
 ## Design UX
 
 - **[ux](https://github.com/Laith0003/ux-skill)** — Design intelligence engine for AI coding tools. A 171-rule anti-AI-slop linter, 160 brand specs, a 7-axis synthesizer, a WCAG-gated design system generator with Arabic and right to left built in, 25 MCP tools, 18 commands, 17 IDEs. Offline, never calls an LLM. MIT.
-  <sub>★ 112 · Python · MIT · npx · pushed 2026-11-12 · Win? · WSL2? · macOS? · Linux?</sub>
+  <sub>★ 113 · Python · MIT · npx · pushed 2026-11-12 · Win? · WSL2? · macOS? · Linux?</sub>
   <sub>`npx uxskill init # downloads pipx + uxskill on first run`</sub>
 - **[nano-banana](https://github.com/Ibrahim-3d/nano-banana-claude-plugin)** — Google Gemini image generation plugin. Text-to-image, text-guided image editing, style transfer, 4K output, search grounding, and multi-reference composition via /genimage. Uses gemini-2.5-flash-image (fast) and gemini-3-pro-image-preview (4K/search)
   <sub>★ 14 · Python · MIT · clone · pushed 2026-09-30 · Win? · WSL2? · macOS? · Linux?</sub>
@@ -987,6 +987,6 @@ Curated by **[ccplugins/awesome-claude-code-plugins](https://github.com/ccplugin
 
 ---
 
-Snapshot 2026-11-27. Stars, language, licence and last-push come from the GitHub API and drift daily.
+Snapshot 2026-11-28. Stars, language, licence and last-push come from the GitHub API and drift daily.
 
 Filter the same data in the browser on the [Atlas site](https://aaa.jeremyfhall.com/catalog/). Spreadsheet edition: retired. The last copy, built 2026-10-22, stays available but is no longer updated. The website is the maintained edition. Its last workbooks: [dark](https://github.com/crazy54/awesome-agentic-atlas/releases/download/v2026.10.22/Awesome-Agentic-Atlas-DARK.xlsx) · [light](https://github.com/crazy54/awesome-agentic-atlas/releases/download/v2026.10.22/Awesome-Agentic-Atlas-LIGHT.xlsx).
